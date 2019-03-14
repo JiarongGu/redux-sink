@@ -20,7 +20,7 @@ const store = configureCreatorStore({
     
 ## Configure Reducers
 using decorators to create redux service class, can access redux state using class from everywhere you want.
-- decorators: `@sink`, `@state`, `@reducer`, `@effect`, `@trigger`, `@sinking`.  
+- decorators: `@sink`, `@state`, `@reducer`, `@effect`, `@trigger`, `@sinking`, `@deepsinking`.  
 
 hint: all instance created by service class will shared in the same scope of its prototype.
 
