@@ -5,7 +5,7 @@ const triggerEvents = new Map<string, Array<Function>>();
 const retriggerActions: { [key: string]: Action | null } = {};
 
 export const triggerMiddleware = (store: MiddlewareAPI<any>) => (next: Dispatch<AnyAction>) => (action: Action) => {
-  if (retriggerActions[action.type] != undefined) {
+  if (retriggerActions[action.type] !== undefined) {
     retriggerActions[action.type] = action;
   }
   runTriggerEvents(action);
