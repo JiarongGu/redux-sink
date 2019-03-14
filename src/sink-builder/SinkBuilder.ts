@@ -1,6 +1,6 @@
 
 import { Dispatch, AnyAction } from 'redux';
-import { ReducerEvent, ActionFunction, EffectEvent, TriggerEvent } from '../types';
+import { ReducerEvent, ActionFunction, EffectEvent, TriggerEvent, Constructor } from '../types';
 import { registerReducer, getCurrentStore } from '../redux-registry';
 import { registerEffect, registerTrigger } from '../middlewares';
 
@@ -59,11 +59,10 @@ export class SinkBuilder {
       let action = trigger.action;
 
       if (trigger.service) {
-        const servicePrototype = trigger.service.prototype;
-        if (servicePrototype === prototype) {
+        if (trigger.service.prototype === prototype) {
           action = this.actions[action];
         } else {
-          action = getSinkBuilder(servicePrototype).actions[action];
+          action = getSinkAction(trigger.service, action);
         }
       }
       registerTrigger({ ...trigger, action });
@@ -97,4 +96,11 @@ export function getSinkBuilder(prototype: any): SinkBuilder {
     prototype._sinkBuilder = new SinkBuilder();
   }
   return prototype._sinkBuilder;
+}
+
+export function getSinkAction(service: Constructor, action: string) {
+  const sinkBuilder = getSinkBuilder(service.prototype);
+  if (!sinkBuilder.built)
+    new service();
+  return sinkBuilder.actions[action];
 }
