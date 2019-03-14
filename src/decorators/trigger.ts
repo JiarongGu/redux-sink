@@ -6,15 +6,9 @@ export function trigger(action: string, service?: Constructor, priority?: number
   return function (target: any, name: string, descriptor: PropertyDescriptor) {
     const sinkBuilder = getSinkBuilder(target);
     const process = descriptor.value.bind(target);
-    const eventProcess = (payload) => process(...payload);
 
     if (!sinkBuilder.built) {
-      sinkBuilder.triggers.push({
-        process: eventProcess,
-        action,
-        service,
-        priority
-      });
+      sinkBuilder.triggers.push({ process, action, service, priority });
     }
     return descriptor;
   }

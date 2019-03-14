@@ -2,8 +2,7 @@
 import { Dispatch, AnyAction } from 'redux';
 import { ReducerEvent, ActionFunction, EffectEvent, TriggerEvent } from '../types';
 import { registerReducer, getCurrentStore } from '../redux-registry';
-import { registerEffect } from '../effect-middleware';
-import { registerTrigger } from '../trigger-middleware';
+import { registerEffect, registerTrigger } from '../middlewares';
 
 export class SinkBuilder {
   // basic reducer config

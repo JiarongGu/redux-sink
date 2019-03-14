@@ -1,8 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { applyReduxSinkStore, buildReducers } from '../redux-registry';
-import { effectMiddleware } from '../effect-middleware';
-import { triggerMiddleware } from '../trigger-middleware';
+import { triggerMiddleware, effectMiddleware } from '../middlewares';
 import { StoreConfiguration } from '../types';
 
 export function configureSinkStore<TState = any>(config?: StoreConfiguration<TState>) {

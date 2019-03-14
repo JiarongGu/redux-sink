@@ -12,7 +12,7 @@ export const triggerMiddleware = (store: MiddlewareAPI<any>) => (next: Dispatch<
 export async function runTriggerEvents(action: AnyAction) {
   const triggers = triggerEvents.get(action.type);
   if (triggers)
-    await Promise.all(triggers.map(handler => handler(action.payload)));
+    await Promise.all(triggers.map(handler => handler(...action.payload)));
 }
 
 // add new location event and run location tasks after
