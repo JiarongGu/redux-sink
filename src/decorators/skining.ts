@@ -5,12 +5,17 @@ import { SinkBuilder, getSinkBuilder } from '../sink-builder';
 import { Constructor } from '../types';
 
 export function sinking(...sinks: Array<Constructor>) {
-  const sinkBuilders = sinks.map(sink => getSinkBuilder(sink.prototype));
+  const sinkBuilders = sinks.map(sink => { 
+    const sinkBuilder = getSinkBuilder(sink.prototype);
+    if (!sinkBuilder.built) new sink();
+    return sinkBuilder;
+  });
   const namespaces = sinkBuilders.map(service => service.namespace);
+  const prototype = sinks.map(sink => Object.getPrototypeOf(sink.prototype));
 
   return connect(
     createMapStateToProps(namespaces),
-    createMapDispatchToProps(sinks),
+    createMapDispatchToProps(prototype),
     createMergeProps(sinkBuilders)
   ) as any
 }
@@ -24,24 +29,29 @@ function createMapStateToProps(namespaces: Array<string>) {
   };
 }
 
-function createMapDispatchToProps(sinks: Array<Constructor>) {
+const ignoredProperties = ['constructor', '_serviceBuilder'];
+
+function createMapDispatchToProps(prototypes: Array<any>) {
   return function (dispatch: Dispatch<AnyAction>) {
-    const dispatchs = sinks.reduce((accumulate: any, sink) => {
-      const sinkBuilder = getSinkBuilder(sink.prototype);
-      accumulate[sinkBuilder.namespace] = new sink();
+    return prototypes.reduce((accumulate: any, prototype) => {
+      const sinkBuilder = getSinkBuilder(prototype);
+      accumulate[sinkBuilder.namespace] = 
+        Object.getOwnPropertyNames(prototype)
+          .filter(x => !ignoredProperties.includes(x))
+          .reduce((a: any, c) => ( a[c] = prototype[c], a ), {});
       return accumulate;
     }, {});
-    return dispatchs;
   };
 }
 
 function createMergeProps(sinkBuilders: Array<SinkBuilder>) {
   return function (stateProps: any, dispatchProps: any, ownProps: any) {
-    return sinkBuilders.reduce((accumulate, service) => {
-      accumulate[service.namespace] = dispatchProps[service.namespace];
-      if (service.stateProperty)
-        accumulate[service.namespace][service.stateProperty] = stateProps[service.namespace];
-
+    return sinkBuilders.reduce((accumulate, sinkBuilder) => {
+      const state = sinkBuilder.stateProperty ? { [sinkBuilder.stateProperty]: stateProps[sinkBuilder.namespace] } : undefined;
+      accumulate[sinkBuilder.namespace] = {
+        ...dispatchProps[sinkBuilder.namespace],
+        ...state
+      };
       return accumulate;
     }, { ...ownProps })
   }
