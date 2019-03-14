@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es6",
+    "lib": ["es6", "es7", "dom", "es2018.promise"],
+    "jsx": "react",
+    "sourceMap": false,
+    "declaration": true,
+    "downlevelIteration": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "strict": true
+  },
+  "exclude": ["lib", "node_modules", "tests"]
+}

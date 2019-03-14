@@ -1,0 +1,48 @@
+{
+  "name": "redux-sink",
+  "version": "0.1.0",
+  "description": "redux sink for less redux boilerplate",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "build": "rm -rf lib/ && node ./node_modules/typescript/bin/tsc",
+    "test": "mocha -r ts-node/register tests/**/*.test.ts*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JiarongGu/banbrick-redux-creator.git"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "utils"
+  ],
+  "author": "Jiarong Gu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JiarongGu/banbrick-redux-creator/issues"
+  },
+  "homepage": "https://github.com/JiarongGu/banbrick-redux-creator#readme",
+  "dependencies": {
+    "@types/redux": "^3.*",
+    "@types/react-redux": "^7.*",
+    "react": "*",
+    "react-redux": "*",
+    "redux": "*",
+    "redux-devtools-extension": "^2.*"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/react-dom": "^16.8.2",
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2",
+    "react-dom": "^16.8.4",
+    "ts-node": "^8.0.3",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3333"
+  }
+}
