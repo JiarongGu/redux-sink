@@ -2,7 +2,7 @@
 import { Dispatch, AnyAction } from 'redux';
 import { ReducerEvent, ActionFunction, EffectEvent, TriggerEvent, Constructor } from '../types';
 import { registerReducer, getCurrentStore } from '../redux-registry';
-import { registerEffect, registerTrigger } from '../middlewares';
+import { registerEffect, registerTrigger, applyRetriggerAction } from '../middlewares';
 
 export class SinkBuilder {
   // basic reducer config
@@ -18,6 +18,7 @@ export class SinkBuilder {
   triggers: Array<TriggerEvent>;
   dispatches: { [key: string]: ActionFunction };
   actions: { [key: string]: string };
+  retriggers: Array<string>;
 
   dispatch!: Dispatch<AnyAction>;
   built: boolean;
@@ -26,6 +27,7 @@ export class SinkBuilder {
     this.reducers = [];
     this.effects = [];
     this.triggers = [];
+    this.retriggers = [];
     this.actions = {};
     this.dispatches = {};
     this.properties = {};
@@ -67,6 +69,11 @@ export class SinkBuilder {
       }
       registerTrigger({ ...trigger, action });
     });
+
+    // added reloadable action
+    this.retriggers.forEach(reloadable => {
+      applyRetriggerAction(reloadable);
+    })
 
     this.built = true;
   }
