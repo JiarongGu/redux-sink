@@ -74,8 +74,8 @@ updateAll(value: number) {
 ```
 
 
-## @sinking
-use `@sinking` to connect sinks to component
+## @sinking / @deepsinking
+use `@sinking` to connect sinks to component, `@deepsinking` allow you to use any function in sink when connect to component, `@sinking` will only allowed to use effect and reducer in component
 ```javascript
 @sinking(CounterService, OtherService1, OtherService2)
 class Counter extends React.Component {
