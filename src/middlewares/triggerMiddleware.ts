@@ -6,7 +6,7 @@ const retriggerActions: { [key: string]: any } = {};
 
 export const triggerMiddleware = (store: MiddlewareAPI<any>) => (next: Dispatch<AnyAction>) => (action: Action) => {
   if (retriggerActions[action.type] !== undefined) {
-    retriggerActions[action.type] = action;
+    retriggerActions[action.type] = action.payload;
   }
   runTriggerEvents(action);
   return next(action);

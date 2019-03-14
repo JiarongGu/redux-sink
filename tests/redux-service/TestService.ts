@@ -42,6 +42,7 @@ export class TestService {
 @sink('Test2Service')
 export class Test2Service {
   name: string = 'test';
+  
   testService = new TestService();
   value = 0;
 

@@ -4,20 +4,35 @@ import { AnyAction } from 'redux';
 import { SinkBuilder, getSinkBuilder } from '../sink-builder';
 import { Constructor } from '../types';
 
+export function deepsinking(...sinks: Array<Constructor>) {
+  const sinkBuilders = ensureSinksBuilt(sinks);
+  const namespaces = sinkBuilders.map(service => service.namespace);
+  const prototypes = sinks.map(sink => Object.getPrototypeOf(sink.prototype));
+
+  return connect(
+    createMapStateToProps(namespaces),
+    createDeepMapDispatchToProps(prototypes),
+    createMergeProps(sinkBuilders)
+  ) as any
+}
+
 export function sinking(...sinks: Array<Constructor>) {
-  const sinkBuilders = sinks.map(sink => { 
+  const sinkBuilders = ensureSinksBuilt(sinks);
+  const namespaces = sinkBuilders.map(service => service.namespace);
+
+  return connect(
+    createMapStateToProps(namespaces),
+    createMapDispatchToProps(sinkBuilders),
+    createMergeProps(sinkBuilders)
+  ) as any
+}
+
+function ensureSinksBuilt(sinks: Array<Constructor>) {
+  return sinks.map(sink => { 
     const sinkBuilder = getSinkBuilder(sink.prototype);
     if (!sinkBuilder.built) new sink();
     return sinkBuilder;
   });
-  const namespaces = sinkBuilders.map(service => service.namespace);
-  const prototype = sinks.map(sink => Object.getPrototypeOf(sink.prototype));
-
-  return connect(
-    createMapStateToProps(namespaces),
-    createMapDispatchToProps(prototype),
-    createMergeProps(sinkBuilders)
-  ) as any
 }
 
 function createMapStateToProps(namespaces: Array<string>) {
@@ -29,9 +44,17 @@ function createMapStateToProps(namespaces: Array<string>) {
   };
 }
 
+function createMapDispatchToProps(sinkBuilders: Array<SinkBuilder>) {
+  return function (dispatch: Dispatch<AnyAction>) {
+    return sinkBuilders.reduce((accumulate: any, sinkBuilder) => (
+      accumulate[sinkBuilder.namespace] = sinkBuilder.dispatches, accumulate
+    ), {});
+  };
+}
+
 const ignoredProperties = ['constructor', '_serviceBuilder'];
 
-function createMapDispatchToProps(prototypes: Array<any>) {
+function createDeepMapDispatchToProps(prototypes: Array<any>) {
   return function (dispatch: Dispatch<AnyAction>) {
     return prototypes.reduce((accumulate: any, prototype) => {
       const sinkBuilder = getSinkBuilder(prototype);

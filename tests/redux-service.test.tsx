@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { renderToString } from 'react-dom/server';
-import { sinking } from '../src/decorators';
+import { sinking, deepsinking } from '../src/decorators';
 import { TestService, Test2Service } from './redux-service/TestService';
 import { configureSinkStore } from '../src/configureStore';
 import { getSinkBuilder } from '../src/sink-builder';
@@ -102,7 +102,7 @@ describe('redux service', () => {
     assert.equal('<div>test name</div>', renderToString(app));
   });
 
-  it('can use other function from service', () => {
+  it('can use other function from deepsinking', () => {
     const store = initalizeStore();
     const test2Service = new Test2Service();
 
@@ -110,7 +110,7 @@ describe('redux service', () => {
       return <div>{props.Test2Service.state.name}</div>
     }
     test2Service.setName('test name');
-    const app = createApp(store, sinking(Test2Service), TestComponent);
+    const app = createApp(store, deepsinking(Test2Service), TestComponent);
     assert.equal('<div>test name</div>', renderToString(app));
   });
 })
