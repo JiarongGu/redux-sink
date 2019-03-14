@@ -1,3 +1,4 @@
+# Redux-Sink
 redux sink for less boilerplate, also allow redux to be loaded by code split.    
 
 ## Install
