@@ -26,7 +26,7 @@ hint: all instance created by service class will shared in the same scope of its
 
 ## @sink
 ```javascript
-@sink('CounterService')
+@sink('counter')
 class CounterService { ... }
 ```
 set the class as redux service, the name of service use to locate the service in props
@@ -86,8 +86,9 @@ sinking(CounterService, OtherService1, OtherService2)(Component)
 ```
 
 ## Properties
-properties can be used and shared between sink, but will not trigger component refreash
+properties can be used and shared between sink instance, but will not trigger component refreash
 ```javascript
+@sink('counter)
 class CounterService { 
   property1 = 0;
   property2 = 'property2 string';
@@ -100,7 +101,7 @@ class CounterService {
 ```javascript
 import { sink, state, reducer, effect, connect } from 'redux-sink'
 
-@sink('CounterService')
+@sink('counter')
 class CounterService {
   @state
   state = { 
@@ -136,15 +137,15 @@ class CounterService {
 @sinking(CounterService)
 class Counter extends React.Component {
   render() {
-    const counterService = this.props.CounterService;
+    const counterService = this.props.counter;
     return (
       <div>
         <h1>Counter</h1>
-        <p>Current Increment: <strong>{counterService.state.increment}</strong></p>
-        <p>Current Decrement: <strong>{counterService.state.decrement}</strong></p>
-        <p>Current Total: <strong>{counterService.state.total}</strong></p>
-        <button onClick={() => counterService.increment(2)}>Increment</button>
-        <button onClick={() => counterService.decrement(2)}>Decrement</button>
+        <p>Current Increment: <strong>{counter.state.increment}</strong></p>
+        <p>Current Decrement: <strong>{counter.state.decrement}</strong></p>
+        <p>Current Total: <strong>{counter.state.total}</strong></p>
+        <button onClick={() => counter.increment(2)}>Increment</button>
+        <button onClick={() => counter.decrement(2)}>Decrement</button>
       </div>
     )
   }
