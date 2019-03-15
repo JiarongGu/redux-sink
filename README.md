@@ -66,7 +66,7 @@ updateAll(value: number) {
 ## @trigger
 `@trigger` is used to trigger multiple reducer functions, will run inside effect middleware
 ```javascript
-@trigger
+@trigger('action/function name', Sink/false)
 updateAll(value: number) {
   this.decrement(value);
   this.increment(value);
