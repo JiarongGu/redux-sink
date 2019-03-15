@@ -27,7 +27,7 @@ export interface EffectEvent {
 
 export interface TriggerEvent {
   action: string; 
-  service?: Constructor;
+  service: Constructor | boolean;
   process: Function; 
   priority?: number
 };

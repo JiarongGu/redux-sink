@@ -56,24 +56,28 @@ export class SinkBuilder {
     // register effects
     this.effects.forEach(effect => registerEffect(effect));
     
+    // added reloadable action
+    this.retriggers.forEach(reloadable => {
+      applyRetriggerAction(this.actions[reloadable]);
+    })
+
     // register subscribe
     this.triggers.forEach(trigger => {
       let action = trigger.action;
 
       if (trigger.service) {
-        if (trigger.service.prototype === prototype) {
-          action = this.actions[action];
+        if (trigger.service === true || trigger.service.prototype === prototype) {
+          const serviceAction = this.actions[action];
+          if (serviceAction)
+            action = serviceAction;
         } else {
           action = getSinkAction(trigger.service, action);
         }
       }
-      registerTrigger({ ...trigger, action });
-    });
 
-    // added reloadable action
-    this.retriggers.forEach(reloadable => {
-      applyRetriggerAction(reloadable);
-    })
+      if (action)
+        registerTrigger({ ...trigger, action });
+    });
 
     this.built = true;
   }

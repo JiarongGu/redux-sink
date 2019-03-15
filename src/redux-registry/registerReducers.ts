@@ -8,7 +8,7 @@ function combineReducerEvents<TState>(initalState: TState, ...events: Array<Redu
     const reducer = reducers[action.type];
     if (reducer)
       return reducer(state, action);
-    return initalState;
+    return state === undefined ? initalState : state;
   }
 
   return combinedReducer;

@@ -1,6 +1,6 @@
 {
   "name": "redux-sink",
-  "version": "0.1.12",
+  "version": "0.1.17",
   "description": "redux sink for less redux boilerplate",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -27,8 +27,8 @@
   },
   "homepage": "https://github.com/JiarongGu/banbrick-redux-creator#readme",
   "dependencies": {
-    "@types/redux": "^3.*",
     "@types/react-redux": "^7.*",
+    "@types/redux": "^3.*",
     "react": "*",
     "react-redux": "*",
     "redux": "*",

@@ -2,7 +2,7 @@
 import { getSinkBuilder } from '../sink-builder';
 import { Constructor } from '../types';
 
-export function trigger(action: string, service?: Constructor, priority?: number) {
+export function trigger(action: string, service: Constructor | boolean = true, priority?: number) {
   return function (target: any, name: string, descriptor: PropertyDescriptor) {
     const sinkBuilder = getSinkBuilder(target);
     if (!sinkBuilder.built) {
