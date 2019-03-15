@@ -88,7 +88,7 @@ sinking(CounterService, OtherService1, OtherService2)(Component)
 ## Properties
 properties can be used and shared between sink instance, but will not trigger component refreash
 ```javascript
-@sink('counter)
+@sink('counter')
 class CounterService { 
   property1 = 0;
   property2 = 'property2 string';
