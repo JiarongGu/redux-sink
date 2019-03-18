@@ -19,10 +19,10 @@ const store = SinkFactory.createStore({ preloadedState, // inital state });
 ### Add Redux-DevTool
 It is possible to add redux-devtool through store creation
 ```javascript
-  const store = SinkFactory.createStore({ 
+const store = SinkFactory.createStore({ 
     preloadedState, // inital state
     devtoolOptions: { devToolCompose: composeWithDevTools } // required compose function from redux-dev-tool
-  });
+});
 ```
     
 ## Configure using decorators
