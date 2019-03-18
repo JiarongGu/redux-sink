@@ -9,17 +9,20 @@ Redux-Sink is redux for less boilerplate, no action, no seprated logic, also nat
 ```npm i redux-sink```    
 
 ## Getting started
+### Initalize store
 create store use `SinkFactory`, SinkFactory is the main registry class for all sinks, manage the store and all loaded sinks
 ```javascript
 import { SinkFactory } from 'redux-sink';
+const store = SinkFactory.createStore({ preloadedState, // inital state });
+```
 
-// its also possible to add reducers and middlewares through this api
-const store = SinkFactory.createStore({ 
-  reducers, // static reducers, built without creator
-  preloadedState, // inital state
-  middlewares, // addtional middlewares
-  devtoolOptions: { devToolCompose: composeWithDevTools } // required compose function from redux-dev-tool
-});
+### Add Redux-DevTool
+It is possible to add redux-devtool through store creation
+```javascript
+  const store = SinkFactory.createStore({ 
+    preloadedState, // inital state
+    devtoolOptions: { devToolCompose: composeWithDevTools } // required compose function from redux-dev-tool
+  });
 ```
     
 ## Configure using decorators
@@ -165,6 +168,21 @@ class Counter extends React.Component {
     )
   }
 }
+```
+
+## Advanced
+### Combine store with other configs
+`createStore` is able to take reducers, middleware and devtoolOptions to configure along with the store generation
+```javascript
+import { SinkFactory } from 'redux-sink';
+
+// its also possible to add reducers and middlewares through this api
+const store = SinkFactory.createStore({ 
+  reducers, // static reducers, built without creator
+  preloadedState, // inital state
+  middlewares, // addtional middlewares
+  devtoolOptions: { devToolCompose: composeWithDevTools } // required compose function from redux-dev-tool
+});
 ```
 
 ### Use outside of component
