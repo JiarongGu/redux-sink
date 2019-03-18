@@ -1,6 +1,5 @@
 
 import { ActionFunction, TriggerEvent, PayloadHandler, Action } from './typings';
-import { registerEffect, registerTrigger, registerReloader } from './middlewares';
 import { SinkFactory } from './SinkFactory';
 
 export class SinkBuilder {
@@ -85,17 +84,17 @@ export class SinkBuilder {
     // register effects
     Object.keys(this.effects).forEach(key => {
       this.actions[key] = `${this.namespace}/${key}`;
-      registerEffect(this.actions[key], this.effects[key]);
+      SinkFactory.addEffect(this.actions[key], this.effects[key]);
     });
 
     // added reloadable action
     this.reloaders.forEach(reloader => {
-      registerReloader(this.actions[reloader]);
+      SinkFactory.addReloader(this.actions[reloader]);
     })
 
     // register subscribe
     this.triggers.forEach(trigger => {
-      registerTrigger(trigger);
+      SinkFactory.addTrigger(trigger.action, trigger.handler, trigger.priority);
     });
 
     this.built = true;

@@ -1,11 +1,11 @@
 import { MiddlewareAPI, Dispatch } from 'redux';
-import { Action, PayloadHandler } from '../typings';
+import { Action } from './typings';
+import { SinkFactory } from './SinkFactory';
 
-const handlers = new Map<string, PayloadHandler>();
 const effectTasks: Array<Promise<any>> = [];
 
 export const effectMiddleware: any = (store: MiddlewareAPI<any>) => (next: Dispatch<Action>) => (action: Action) => {
-  const handler = handlers.get(action.type);
+  const handler = SinkFactory.effectHandlers.get(action.type);
 
   if (handler) {
     const task = handler(action.payload);
@@ -22,10 +22,6 @@ export const effectMiddleware: any = (store: MiddlewareAPI<any>) => (next: Dispa
 
   return next(action);
 };
-
-export function registerEffect(action: string, event: PayloadHandler) {
-  handlers.set(action, event);
-}
 
 export function getEffectTasks() {
   return effectTasks;

@@ -1,20 +1,6 @@
 import { createStore, applyMiddleware, compose, Middleware } from 'redux';
-import { triggerMiddleware, effectMiddleware } from './middlewares';
 import { StoreConfiguration } from './typings';
-import { SinkFactory } from './SinkFactory';
 import { buildReducers } from './buildReducers';
-
-export function configureSinkStore<TState = any>(config?: StoreConfiguration<TState>) {
-  let middlewares = [triggerMiddleware, effectMiddleware];
-
-  if (config && config.middlewares)
-    middlewares = middlewares.concat(config.middlewares);
-
-  const store = configureStore({ ...config, middlewares });
-
-  SinkFactory.applyReduxSinkStore(store);
-  return store;
-}
 
 export function configureStore<TState = any>(config?: StoreConfiguration<TState>) {
   let preloadedState = config && config.preloadedState;

@@ -1,7 +1,7 @@
 import { SinkBuilder } from '../SinkBuilder';
 
 /**
- * 
+ * assign property to be the state property to hold the state inside sink
  * @param target prototype
  * @param name state property name in sink
  */

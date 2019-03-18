@@ -16,7 +16,7 @@ export type ActionFunction = (...args: Array<any>) => Action;
 
 export interface TriggerEvent {
   action: string;
-  process: Function; 
+  handler: PayloadHandler; 
   priority?: number
 };
 

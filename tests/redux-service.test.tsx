@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { renderToString } from 'react-dom/server';
-import { configureSinkStore } from '../src/configureStore';
 import { sinking, deepsinking } from '../src/decorators';
 import { TestSink, Test2Sink } from './sinks';
 import { SinkFactory } from '../src/SinkFactory';
@@ -11,7 +10,7 @@ import { SinkBuilder } from '../src/SinkBuilder';
 import { StoreConfiguration } from '../src/typings';
 
 export function initalizeStore(config?: StoreConfiguration) {
-  const store = configureSinkStore(config);
+  const store = SinkFactory.createStore(config);
   // reset sinks
   SinkBuilder.get(TestSink.prototype).built = false;
   SinkBuilder.get(Test2Sink.prototype).built = false;
@@ -51,7 +50,7 @@ describe('redux sink', () => {
     resetStore();
     const state = { name: 'initalized name before store' };
     const testSink = new TestSink();
-    const store = configureSinkStore({ preloadedState: { testSink: state } });
+    const store = SinkFactory.createStore({ preloadedState: { testSink: state } });
 
     assert.equal(state, testSink.state);
   });

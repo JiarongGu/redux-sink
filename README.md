@@ -11,14 +11,14 @@ redux sink for less boilerplate, also allow redux to be loaded by code split.
 ## Getting started
 create a redux sink store
 ```javascript
-import { configureSinkStore } from 'redux-sink';
+import { SinkFactory } from 'redux-sink';
 
 // its also possible to add reducers and middlewares through this api
-const store = configureCreatorStore({ 
+const store = SinkFactory.createStore({ 
   reducers, // static reducers, built without creator
   preloadedState, // inital state
   middlewares, // addtional middlewares
-  devtoolOptions: // required compose function from redux-dev-tool
+  devtoolOptions: { devToolCompose: composeWithDevTools } // required compose function from redux-dev-tool
 });
 ```
     
