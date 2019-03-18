@@ -33,14 +33,14 @@ using decorators to create redux sink class, can access redux state using class 
     
 hint: all instance created by sink class will shared in the same scope of its prototype.
 
-## @sink
+##@sink
 ```javascript
 @sink('counter')
 class CounterSink { ... }
 ```
 set the class as redux sink, the name of sink use to locate the sink in props
 
-## @state
+##@state
 ```javascript
 @state
 state = { 
@@ -52,7 +52,7 @@ state = {
 configure inital state, can access state in sink class by `this.state`,
 inital state created based on this property or inheritant from current store
 
-## @reducer
+##@reducer
 `@reducer` use to update state, will trigger component update
 ```javascript
 @reducer
@@ -62,7 +62,7 @@ increment(value: number) {
 ```
 warning: do not call reducer function in side reducer, use effect to do it
 
-## @effect
+##@effect
 `@effect` use to process side-effects and aysnc calls, will run inside effect middleware
 ```javascript
 @effect
@@ -72,7 +72,7 @@ updateAll(value: number) {
 }
 ```
 
-## @trigger
+##@trigger
 `@trigger` is used to trigger multiple reducer functions, will run inside effect middleware
 ```javascript
 @trigger('action/function name', Sink/false)
@@ -82,7 +82,7 @@ updateAll(value: number) {
 }
 ```
 
-## @sinking/deepsinking
+##@sinking/deepsinking
 use `@sinking` to connect sinks to component, `@deepsinking` allow you to use any function in sink when connect to component, `@sinking` will only allowed to use effect and reducer in component
 ```javascript
 @sinking(CounterSink, OtherSink1, OtherSink2)
@@ -93,7 +93,7 @@ class Counter extends React.Component {
 sinking(CounterSink, OtherSink1, OtherSink2)(Component)
 ```
 
-## Properties
+##Properties
 properties can be used and shared between sink instance, but will not trigger component refreash
 ```javascript
 @sink('counter')
