@@ -9,7 +9,7 @@ Redux-Sink is redux for less boilerplate, no action, no seprated logic, also nat
 ## Getting started
 ```npm i redux-sink```   
 
-### Initalize
+### Step 1: create store
 create store use `SinkFactory.createStore`.   
 
 #### index.js
@@ -20,7 +20,56 @@ const store = SinkFactory.createStore({
     devtoolOptions: { devToolCompose: composeWithDevTools } // required compose function from redux-dev-tool
 });
 ```
-    
+
+### Step 2: create sink
+logic block of state called `sink`, includes state, reducer, effect, configured by decorators.
+
+```javascript
+import { sink, state, reducer, effect, connect } from 'redux-sink'
+
+@sink('counter')
+class CounterSink {
+  @state
+  state = 0;
+
+  @reducer
+  increment(value: number) {
+    return this.state + value;
+  }
+
+  @reducer
+  decrement(value: number) {
+    return this.state - value;
+  }
+
+  @effect
+  async updateAll(increase: number, decrease: number) {
+    this.increment(increase);
+    this.decrement(decrease);
+  }
+}
+```
+
+### Step 3: sinking
+use `sinking` instead of `connect`, to connect sinks to component
+
+```javascript
+@sinking(CounterSink)
+class Counter extends React.Component {
+  render() {
+    const counter = this.props.counter;
+    return (
+      <div>
+        <p>Current Count: <strong>{counter.state}</strong></p>
+        <button onClick={() => counter.increment(1)}>Increment</button>
+        <button onClick={() => counter.decrement(1)}>Decrement</button>
+        <button onClick={() => counter.updateAll(1, 2)}>All</button>
+      </div>
+    )
+  }
+}
+```
+
 ## Configure using decorators
 - [@sink](#sink)
 - [@state](#state)
@@ -107,62 +156,6 @@ properties can be used and shared between sink instance, but will not trigger co
 class CounterSink { 
   property1 = 0;
   property2 = 'property2 string';
-}
-```
-
-## Example
-### Create ReduxSink class
-```javascript
-import { sink, state, reducer, effect, connect } from 'redux-sink'
-
-@sink('counter')
-class CounterSink {
-  @state
-  state = { 
-    increment: 0, 
-    decrement: 0, 
-    total: 0 
-  };
-
-  @reducer
-  increment(value: number) {
-    const increment = this.state.increment + value;
-    const total = this.state.total + value;
-    return { ...this.state, increment, total };
-  }
-
-  @reducer
-  decrement(value: number) {
-    const decrement = this.state.decrement - value;
-    const total = this.state.total - value;
-    return { ...this.state, decrement, total };
-  }
-
-  @effect
-  updateAll(value: number) {
-    this.decrement(value);
-    this.increment(value);
-  }
-}
-```
-
-### Connect to component
-```javascript
-@sinking(CounterSink)
-class Counter extends React.Component {
-  render() {
-    const counterSink = this.props.counter;
-    return (
-      <div>
-        <h1>Counter</h1>
-        <p>Current Increment: <strong>{counter.state.increment}</strong></p>
-        <p>Current Decrement: <strong>{counter.state.decrement}</strong></p>
-        <p>Current Total: <strong>{counter.state.total}</strong></p>
-        <button onClick={() => counter.increment(2)}>Increment</button>
-        <button onClick={() => counter.decrement(2)}>Decrement</button>
-      </div>
-    )
-  }
 }
 ```
 
