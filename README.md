@@ -1,5 +1,5 @@
 # Redux-Sink
-redux sink for less boilerplate, also allow redux to be loaded by code split.    
+Redux-Sink is redux for less boilerplate, no action, no seprated logic, also natively support redux to be loaded by code split.    
     
 [![travis](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)](https://travis-ci.org/JiarongGu/redux-sink)
 [![npm version](https://badge.fury.io/js/redux-sink.svg)](https://www.npmjs.com/package/redux-sink)
@@ -9,7 +9,7 @@ redux sink for less boilerplate, also allow redux to be loaded by code split.
 ```npm i redux-sink```    
 
 ## Getting started
-create a redux sink store
+create store use `SinkFactory`, `SinkFactory` is the main registry class for all sinks, manage the store and all loaded sinks
 ```javascript
 import { SinkFactory } from 'redux-sink';
 
