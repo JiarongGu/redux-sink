@@ -173,7 +173,7 @@ use to bind extra event when action fires
 use to fire trigger event when trigger dynamic loaded
 
 ### SinkFactory
-`SinkFactory` is the main registry class for all sinks, manage the store and all loaded sinks
+main registry class for all sinks, manage the store and all loaded sinks
 
 ### SinkBuilder
-`SinkBuilder` is the building class embadded inside sink's protoype, which collect the sink configuration and build sink use `SinkFactory`
+build class embadded inside sink's protoype, which collect the sink configuration and build sink use `SinkFactory`
