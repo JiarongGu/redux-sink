@@ -9,7 +9,7 @@ Redux-Sink is redux for less boilerplate, no action, no seprated logic, also nat
 ```npm i redux-sink```    
 
 ## Getting started
-create store use `SinkFactory`, `SinkFactory` is the main registry class for all sinks, manage the store and all loaded sinks
+create store use `SinkFactory`, SinkFactory is the main registry class for all sinks, manage the store and all loaded sinks
 ```javascript
 import { SinkFactory } from 'redux-sink';
 
