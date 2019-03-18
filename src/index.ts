@@ -3,3 +3,4 @@ export * from './configureStore';
 export * from './typings';
 export * from './effectsMiddleware';
 export * from './triggerMiddleware';
+export * from './SinkFactory';
