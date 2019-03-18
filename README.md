@@ -4,21 +4,17 @@ Redux-Sink is redux for less boilerplate, no action, no seprated logic, also nat
 [![travis](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)](https://travis-ci.org/JiarongGu/redux-sink)
 [![npm version](https://badge.fury.io/js/redux-sink.svg)](https://www.npmjs.com/package/redux-sink)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ee58187b2e794033aeb4296f128fd3ee)](https://app.codacy.com/app/JiarongGu/redux-sink?utm_source=github.com&utm_medium=referral&utm_content=JiarongGu/redux-sink&utm_campaign=Badge_Grade_Dashboard)
-
-## Install
-```npm i redux-sink```    
+ 
 
 ## Getting started
-### Initalize store
-create store use `SinkFactory`, SinkFactory is the main registry class for all sinks, manage the store and all loaded sinks
+```npm i redux-sink```   
+
+### Initalize
+create store use `SinkFactory.createStore`.   
+
+#### index.js
 ```javascript
 import { SinkFactory } from 'redux-sink';
-const store = SinkFactory.createStore({ preloadedState, // inital state });
-```
-
-### Add Redux-DevTool
-It is possible to add redux-devtool through store creation
-```javascript
 const store = SinkFactory.createStore({ 
     preloadedState, // inital state
     devtoolOptions: { devToolCompose: composeWithDevTools } // required compose function from redux-dev-tool
@@ -169,6 +165,10 @@ class Counter extends React.Component {
   }
 }
 ```
+
+## Api Reference
+### SinkFactory
+SinkFactory is the main registry class for all sinks, manage the store and all loaded sinks
 
 ## Advanced
 ### Combine store with other configs
