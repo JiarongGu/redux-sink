@@ -4,7 +4,11 @@ Redux-Sink is redux for less boilerplate, no action, no seprated logic, also nat
 [![travis](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)](https://travis-ci.org/JiarongGu/redux-sink)
 [![npm version](https://badge.fury.io/js/redux-sink.svg)](https://www.npmjs.com/package/redux-sink)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ee58187b2e794033aeb4296f128fd3ee)](https://app.codacy.com/app/JiarongGu/redux-sink?utm_source=github.com&utm_medium=referral&utm_content=JiarongGu/redux-sink&utm_campaign=Badge_Grade_Dashboard)
- 
+
+## Index
+- [Getting started](#getting-started)
+- [Advanced Usages](#advanced-usages)
+- [Api_References](#api-references)
 
 ## Getting started
 ```npm i redux-sink```   
@@ -69,102 +73,60 @@ class Counter extends React.Component {
   }
 }
 ```
-
-## Configure using decorators
-- [@sink](#sink)
-- [@state](#state)
-- [@reducer](#reducer)
-- [@effect](#effect)
-- [@trigger](#trigger)
-- [@sinking/deepsinking](#sinking--deepsinking)
-
-## @sink
+or   
 ```javascript
-@sink('counter')
-class CounterSink { ... }
+sinking(CounterSink, OtherSink1)(Component)
 ```
-set the class as redux sink, the name of sink use to locate the sink in props
 
-## @state
-```javascript
-class CounterSink {
-    @state
-    state = { 
-      increment: 0, 
-      decrement: 0, 
-      total: 0 
-    };
-}
-```
-configure inital state, can access state in sink class by `this.state`,
-inital state created based on this property or inheritant from current store
-
-## @reducer
-`@reducer` use to update state, will trigger component update
+## Advanced Usages
+### create trigger
+`@trigger` is used to trigger when effect or reducer action fired, the action name will be `{sink}/{function}`. the parameters should be the same as the orginal action.
 ```javascript
 class CounterSink {
     ...
-    @reducer
-    increment(value: number) {
-      return { ...this.state, increment: this.state.increment + number };
-    }
-}
-```
-warning: do not call reducer function in side reducer, use effect to do it
-
-## @effect
-`@effect` use to process side-effects and aysnc calls, will run inside effect middleware
-```javascript
-class CounterSink {
-    ...
-    @effect
-    updateAll(value: number) {
-      this.decrement(value);
-      this.increment(value);
+    @trigger('counter/updateAll')
+    updateAllTrigger(increase: number, decrease: number) {
+      this.decrement(decrease);
+      this.increment(increase);
     }
 }
 ```
 
-## @trigger
-`@trigger` is used to trigger multiple reducer functions, will run inside effect middleware
+### use reloader
+`@reloader` or `SinkFactory.addReloader` is used for fire a trigger event when trigger just been dynamically added. 
 ```javascript
 class CounterSink {
-    ...
-    @trigger('action/function name', Sink/false)
-    updateAll(value: number) {
-      this.decrement(value);
-      this.increment(value);
-    }
+  ...
+  @effect
+  @reloader
+  async updateAll(increase: number, decrease: number) {
+    this.increment(increase);
+    this.decrement(decrease);
+  }
 }
 ```
-
-## @sinking / deepsinking
-use `@sinking` to connect sinks to component, `@deepsinking` allow you to use any function in sink when connect to component, `@sinking` will only allowed to use effect and reducer in component
+or   
 ```javascript
-@sinking(CounterSink, OtherSink1, OtherSink2)
+SinkFactory.addReloader('counter/updateAll', [inital paramters]);
+```
+
+### use deepsking
+`@deepsinking` allow you to use any function or property in sink when connect to component, which `@sinking` will only allowed to use effect and reducer
+```javascript
+@deepsking(CounterSink, OtherSink1, OtherSink2)
 class Counter extends React.Component {
  ...
 }
-
-sinking(CounterSink, OtherSink1, OtherSink2)(Component)
 ```
 
-## Properties
-properties can be used and shared between sink instance, but will not trigger component refreash
+### use sink outside of component
+redux-sink allowed you to use sinks without connect to component
 ```javascript
-@sink('counter')
-class CounterSink { 
-  property1 = 0;
-  property2 = 'property2 string';
-}
+const counterSink = new CounterSink();
+const counterState = counterSink.increment(10);
 ```
 
-## Api Reference
-### SinkFactory
-SinkFactory is the main registry class for all sinks, manage the store and all loaded sinks
-
-## Advanced
-### Combine store with other configs
+### combine store with other configs
 `createStore` is able to take reducers, middleware and devtoolOptions to configure along with the store generation
 ```javascript
 import { SinkFactory } from 'redux-sink';
@@ -178,8 +140,31 @@ const store = SinkFactory.createStore({
 });
 ```
 
-### Use outside of component
+## Api References
+- [@sink](#sink)
+- [@state](#state)
+- [@reducer](#reducer)
+- [@effect](#effect)
+- [@trigger](#trigger)
+- [@sinking/deepsinking](#sinking--deepsinking)
+
+### @sink
 ```javascript
-const counterSink = new CounterSink();
-const counterState = counterSink.increment(10);
+@sink('counter')
+class CounterSink { ... }
 ```
+set the class as redux sink, the name of sink use to locate the sink in props
+
+### @state
+configure inital state, can access state in sink class by `this.state`,
+inital state created based on this property or inheritant from current store
+
+### @reducer
+use to update state, will trigger component update
+warning: do not call reducer function in side reducer, use effect to do it
+
+### @effect
+use to process side-effects and aysnc calls, will run inside effect middleware
+
+### SinkFactory
+SinkFactory is the main registry class for all sinks, manage the store and all loaded sinks
