@@ -29,7 +29,7 @@ using decorators to create redux sink class, can access redux state using class 
 - [@reducer](#reducer)
 - [@effect](#effect)
 - [@trigger](#trigger)
-- [@sinking/deepsinking](#sinking/deepsinking)
+- [@sinking/deepsinking](#sinking--deepsinking)
     
 hint: all instance created by sink class will shared in the same scope of its prototype.
 
