@@ -39,12 +39,14 @@ set the class as redux sink, the name of sink use to locate the sink in props
 
 ## @state
 ```javascript
-@state
-state = { 
-  increment: 0, 
-  decrement: 0, 
-  total: 0 
-};
+class CounterSink {
+    @state
+    state = { 
+      increment: 0, 
+      decrement: 0, 
+      total: 0 
+    };
+}
 ```
 configure inital state, can access state in sink class by `this.state`,
 inital state created based on this property or inheritant from current store
@@ -52,9 +54,12 @@ inital state created based on this property or inheritant from current store
 ## @reducer
 `@reducer` use to update state, will trigger component update
 ```javascript
-@reducer
-increment(value: number) {
-  return { ...this.state, increment: this.state.increment + number };
+class CounterSink {
+    ...
+    @reducer
+    increment(value: number) {
+      return { ...this.state, increment: this.state.increment + number };
+    }
 }
 ```
 warning: do not call reducer function in side reducer, use effect to do it
@@ -62,20 +67,26 @@ warning: do not call reducer function in side reducer, use effect to do it
 ## @effect
 `@effect` use to process side-effects and aysnc calls, will run inside effect middleware
 ```javascript
-@effect
-updateAll(value: number) {
-  this.decrement(value);
-  this.increment(value);
+class CounterSink {
+    ...
+    @effect
+    updateAll(value: number) {
+      this.decrement(value);
+      this.increment(value);
+    }
 }
 ```
 
 ## @trigger
 `@trigger` is used to trigger multiple reducer functions, will run inside effect middleware
 ```javascript
-@trigger('action/function name', Sink/false)
-updateAll(value: number) {
-  this.decrement(value);
-  this.increment(value);
+class CounterSink {
+    ...
+    @trigger('action/function name', Sink/false)
+    updateAll(value: number) {
+      this.decrement(value);
+      this.increment(value);
+    }
 }
 ```
 
