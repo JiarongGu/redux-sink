@@ -12,9 +12,9 @@ export const effectMiddleware: any = (store: MiddlewareAPI<any>) => (next: Dispa
 
     // push promise task to queue
     if (task && task.then) {
-      effectTasks.push(task.then((res) => {
+      effectTasks.push(task.then((response: any) => {
         effectTasks.splice(effectTasks.indexOf(task), 1);
-        return res;
+        return response;
       }));
     }
     return task;

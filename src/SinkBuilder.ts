@@ -70,7 +70,7 @@ export class SinkBuilder {
         prototype[this.stateProperty!] = state
       };
 
-      const mergedReducers = {};
+      const mergedReducers: { [key: string]: PayloadHandler } = {};
 
       reducerKeys.forEach(key => {
         this.actions[key] = `${this.namespace}/${key}`;

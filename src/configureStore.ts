@@ -1,5 +1,4 @@
-import { createStore, applyMiddleware, compose } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { createStore, applyMiddleware, compose, Middleware } from 'redux';
 import { triggerMiddleware, effectMiddleware } from './middlewares';
 import { StoreConfiguration } from './typings';
 import { SinkFactory } from './SinkFactory';
@@ -18,13 +17,23 @@ export function configureSinkStore<TState = any>(config?: StoreConfiguration<TSt
 }
 
 export function configureStore<TState = any>(config?: StoreConfiguration<TState>) {
-  const reducers = config && config.reducers || [];
-  const middlewares = config && config.middlewares || [];
-  const preloadedState = config && config.preloadedState;
-  const devTool = config && config.devTool || false;
+  let preloadedState = config && config.preloadedState;
+  let reducers: { [key: string]: any } = {};
+  let middlewares: Array<Middleware> = [];
+  let finalCompose = compose;
+
+  if (config) {
+    reducers = config.reducers || [];
+    middlewares = config.middlewares || [];
+
+    if (config.devtoolOptions && !config.devtoolOptions.disabled) {
+      const { disabled, devToolCompose, ...options } =  config.devtoolOptions;
+      finalCompose = config.devtoolOptions.devToolCompose(config.devtoolOptions); 
+    }
+  }
 
   const combinedMiddleware = applyMiddleware(...middlewares);
-  const composedMiddlewares = devTool ? composeWithDevTools(combinedMiddleware) : compose(combinedMiddleware);
+  const composedMiddlewares = finalCompose(combinedMiddleware);
   const combinedReducer = buildReducers(reducers);
 
   if (preloadedState == undefined)

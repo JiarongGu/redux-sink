@@ -10,9 +10,9 @@ export interface Action<Payload = any> {
 export type Reducer<TState, TPayload> = (state: TState, action: Action<TPayload>) => TState;
 
 // functions
-export type Function = (...args: any[]) => any;
+export type Function = (...args: Array<any>) => any;
 export type PayloadHandler<TPayload = any>  = (payload: TPayload) => any;
-export type ActionFunction = (...args: any[]) => Action;
+export type ActionFunction = (...args: Array<any>) => Action;
 
 export interface TriggerEvent {
   action: string;
@@ -22,7 +22,13 @@ export interface TriggerEvent {
 
 export interface StoreConfiguration<TState = any> {
   reducers?: { [key: string]: any };
-  middlewares?: Middleware[];
+  middlewares?: Array<Middleware>;
   preloadedState?: TState;
-  devTool?: boolean;
+  devtoolOptions?: DevtoolOptions;
+}
+
+export interface DevtoolOptions  {
+  devToolCompose: Function,
+  disabled?: boolean,
+  [key: string]: any,
 }

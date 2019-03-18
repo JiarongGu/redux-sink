@@ -1,7 +1,7 @@
 import { MiddlewareAPI, Dispatch, AnyAction } from 'redux';
-import { TriggerEvent, Function, Action } from '../typings';
+import { Function, Action, TriggerEvent } from '../typings';
 
-const triggerEvents = new Map<string, Array<Function>>();
+const triggerEvents = new Map<string, Array<{ priority: number, process: Function }>>();
 const reloaders: { [key: string]: any } = {};
 
 export const triggerMiddleware = (store: MiddlewareAPI<any>) => (next: Dispatch<AnyAction>) => (action: Action) => {
@@ -16,21 +16,22 @@ export const triggerMiddleware = (store: MiddlewareAPI<any>) => (next: Dispatch<
 export async function runTriggerEvents(action: Action) {
   const triggers = triggerEvents.get(action.type);
   if (triggers)
-    await Promise.all(triggers.map(handler => handler(...formatPayload(action.payload))));
+    await Promise.all(triggers.map(trigger => trigger.process(...formatPayload(action.payload))));
 }
 
 // add new location event and run location tasks after
-export function registerTrigger(handler: TriggerEvent) {
-  const action = handler.action;
-  const process = handler.process;
-  let triggers = triggerEvents.get[action];
+export function registerTrigger(trigger: TriggerEvent) {
+  const action = trigger.action;
+  const process = trigger.process;
+
+  let triggers = triggerEvents.get(action);
 
   if (!triggers) {
-    triggers = [];
-    triggerEvents.set(action, triggers);
+    triggerEvents.set(action, triggers = []);
   }
-  triggers.push(process);
-  triggers.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+
+  triggers.push({ process, priority: trigger.priority || 0 });
+  triggers.sort((a, b) => b.priority - a.priority);
 
   if (reloaders[action] !== undefined) {
     process(...formatPayload(reloaders[action]));

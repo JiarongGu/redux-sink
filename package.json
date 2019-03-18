@@ -18,7 +18,8 @@
   "keywords": [
     "react",
     "redux",
-    "utils"
+    "react-redux",
+    "redux-sink"
   ],
   "author": "Jiarong Gu",
   "license": "MIT",
@@ -27,8 +28,7 @@
   },
   "homepage": "https://github.com/JiarongGu/banbrick-redux-creator#readme",
   "dependencies": {
-    "redux": "*",
-    "redux-devtools-extension": "^2.*"
+    "redux": "*"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
