@@ -22,16 +22,13 @@ const store = configureCreatorStore({
 });
 ```
     
-## Configure Reducers
-using decorators to create redux sink class, can access redux state using class from everywhere you want.
+## Configure using decorators
 - [@sink](#sink)
 - [@state](#state)
 - [@reducer](#reducer)
 - [@effect](#effect)
 - [@trigger](#trigger)
 - [@sinking/deepsinking](#sinking--deepsinking)
-    
-hint: all instance created by sink class will shared in the same scope of its prototype.
 
 ## @sink
 ```javascript
