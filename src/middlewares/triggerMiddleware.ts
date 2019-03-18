@@ -1,12 +1,12 @@
 import { MiddlewareAPI, Dispatch, AnyAction } from 'redux';
-import { TriggerEvent, Function, Action } from '../types';
+import { TriggerEvent, Function, Action } from '../typings';
 
 const triggerEvents = new Map<string, Array<Function>>();
-const retriggerActions: { [key: string]: any } = {};
+const reloaders: { [key: string]: any } = {};
 
 export const triggerMiddleware = (store: MiddlewareAPI<any>) => (next: Dispatch<AnyAction>) => (action: Action) => {
-  if (retriggerActions[action.type] !== undefined) {
-    retriggerActions[action.type] = action.payload;
+  if (reloaders[action.type] !== undefined) {
+    reloaders[action.type] = action.payload;
   }
   runTriggerEvents(action);
   return next(action);
@@ -32,8 +32,8 @@ export function registerTrigger(handler: TriggerEvent) {
   triggers.push(process);
   triggers.sort((a, b) => (b.priority || 0) - (a.priority || 0));
 
-  if (retriggerActions[action] !== undefined) {
-    process(...formatPayload(retriggerActions[action]));
+  if (reloaders[action] !== undefined) {
+    process(...formatPayload(reloaders[action]));
   }
 }
 
@@ -41,6 +41,6 @@ function formatPayload(payload: any) {
   return Array.isArray(payload) ? payload : [ payload ];
 }
 
-export function applyRetriggerAction(action: string, payload: any = null) {
-  retriggerActions[action] = payload;
+export function registerReloader(action: string, payload: any = null) {
+  reloaders[action] = payload;
 }

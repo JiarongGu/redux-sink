@@ -6,8 +6,8 @@ export class TestState {
   copy: string = '';
 }
 
-@sink('TestService')
-export class TestService {
+@sink('testSink')
+export class TestSink {
   @state
   state = new TestState();
 
@@ -33,22 +33,22 @@ export class TestService {
     return 'effect success';
   }
 
-  @trigger('setName', TestService)
+  @trigger('testSink/setName')
   trigger(name: string) {
     this.setCopy(name);
   }
 }
 
-@sink('Test2Service')
-export class Test2Service {
+@sink('test2Sink')
+export class Test2Sink {
   name: string = 'test';
   
-  testService = new TestService();
+  testSink = new TestSink();
   value = 0;
 
   @effect
   setName(name: string) {
-    this.testService.setName(name);
+    this.testSink.setName(name);
   }
 
   @effect
@@ -57,6 +57,6 @@ export class Test2Service {
   }
 
   get state() {
-    return this.testService.state;
+    return this.testSink.state;
   }
 }

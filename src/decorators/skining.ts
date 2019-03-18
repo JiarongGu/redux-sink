@@ -1,12 +1,30 @@
 import { connect } from 'react-redux';
-import { Dispatch } from 'react';
-import { AnyAction } from 'redux';
-import { SinkBuilder, getSinkBuilder } from '../sink-builder';
-import { Constructor } from '../types';
+import { Dispatch } from 'redux';
+import { SinkBuilder } from '../SinkBuilder';
+import { Constructor } from '../typings';
 
+/**
+ * connect sinks with component, only connect state, reducers and effects
+ * @param sinks array args of sinks
+ */
+export function sinking(...sinks: Array<Constructor>) {
+  const sinkBuilders = ensureSinksBuilt(sinks);
+  const namespaces = sinkBuilders.map(sink => sink.namespace);
+
+  return connect(
+    createMapStateToProps(namespaces),
+    createMapDispatchToProps(sinkBuilders),
+    createMergeProps(sinkBuilders)
+  ) as any
+}
+
+/**
+ * deep connect sinks with component, will connect all properies
+ * @param sinks array args of sinks
+ */
 export function deepsinking(...sinks: Array<Constructor>) {
   const sinkBuilders = ensureSinksBuilt(sinks);
-  const namespaces = sinkBuilders.map(service => service.namespace);
+  const namespaces = sinkBuilders.map(sink => sink.namespace);
   const prototypes = sinks.map(sink => Object.getPrototypeOf(sink.prototype));
 
   return connect(
@@ -16,20 +34,9 @@ export function deepsinking(...sinks: Array<Constructor>) {
   ) as any
 }
 
-export function sinking(...sinks: Array<Constructor>) {
-  const sinkBuilders = ensureSinksBuilt(sinks);
-  const namespaces = sinkBuilders.map(service => service.namespace);
-
-  return connect(
-    createMapStateToProps(namespaces),
-    createMapDispatchToProps(sinkBuilders),
-    createMergeProps(sinkBuilders)
-  ) as any
-}
-
 function ensureSinksBuilt(sinks: Array<Constructor>) {
   return sinks.map(sink => { 
-    const sinkBuilder = getSinkBuilder(sink.prototype);
+    const sinkBuilder = SinkBuilder.get(sink.prototype);
     if (!sinkBuilder.built) new sink();
     return sinkBuilder;
   });
@@ -45,18 +52,18 @@ function createMapStateToProps(namespaces: Array<string>) {
 }
 
 function createMapDispatchToProps(sinkBuilders: Array<SinkBuilder>) {
-  return function (dispatch: Dispatch<AnyAction>) {
+  return function (dispatch: Dispatch) {
     return sinkBuilders.reduce((accumulate: any, sinkBuilder) => (
       accumulate[sinkBuilder.namespace] = sinkBuilder.dispatches, accumulate
     ), {});
   };
 }
 
-const ignoredProperties = ['constructor', '_serviceBuilder'];
+const ignoredProperties = ['constructor', '_sinkBuilder'];
 function createDeepMapDispatchToProps(prototypes: Array<any>) {
-  return function (dispatch: Dispatch<AnyAction>) {
+  return function (dispatch: Dispatch) {
     return prototypes.reduce((accumulate: any, prototype) => {
-      const sinkBuilder = getSinkBuilder(prototype);
+      const sinkBuilder = SinkBuilder.get(prototype);
       accumulate[sinkBuilder.namespace] = 
         Object.getOwnPropertyNames(prototype)
           .filter(x => !ignoredProperties.includes(x))

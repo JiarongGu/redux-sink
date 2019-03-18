@@ -3,114 +3,114 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { renderToString } from 'react-dom/server';
-import { sinking, deepsinking } from '../src/decorators';
-import { TestService, Test2Service } from './redux-service/TestService';
 import { configureSinkStore } from '../src/configureStore';
-import { getSinkBuilder } from '../src/sink-builder';
-import { applyReduxSinkStore } from '../src/redux-registry';
-import { StoreConfiguration } from '../src/types';
+import { sinking, deepsinking } from '../src/decorators';
+import { TestSink, Test2Sink } from './sinks';
+import { SinkFactory } from '../src/SinkFactory';
+import { SinkBuilder } from '../src/SinkBuilder';
+import { StoreConfiguration } from '../src/typings';
 
 export function initalizeStore(config?: StoreConfiguration) {
   const store = configureSinkStore(config);
-  // reset services
-  getSinkBuilder(TestService.prototype).built = false;
-  getSinkBuilder(Test2Service.prototype).built = false;
+  // reset sinks
+  SinkBuilder.get(TestSink.prototype).built = false;
+  SinkBuilder.get(Test2Sink.prototype).built = false;
   return store;
 }
 
 export function resetStore() {
-  applyReduxSinkStore(undefined as any);
-  getSinkBuilder(TestService.prototype).built = false;
-  getSinkBuilder(Test2Service.prototype).built = false;
+  SinkFactory.applyReduxSinkStore(undefined as any);
+  SinkBuilder.get(TestSink.prototype).built = false;
+  SinkBuilder.get(Test2Sink.prototype).built = false;
 }
 
-describe('redux service', () => {
+describe('redux sink', () => {
   it('can inherit state from store', () => {
     const state = { name: 'initalized name' };
-    const store = initalizeStore({ preloadedState: { TestService: state } });
-    const testService = new TestService();
-    assert.equal(state, testService.state);
+    const store = initalizeStore({ preloadedState: { testSink: state } });
+    const testSink = new TestSink();
+    assert.equal(state, testSink.state);
   });
 
   it('can share state between instance', () => {
     const store = initalizeStore();
-    const testService1 = new TestService();
-    const testService2 = new TestService();
-    assert.equal(testService1.state, testService2.state);
+    const testSink1 = new TestSink();
+    const testSink2 = new TestSink();
+    assert.equal(testSink1.state, testSink2.state);
   });
 
   it('can share property between instance', () => {
     const store = initalizeStore();
-    const testService1 = new Test2Service();
-    const testService2 = new Test2Service();
-    testService2.setProp((prop) => { assert.equal(1, prop) });
-    testService1.setProp((prop) => { assert.equal(2, prop) });
+    const testSink1 = new Test2Sink();
+    const testSink2 = new Test2Sink();
+    testSink2.setProp((prop) => { assert.equal(1, prop) });
+    testSink1.setProp((prop) => { assert.equal(2, prop) });
   });
 
-  it('can service created before store initalized', () => {
+  it('can sink created before store initalized', () => {
     resetStore();
     const state = { name: 'initalized name before store' };
-    const testService = new TestService();
-    const store = configureSinkStore({ preloadedState: { TestService: state } });
+    const testSink = new TestSink();
+    const store = configureSinkStore({ preloadedState: { testSink: state } });
 
-    assert.equal(state, testService.state);
+    assert.equal(state, testSink.state);
   });
 
   it('can call multiple reducers from effect', () => {
     const store = initalizeStore();
-    const testService = new TestService();
-    testService.setAll('test name', 'test value');
-    const state = testService.state;
+    const testSink = new TestSink();
+    testSink.setAll('test name', 'test value');
+    const state = testSink.state;
     assert.equal('test name', state.name);
     assert.equal('test value', state.value);
   });
 
-  it('can service call reducers from other service by effect', () => {
+  it('can sink call reducers from other sink by effect', () => {
     const store = initalizeStore();
-    const testService = new TestService();
-    const test2Service = new Test2Service();
-    test2Service.setName('new name hahah');
-    assert.equal('new name hahah', testService.state.name);
+    const testSink = new TestSink();
+    const test2Sink = new Test2Sink();
+    test2Sink.setName('new name hahah');
+    assert.equal('new name hahah', testSink.state.name);
   });
 
   it('can trigger run when action detected', () => {
     const store = initalizeStore();
-    const testService = new TestService();
-    testService.setAll('test name', 'test value');
-    assert.equal('test name', testService.state.copy);
+    const testSink = new TestSink();
+    testSink.setAll('test name', 'test value');
+    assert.equal('test name', testSink.state.copy);
   });
 
-  it('can connect to component with state service', () => {
+  it('can connect to component with state sink', () => {
     const store = initalizeStore();
-    const testService = new TestService();
-    testService.setAll('test name', 'test value');
-    const TestComponent = (props: { TestService: TestService }) => {
-      return <div>{props.TestService.state!.name}</div>
+    const testSink = new TestSink();
+    testSink.setAll('test name', 'test value');
+    const TestComponent = (props: { testSink: TestSink }) => {
+      return <div>{props.testSink.state!.name}</div>
     }
-    const app = createApp(store, sinking(TestService), TestComponent);
+    const app = createApp(store, sinking(TestSink), TestComponent);
     assert.equal('<div>test name</div>', renderToString(app));
   });
 
-  it('can connect to component with non-state service', () => {
+  it('can connect to component with non-state sink', () => {
     const store = initalizeStore();
-    const test2Service = new Test2Service();
-    const TestComponent = (props: { TestService: TestService }) => {
-      return <div>{props.TestService.state!.name}</div>
+    const test2Sink = new Test2Sink();
+    const TestComponent = (props: { testSink: TestSink }) => {
+      return <div>{props.testSink.state!.name}</div>
     }
-    test2Service.setName('test name');
-    const app = createApp(store, sinking(TestService), TestComponent);
+    test2Sink.setName('test name');
+    const app = createApp(store, sinking(TestSink), TestComponent);
     assert.equal('<div>test name</div>', renderToString(app));
   });
 
   it('can use other function from deepsinking', () => {
     const store = initalizeStore();
-    const test2Service = new Test2Service();
+    const test2Sink = new Test2Sink();
 
-    const TestComponent = (props: { Test2Service: Test2Service }) => {
-      return <div>{props.Test2Service.state.name}</div>
+    const TestComponent = (props: { test2Sink: Test2Sink }) => {
+      return <div>{props.test2Sink.state.name}</div>
     }
-    test2Service.setName('test name');
-    const app = createApp(store, deepsinking(Test2Service), TestComponent);
+    test2Sink.setName('test name');
+    const app = createApp(store, deepsinking(Test2Sink), TestComponent);
     assert.equal('<div>test name</div>', renderToString(app));
   });
 })

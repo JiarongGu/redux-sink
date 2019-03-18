@@ -19,17 +19,17 @@ const store = configureCreatorStore({
 ```
     
 ## Configure Reducers
-using decorators to create redux service class, can access redux state using class from everywhere you want.
+using decorators to create redux sink class, can access redux state using class from everywhere you want.
 - decorators: `@sink`, `@state`, `@reducer`, `@effect`, `@trigger`, `@sinking`, `@deepsinking`.  
 
-hint: all instance created by service class will shared in the same scope of its prototype.
+hint: all instance created by sink class will shared in the same scope of its prototype.
 
 ## @sink
 ```javascript
 @sink('counter')
-class CounterService { ... }
+class CounterSink { ... }
 ```
-set the class as redux service, the name of service use to locate the service in props
+set the class as redux sink, the name of sink use to locate the sink in props
 
 ## @state
 ```javascript
@@ -40,7 +40,7 @@ state = {
   total: 0 
 };
 ```
-configure inital state, can access state in service class by `this.state`,
+configure inital state, can access state in sink class by `this.state`,
 inital state created based on this property or inheritant from current store
 
 ## @reducer
@@ -77,19 +77,19 @@ updateAll(value: number) {
 ## @sinking / @deepsinking
 use `@sinking` to connect sinks to component, `@deepsinking` allow you to use any function in sink when connect to component, `@sinking` will only allowed to use effect and reducer in component
 ```javascript
-@sinking(CounterService, OtherService1, OtherService2)
+@sinking(CounterSink, OtherSink1, OtherSink2)
 class Counter extends React.Component {
  ...
 }
 
-sinking(CounterService, OtherService1, OtherService2)(Component)
+sinking(CounterSink, OtherSink1, OtherSink2)(Component)
 ```
 
 ## Properties
 properties can be used and shared between sink instance, but will not trigger component refreash
 ```javascript
 @sink('counter')
-class CounterService { 
+class CounterSink { 
   property1 = 0;
   property2 = 'property2 string';
 }
@@ -97,12 +97,12 @@ class CounterService {
 
 
 ## Example
-### Create ReduxService class
+### Create ReduxSink class
 ```javascript
 import { sink, state, reducer, effect, connect } from 'redux-sink'
 
 @sink('counter')
-class CounterService {
+class CounterSink {
   @state
   state = { 
     increment: 0, 
@@ -134,10 +134,10 @@ class CounterService {
 
 ### Connect to component
 ```javascript
-@sinking(CounterService)
+@sinking(CounterSink)
 class Counter extends React.Component {
   render() {
-    const counterService = this.props.counter;
+    const counterSink = this.props.counter;
     return (
       <div>
         <h1>Counter</h1>
@@ -154,6 +154,6 @@ class Counter extends React.Component {
 
 ### Use outside of component
 ```javascript
-const counterService = new CounterService();
-const counterState = counterService.increment(10);
+const counterSink = new CounterSink();
+const counterState = counterSink.increment(10);
 ```

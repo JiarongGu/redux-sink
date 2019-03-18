@@ -1,14 +1,14 @@
 import { MiddlewareAPI, Dispatch } from 'redux';
-import { Action, EffectEvent, EffectFunction } from '../types';
+import { Action, PayloadHandler } from '../typings';
 
-const effects = new Map<string, EffectFunction>();
+const handlers = new Map<string, PayloadHandler>();
 const effectTasks: Array<Promise<any>> = [];
 
 export const effectMiddleware: any = (store: MiddlewareAPI<any>) => (next: Dispatch<Action>) => (action: Action) => {
-  const effect = effects.get(action.type);
+  const handler = handlers.get(action.type);
 
-  if (effect) {
-    const task = effect(store, action.payload);
+  if (handler) {
+    const task = handler(action.payload);
 
     // push promise task to queue
     if (task && task.then) {
@@ -23,8 +23,8 @@ export const effectMiddleware: any = (store: MiddlewareAPI<any>) => (next: Dispa
   return next(action);
 };
 
-export function registerEffect(event: EffectEvent) {
-  effects.set(event.action.toString(), event.effect);
+export function registerEffect(action: string, event: PayloadHandler) {
+  handlers.set(action, event);
 }
 
 export function getEffectTasks() {

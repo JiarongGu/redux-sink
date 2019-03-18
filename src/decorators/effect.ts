@@ -1,23 +1,15 @@
-import { createEffectEvent } from '../helpers';
-import { getSinkBuilder } from '../sink-builder';
+import { SinkBuilder } from '../SinkBuilder';
 
+/**
+ * override function to effect dispatch function
+ * @param target prototype
+ * @param name name of effect
+ * @param descriptor function to handle effect
+ */
 export function effect(target: any, name: string, descriptor: PropertyDescriptor) {
-  const sinkBuilder = getSinkBuilder(target);
-
-  if (!sinkBuilder.built) {
-    // create effect event
-    const handler = descriptor.value.bind(target);
-    const effectFunction = (store: any, payload: any) => handler(...payload);
-    const effectEvent = createEffectEvent(effectFunction);
-
-    sinkBuilder.effects.push(effectEvent);
-    sinkBuilder.actions[name] = effectEvent.action.toString();
-
-    // create dispatch action
-    const dispatchAction = (...payloads: any[]) => sinkBuilder.dispatch(effectEvent.action(payloads));
-    sinkBuilder.dispatches[name] = dispatchAction;
-  }
-
-  descriptor.value = sinkBuilder.dispatches[name];
-  return descriptor;
+  const sinkBuilder = SinkBuilder.get(target);
+  const handler = descriptor.value.bind(target);
+  
+  sinkBuilder.effects[name] =  (payload: any) => handler(...payload);
+  descriptor.value = (...args: Array<any>) => sinkBuilder.dispatch(name)(args);
 }
