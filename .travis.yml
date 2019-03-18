@@ -10,7 +10,6 @@ jobs:
   include:
     - stage: redux-sink
       before_install:
-        - npm install typescript
-        - npm run install
+        - npm install
         - npm run build
       script: npm run test
