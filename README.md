@@ -11,6 +11,11 @@ Redux-Sink is redux for less boilerplate, no action, no seprated logic, also nat
   * [Step 2: create sink](#step-2-create-sink)
   * [Step 3: sinking](#step-3-sinking)
 - [Advanced Usages](#advanced-usages)
+  * [create trigger](#create-trigger)
+  * [create reloader](#create-reloader)
+  * [use deepsking](#use-deepsking)
+  * [sink outside of component](#sink-outside-of-component)
+  * [create store with configs](#create-store-with-configs)
 - [Api References](#api-references)
 
 ## Getting started
@@ -95,7 +100,7 @@ class CounterSink {
 }
 ```
 
-### use reloader
+### create reloader
 `@reloader` or `SinkFactory.addReloader` is used for fire a trigger event when trigger just been dynamically added. 
 ```javascript
 class CounterSink {
@@ -122,15 +127,15 @@ class Counter extends React.Component {
 }
 ```
 
-### use sink outside of component
+### sink outside of component
 redux-sink allowed you to use sinks without connect to component
 ```javascript
 const counterSink = new CounterSink();
 const counterState = counterSink.increment(10);
 ```
 
-### combine store with other configs
-`createStore` is able to take reducers, middleware and devtoolOptions to configure along with the store generation
+### create store with configs
+`SinkFactory.createStore` is able to take reducers, middlewares and devtoolOptions along with store creation
 ```javascript
 import { SinkFactory } from 'redux-sink';
 
