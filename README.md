@@ -146,25 +146,31 @@ const store = SinkFactory.createStore({
 - [@reducer](#reducer)
 - [@effect](#effect)
 - [@trigger](#trigger)
-- [@sinking/deepsinking](#sinking--deepsinking)
+- [@SinkFactory](#sinkFactory)
+- [@SinkBuilder](#sinkBuilder)
 
 ### @sink
-```javascript
-@sink('counter')
-class CounterSink { ... }
-```
-set the class as redux sink, the name of sink use to locate the sink in props
+mark the class as redux-sink class, the sink name use to locate the sink in store
 
 ### @state
-configure inital state, can access state in sink class by `this.state`,
-inital state created based on this property or inheritant from current store
+configure state property, state will be sync when reducer updates the store state, inital state created based on this property or preloadedState from store.   
+warning: only one state in each sink
 
 ### @reducer
-use to update state, will trigger component update
-warning: do not call reducer function in side reducer, use effect to do it
+use to update state, will trigger component update.   
+warning: do not call reducer or effect function inside reducer, use effect to do it
 
 ### @effect
 use to process side-effects and aysnc calls, will run inside effect middleware
 
+### @trigger
+use to bind extra event when action fires
+
+### @reloader
+use to fire trigger event when trigger dynamic loaded
+
 ### SinkFactory
-SinkFactory is the main registry class for all sinks, manage the store and all loaded sinks
+`SinkFactory` is the main registry class for all sinks, manage the store and all loaded sinks
+
+### SinkBuilder
+`SinkBuilder` is the building class embadded inside sink's protoype, which collect the sink configuration and build sink use `SinkFactory`
