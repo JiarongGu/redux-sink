@@ -2,7 +2,7 @@
 redux sink for less boilerplate, also allow redux to be loaded by code split.    
     
 ![alt text](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)
-
+![alt test](https://www.npmjs.com/package/redux)
 ## Install
 ```npm i redux-sink```  
 
