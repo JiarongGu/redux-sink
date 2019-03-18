@@ -27,7 +27,7 @@ create store use `SinkFactory.createStore`.
 #### index.js
 ```javascript
 import { SinkFactory } from 'redux-sink';
-const store = SinkFactory.createStore({ preloadedState });
+const store = SinkFactory.createStore();
 ```
 
 ### Step 2: create sink
