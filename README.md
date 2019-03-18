@@ -7,8 +7,11 @@ Redux-Sink is redux for less boilerplate, no action, no seprated logic, also nat
 
 ## Index
 - [Getting started](#getting-started)
+  * [Step 1: create store](#step-1-create-store)
+  * [Step 2: create sink](#step-2-create-sink)
+  * [Step 3: sinking](#step-3-sinking)
 - [Advanced Usages](#advanced-usages)
-- [Api_References](#api-references)
+- [Api References](#api-references)
 
 ## Getting started
 ```npm i redux-sink```   
