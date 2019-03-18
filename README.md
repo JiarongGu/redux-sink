@@ -1,5 +1,5 @@
 # Redux-Sink
-(https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)
+![alt text](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)
 
 redux sink for less boilerplate, also allow redux to be loaded by code split.    
 
