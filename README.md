@@ -1,5 +1,6 @@
 # Redux-Sink
 redux sink for less boilerplate, also allow redux to be loaded by code split.    
+    
 ![alt text](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)
 
 ## Install
