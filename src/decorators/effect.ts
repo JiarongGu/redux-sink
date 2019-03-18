@@ -9,7 +9,9 @@ import { SinkBuilder } from '../SinkBuilder';
 export function effect(target: any, name: string, descriptor: PropertyDescriptor) {
   const sinkBuilder = SinkBuilder.get(target);
   const handler = descriptor.value.bind(target);
-  
-  sinkBuilder.effects[name] =  (payload: any) => handler(...payload);
-  descriptor.value = (...args: Array<any>) => sinkBuilder.dispatch(name)(args);
+
+  sinkBuilder.effects[name] = (payload: Array<any>) => handler(...payload);
+  descriptor.value = function() { 
+    return sinkBuilder.dispatch(name)(Array.from(arguments)); 
+  };
 }

@@ -16,7 +16,7 @@ export const triggerMiddleware = (store: MiddlewareAPI<any>) => (next: Dispatch<
 export async function runTriggerEvents(action: Action) {
   const triggers = triggerEvents.get(action.type);
   if (triggers)
-    await Promise.all(triggers.map(trigger => trigger.process(...formatPayload(action.payload))));
+    await Promise.all(triggers.map(trigger => trigger.process(action.payload)));
 }
 
 // add new location event and run location tasks after
@@ -34,12 +34,8 @@ export function registerTrigger(trigger: TriggerEvent) {
   triggers.sort((a, b) => b.priority - a.priority);
 
   if (reloaders[action] !== undefined) {
-    process(...formatPayload(reloaders[action]));
+    process(reloaders[action]);
   }
-}
-
-function formatPayload(payload: any) {
-  return Array.isArray(payload) ? payload : [ payload ];
 }
 
 export function registerReloader(action: string, payload: any = null) {

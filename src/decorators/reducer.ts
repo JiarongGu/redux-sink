@@ -16,5 +16,7 @@ export function reducer(target: any, name: string, descriptor: PropertyDescripto
     target[sinkBuilder.stateProperty!] = newState;
     return newState;
   };
-  descriptor.value = (...args: Array<any>) => sinkBuilder.dispatch(name)(args);
+  descriptor.value = function() {
+    return sinkBuilder.dispatch(name)(Array.from(arguments)); 
+  };
 }

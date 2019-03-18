@@ -103,16 +103,19 @@ export class SinkBuilder {
 
   dispatch(name: string) {
     const dispatch = SinkFactory.store && SinkFactory.store.dispatch;
-    return (args: Array<any>) => dispatch && dispatch({
+    return (payload: Array<any>) => dispatch && dispatch({
       type: this.actions[name],
-      payload: args
+      payload: payload
     });
   }
 
   get dispatches() {
     return Object.keys(this.actions).reduce((accumulate: any, key) => (
-      accumulate[key] = this.dispatch(key), accumulate
-    ), {});
+      accumulate[key] = function() {
+        this.dispatch(key)(Array.from(arguments));
+      }, 
+      accumulate), {}
+    );
   }
 }
 

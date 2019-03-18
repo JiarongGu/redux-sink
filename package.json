@@ -1,6 +1,6 @@
 {
   "name": "redux-sink",
-  "version": "0.2.1",
+  "version": "0.2.4",
   "description": "redux sink for less redux boilerplate",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
