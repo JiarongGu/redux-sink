@@ -110,12 +110,13 @@ export class SinkBuilder {
   }
 
   get dispatches() {
-    return Object.keys(this.actions).reduce((accumulate: any, key) => (
+    return Object.keys(this.actions).reduce((accumulate: any, key) => {
+      const dispatch = this.dispatch(key);
       accumulate[key] = function() {
-        this.dispatch(key)(Array.from(arguments));
-      }, 
-      accumulate), {}
-    );
+        dispatch(Array.from(arguments));
+      }; 
+      return accumulate;
+    }, {});
   }
 }
 
