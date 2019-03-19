@@ -1,4 +1,4 @@
-<img src="https://github.com/JiarongGu/redux-sink/blob/master/redux-sink-logo.svg" width="200">
+<img src="https://github.com/JiarongGu/redux-sink/blob/master/redux-sink-logo.svg" width="200">  
 # Redux-Sink
 Redux-Sink is redux for less boilerplate, no action, no seprated logic, also natively support redux to be loaded by code split.    
     
