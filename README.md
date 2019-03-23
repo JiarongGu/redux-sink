@@ -24,12 +24,22 @@ Redux-Sink is decorater based redux for less boilerplate, no action, no seprated
 ```npm i redux-sink```   
 
 ### Step 1: create store
-create store use `SinkFactory.createStore`.   
+create store use `SinkFactory.createStore`, then use `react-redux` or other library to connect the store with `Provider`.
 
 #### index.js
 ```javascript
 import { SinkFactory } from 'redux-sink';
 const store = SinkFactory.createStore();
+
+// for react
+import { Provider } from 'react-redux';
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  rootElement
+)
 ```
 
 ### Step 2: create sink
