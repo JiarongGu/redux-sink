@@ -5,3 +5,5 @@ export * from './effect';
 export * from './sink';
 export * from './trigger'
 export * from './reloader';
+export * from './debounce';
+export * from './throttle';

@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/JiarongGu/redux-sink#readme",
   "dependencies": {
+    "lodash": "^4.17.11",
     "redux": "*"
   },
   "devDependencies": {
@@ -38,8 +39,8 @@
     "@types/redux": "^3.*",
     "chai": "^4.2.0",
     "mocha": "^6.0.2",
-    "react-dom": "^16.8.4",
     "react": "*",
+    "react-dom": "^16.8.4",
     "react-redux": "*",
     "ts-node": "^8.0.3",
     "tslint": "^5.12.1",

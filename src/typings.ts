@@ -32,3 +32,14 @@ export interface DevtoolOptions  {
   disabled?: boolean,
   [key: string]: any,
 }
+
+export interface DebounceOptions {
+  leading?: boolean;
+  maxWait?: number;
+  trailing?: boolean;
+}
+
+export interface ThrottleOptions {
+  leading?: boolean;
+  trailing?: boolean;
+}
