@@ -10,13 +10,12 @@ Redux-Sink is decorater based redux for less boilerplate, no action, no seprated
   * [Step 1: create store](#step-1-create-store)
   * [Step 2: create sink](#step-2-create-sink)
   * [Step 3: sinking](#step-3-sinking)
-- [Advanced decorators](#advanced-decorators)
-  * [@debounce](#debounce)
-  * [@throttle](#throttle)
-  * [@trigger](#trigger)
-  * [@reloader](#reloader)
-  * [@deepsking](#deepsking)
-- [Other usage](#other-usage)
+- [Advanced usages](#advanced-usages)
+  * [debounce](#debounce)
+  * [throttle](#throttle)
+  * [trigger](#trigger)
+  * [reloader](#reloader)
+  * [deepsking](#deepsking)
   * [use sink without component](#use-sink-without-component)
   * [create store with configs](#create-store-with-configs)
 - [Api References](#api-references)
@@ -86,7 +85,7 @@ or
 sinking(CounterSink, OtherSink1)(Component)
 ```
 
-## Advanced decorators
+## Advanced usages
 ### debounce
 `@debounce` allow you to take the last dispatch with in the wait time, need to be used before `@effect` or `@reducer`
 ```javascript
@@ -153,7 +152,6 @@ class Counter extends React.Component {
 }
 ```
 
-## Other Usages
 ### use sink without component
 redux-sink allowed you to use sinks without connect to component
 ```javascript
