@@ -14,9 +14,9 @@ Redux-Sink is decorater based redux for less boilerplate, no action, no seprated
   * [trigger](#trigger)
   * [reloader](#reloader)
   * [deepsking](#deepsking)
-  * [use sink without component](#use-sink-without-component)
-  * [create store with configs](#create-store-with-configs)
-  * [use debounce/throttle](#use-debounce-throttle)
+  * [Use sink without component](#use-sink-without-component)
+  * [Create store with configs](#create-store-with-configs)
+  * [Use debounce/throttle](#use-debounce-throttle)
 - [Api References](#api-references)
 
 ## Getting started
@@ -135,14 +135,14 @@ class Counter extends React.Component {
 }
 ```
 
-### use sink without component
+### Use sink without component
 redux-sink allowed you to use sinks without connect to component
 ```javascript
 const counterSink = new CounterSink();
 const counterState = counterSink.increment(10);
 ```
 
-### create store with configs
+### Create store with configs
 `SinkFactory.createStore` is able to take reducers, middlewares and devtoolOptions along with store creation
 ```javascript
 import { SinkFactory } from 'redux-sink';
@@ -156,7 +156,7 @@ const store = SinkFactory.createStore({
 });
 ```
 
-### use debounce/throttle
+### Use debounce/throttle
 you can use debounce or throttle from lodash or other library, to create decorator apply to sink functions. for `reducer` need to be used before `@reducer`
 #### debounce.ts
 ```javascript
