@@ -15,8 +15,8 @@ Redux-Sink is redux for less boilerplate, no action, no seprated logic, also nat
   * [@throttle](#throttle)
   * [@trigger](#trigger)
   * [@reloader](#reloader)
-- [Advanced usage](#advanced-usage)
-  * [deepsking](#deepsking)
+  * [@deepsking](#deepsking)
+- [Other usage](#other-usage)
   * [use sink without component](#use-sink-without-component)
   * [create store with configs](#create-store-with-configs)
 - [Api References](#api-references)
@@ -144,8 +144,7 @@ or
 SinkFactory.addReloader('counter/updateAll', [inital paramters]);
 ```
 
-## Advanced Usages
-### deepsking
+### @deepsking
 `@deepsinking` allow you to use any function or property in sink when connect to component, which `@sinking` will only allowed to use effect and reducer
 ```javascript
 @deepsking(CounterSink, OtherSink1, OtherSink2)
@@ -154,6 +153,7 @@ class Counter extends React.Component {
 }
 ```
 
+## Other Usages
 ### use sink without component
 redux-sink allowed you to use sinks without connect to component
 ```javascript
