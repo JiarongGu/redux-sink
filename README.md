@@ -16,7 +16,7 @@ Redux-Sink is decorater based redux for less boilerplate, no action, no seprated
   * [Use deepsking](#use-deepsking)
   * [Use sink without component](#use-sink-without-component)
   * [Create store with configs](#create-store-with-configs)
-  * [Use debounce/throttle](#use-debounce-throttle)
+  * [Use debounce/throttle](#use-debouncethrottle)
 - [Api References](#api-references)
 
 ## Getting started
