@@ -10,11 +10,14 @@ Redux-Sink is redux for less boilerplate, no action, no seprated logic, also nat
   * [Step 1: create store](#step-1-create-store)
   * [Step 2: create sink](#step-2-create-sink)
   * [Step 3: sinking](#step-3-sinking)
-- [Advanced Usages](#advanced-usages)
-  * [create trigger](#create-trigger)
-  * [create reloader](#create-reloader)
-  * [use deepsking](#use-deepsking)
-  * [sink outside of component](#sink-outside-of-component)
+- [Advanced decorators](#advanced-decorators)
+  * [@trigger](#trigger)
+  * [@reloader](#reloader)
+  * [@debounce](#debounce)
+  * [@throttle](#throttle)
+- [Advanced usage](#advanced-usage)
+  * [deepsking](#deepsking)
+  * [use sink without component](#use sink without component)
   * [create store with configs](#create-store-with-configs)
 - [Api References](#api-references)
 
@@ -83,8 +86,8 @@ or
 sinking(CounterSink, OtherSink1)(Component)
 ```
 
-## Advanced Usages
-### trigger
+## Advanced decorators
+### @trigger
 `@trigger` is used to trigger when effect or reducer action fired, the action name will be `{sink}/{function}`. the parameters should be the same as the orginal action.
 ```javascript
 class CounterSink {
@@ -97,7 +100,7 @@ class CounterSink {
 }
 ```
 
-### reloader
+### @reloader
 `@reloader` or `SinkFactory.addReloader` is used for fire a trigger event when trigger just been dynamically added. 
 ```javascript
 class CounterSink {
@@ -115,16 +118,7 @@ or
 SinkFactory.addReloader('counter/updateAll', [inital paramters]);
 ```
 
-### deepsking
-`@deepsinking` allow you to use any function or property in sink when connect to component, which `@sinking` will only allowed to use effect and reducer
-```javascript
-@deepsking(CounterSink, OtherSink1, OtherSink2)
-class Counter extends React.Component {
- ...
-}
-```
-
-### debounce
+### @debounce
 `@debounce` allow you to take the last dispatch with in the wait time, need to be used before `@effect` or `@reducer`
 ```javascript
 class Counter extends React.Component {
@@ -137,7 +131,7 @@ class Counter extends React.Component {
 }
 ```
 
-### throttle
+### @throttle
 `@throttle` allow you to take the first dispatch with in the wait time, need to be used before `@effect` or `@reducer`
 ```javascript
 class Counter extends React.Component {
@@ -147,6 +141,16 @@ class Counter extends React.Component {
   update(state: any) {
     return { ...this.state, ...state };
   }
+}
+```
+
+## Advanced Usages
+### deepsking
+`@deepsinking` allow you to use any function or property in sink when connect to component, which `@sinking` will only allowed to use effect and reducer
+```javascript
+@deepsking(CounterSink, OtherSink1, OtherSink2)
+class Counter extends React.Component {
+ ...
 }
 ```
 
