@@ -11,9 +11,9 @@ Redux-Sink is decorater based redux for less boilerplate, no action, no seprated
   * [Step 2: create sink](#step-2-create-sink)
   * [Step 3: sinking](#step-3-sinking)
 - [Advanced usages](#advanced-usages)
-  * [trigger](#trigger)
-  * [reloader](#reloader)
-  * [deepsking](#deepsking)
+  * [Create trigger](#create-trigger)
+  * [Create reloader](#create-reloader)
+  * [Use deepsking](#use-deepsking)
   * [Use sink without component](#use-sink-without-component)
   * [Create store with configs](#create-store-with-configs)
   * [Use debounce/throttle](#use-debounce-throttle)
@@ -95,7 +95,7 @@ sinking(CounterSink, OtherSink1)(Component)
 ```
 
 ## Advanced usages
-### trigger
+### Create trigger
 `@trigger` is used to trigger when effect or reducer action fired, the action name will be `{sink}/{function}`. the parameters should be the same as the orginal action.
 ```javascript
 class CounterSink {
@@ -108,7 +108,7 @@ class CounterSink {
 }
 ```
 
-### reloader
+### Create reloader
 `@reloader` or `SinkFactory.addReloader` is used for fire a trigger event when trigger just been dynamically added. 
 ```javascript
 class CounterSink {
@@ -126,7 +126,7 @@ or
 SinkFactory.addReloader('counter/updateAll', [inital paramters]);
 ```
 
-### deepsking
+### Use deepsking
 `@deepsinking` allow you to use any function or property in sink when connect to component, which `@sinking` will only allowed to use effect and reducer
 ```javascript
 @deepsking(CounterSink, OtherSink1, OtherSink2)
