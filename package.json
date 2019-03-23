@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JiarongGu/banbrick-redux-creator.git"
+    "url": "git+https://github.com/JiarongGu/redux-sink.git"
   },
   "keywords": [
     "react",
@@ -24,9 +24,9 @@
   "author": "Jiarong Gu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JiarongGu/banbrick-redux-creator/issues"
+    "url": "https://github.com/JiarongGu/redux-sink/issues"
   },
-  "homepage": "https://github.com/JiarongGu/banbrick-redux-creator#readme",
+  "homepage": "https://github.com/JiarongGu/redux-sink#readme",
   "dependencies": {
     "redux": "*"
   },
