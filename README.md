@@ -11,13 +11,12 @@ Redux-Sink is decorater based redux for less boilerplate, no action, no seprated
   * [Step 2: create sink](#step-2-create-sink)
   * [Step 3: sinking](#step-3-sinking)
 - [Advanced usages](#advanced-usages)
-  * [debounce](#debounce)
-  * [throttle](#throttle)
   * [trigger](#trigger)
   * [reloader](#reloader)
   * [deepsking](#deepsking)
   * [use sink without component](#use-sink-without-component)
   * [create store with configs](#create-store-with-configs)
+  * [use debounce/throttle](#use-debounce-throttle)
 - [Api References](#api-references)
 
 ## Getting started
@@ -96,32 +95,6 @@ sinking(CounterSink, OtherSink1)(Component)
 ```
 
 ## Advanced usages
-### debounce
-`@debounce` allow you to take the last dispatch with in the wait time, need to be used before `@effect` or `@reducer`
-```javascript
-class Counter extends React.Component {
- ...
- @debounce(300)
- @reducer
-  update(state: any) {
-    return { ...this.state, ...state };
-  }
-}
-```
-
-### throttle
-`@throttle` allow you to take the first dispatch with in the wait time, need to be used before `@effect` or `@reducer`
-```javascript
-class Counter extends React.Component {
- ...
- @throttle(1000)
- @reducer
-  update(state: any) {
-    return { ...this.state, ...state };
-  }
-}
-```
-
 ### trigger
 `@trigger` is used to trigger when effect or reducer action fired, the action name will be `{sink}/{function}`. the parameters should be the same as the orginal action.
 ```javascript
@@ -183,14 +156,51 @@ const store = SinkFactory.createStore({
 });
 ```
 
+### use debounce/throttle
+you can use debounce or throttle from lodash or other library, to create decorator apply to sink functions. for `reducer` need to be used before `@reducer`
+#### debounce.ts
+```javascript
+import _debounce from 'lodash/debounce';
+
+export function debounce(wait: number, option?: any) {
+  return function (target: any, name: string, descriptor: PropertyDescriptor) {
+    descriptor.value = _debounce(descriptor.value, wait, option);
+  }
+}
+
+```
+#### throttle.ts
+```javascript
+import _throttle from 'lodash/throttle';
+
+export function throttle(wait: number, option?: any) {
+  return function (target: any, name: string, descriptor: PropertyDescriptor) {
+    descriptor.value = _throttle(descriptor.value, wait, option);
+  }
+}
+
+```
+#### use debounce/throttle
+```javascript
+import { debounce } from './debounce.ts';
+import { throttle } from './throttle.ts';
+
+class Counter extends React.Component {
+ ...
+ @debounce(300)
+ @reducer
+  update(state: any) {
+    return { ...this.state, ...state };
+  }
+}
+```
+
 ## Api References
 - [@sink](#sink)
 - [@state](#state)
 - [@reducer](#reducer)
 - [@effect](#effect)
 - [@trigger](#trigger-1)
-- [@debounce](#debounce-1)
-- [@throttle](#throttle-1)
 - [@SinkFactory](#sinkFactory)
 - [@SinkBuilder](#sinkBuilder)
 
@@ -213,12 +223,6 @@ use to bind extra event when action fires
 
 ### @reloader
 use to fire trigger event when trigger dynamic loaded
-
-### @debounce
-use before the `@reducer` or `@effect`, to take the latest dispatch call, based on [lodash/debounce](https://lodash.com/docs/4.17.11#debounce)
-
-### @throttle
-use before the `@reducer` or `@effect`, to take the first dispatch call, based on [lodash/throttle](https://lodash.com/docs/4.17.11#throttle)
 
 ### SinkFactory
 main registry class for all sinks, manage the store and all loaded sinks

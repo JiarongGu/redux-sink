@@ -1,6 +1,6 @@
 {
   "name": "redux-sink",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "redux sink for less redux boilerplate",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/JiarongGu/redux-sink#readme",
   "dependencies": {
-    "lodash": "^4.17.11",
     "redux": "*"
   },
   "devDependencies": {
