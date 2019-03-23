@@ -87,7 +87,7 @@ sinking(CounterSink, OtherSink1)(Component)
 ```
 
 ## Advanced decorators
-### @debounce
+### debounce
 `@debounce` allow you to take the last dispatch with in the wait time, need to be used before `@effect` or `@reducer`
 ```javascript
 class Counter extends React.Component {
@@ -100,7 +100,7 @@ class Counter extends React.Component {
 }
 ```
 
-### @throttle
+### throttle
 `@throttle` allow you to take the first dispatch with in the wait time, need to be used before `@effect` or `@reducer`
 ```javascript
 class Counter extends React.Component {
@@ -113,7 +113,7 @@ class Counter extends React.Component {
 }
 ```
 
-### @trigger
+### trigger
 `@trigger` is used to trigger when effect or reducer action fired, the action name will be `{sink}/{function}`. the parameters should be the same as the orginal action.
 ```javascript
 class CounterSink {
@@ -126,7 +126,7 @@ class CounterSink {
 }
 ```
 
-### @reloader
+### reloader
 `@reloader` or `SinkFactory.addReloader` is used for fire a trigger event when trigger just been dynamically added. 
 ```javascript
 class CounterSink {
@@ -144,7 +144,7 @@ or
 SinkFactory.addReloader('counter/updateAll', [inital paramters]);
 ```
 
-### @deepsking
+### deepsking
 `@deepsinking` allow you to use any function or property in sink when connect to component, which `@sinking` will only allowed to use effect and reducer
 ```javascript
 @deepsking(CounterSink, OtherSink1, OtherSink2)
