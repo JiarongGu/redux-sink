@@ -180,9 +180,9 @@ const store = SinkFactory.createStore({
 - [@state](#state)
 - [@reducer](#reducer)
 - [@effect](#effect)
-- [@trigger](#trigger)
-- [@debounce](#debounce)
-- [@throttle](#throttle)
+- [@trigger](#trigger-1)
+- [@debounce](#debounce-1)
+- [@throttle](#throttle-1)
 - [@SinkFactory](#sinkFactory)
 - [@SinkBuilder](#sinkBuilder)
 
