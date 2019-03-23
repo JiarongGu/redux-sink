@@ -17,7 +17,7 @@ Redux-Sink is redux for less boilerplate, no action, no seprated logic, also nat
   * [@throttle](#throttle)
 - [Advanced usage](#advanced-usage)
   * [deepsking](#deepsking)
-  * [use sink without component](#use sink without component)
+  * [use sink without component](#use-sink-without-component)
   * [create store with configs](#create-store-with-configs)
 - [Api References](#api-references)
 
