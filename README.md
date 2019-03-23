@@ -207,10 +207,10 @@ use to bind extra event when action fires
 use to fire trigger event when trigger dynamic loaded
 
 ### @debounce
-use before the `@reducer` or `@effect`, to take the latest dispatch call, based on ![lodash/debounce](https://lodash.com/docs/4.17.11#debounce)
+use before the `@reducer` or `@effect`, to take the latest dispatch call, based on [lodash/debounce](https://lodash.com/docs/4.17.11#debounce)
 
 ### @throttle
-use before the `@reducer` or `@effect`, to take the first dispatch call, based on ![lodash/throttle](https://lodash.com/docs/4.17.11#throttle)
+use before the `@reducer` or `@effect`, to take the first dispatch call, based on [lodash/throttle](https://lodash.com/docs/4.17.11#throttle)
 
 ### SinkFactory
 main registry class for all sinks, manage the store and all loaded sinks
