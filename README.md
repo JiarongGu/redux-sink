@@ -11,10 +11,10 @@ Redux-Sink is redux for less boilerplate, no action, no seprated logic, also nat
   * [Step 2: create sink](#step-2-create-sink)
   * [Step 3: sinking](#step-3-sinking)
 - [Advanced decorators](#advanced-decorators)
-  * [@trigger](#trigger)
-  * [@reloader](#reloader)
   * [@debounce](#debounce)
   * [@throttle](#throttle)
+  * [@trigger](#trigger)
+  * [@reloader](#reloader)
 - [Advanced usage](#advanced-usage)
   * [deepsking](#deepsking)
   * [use sink without component](#use-sink-without-component)
@@ -87,6 +87,32 @@ sinking(CounterSink, OtherSink1)(Component)
 ```
 
 ## Advanced decorators
+### @debounce
+`@debounce` allow you to take the last dispatch with in the wait time, need to be used before `@effect` or `@reducer`
+```javascript
+class Counter extends React.Component {
+ ...
+ @debounce(300)
+ @reducer
+  update(state: any) {
+    return { ...this.state, ...state };
+  }
+}
+```
+
+### @throttle
+`@throttle` allow you to take the first dispatch with in the wait time, need to be used before `@effect` or `@reducer`
+```javascript
+class Counter extends React.Component {
+ ...
+ @throttle(1000)
+ @reducer
+  update(state: any) {
+    return { ...this.state, ...state };
+  }
+}
+```
+
 ### @trigger
 `@trigger` is used to trigger when effect or reducer action fired, the action name will be `{sink}/{function}`. the parameters should be the same as the orginal action.
 ```javascript
@@ -116,32 +142,6 @@ class CounterSink {
 or   
 ```javascript
 SinkFactory.addReloader('counter/updateAll', [inital paramters]);
-```
-
-### @debounce
-`@debounce` allow you to take the last dispatch with in the wait time, need to be used before `@effect` or `@reducer`
-```javascript
-class Counter extends React.Component {
- ...
- @debounce(300)
- @reducer
-  update(state: any) {
-    return { ...this.state, ...state };
-  }
-}
-```
-
-### @throttle
-`@throttle` allow you to take the first dispatch with in the wait time, need to be used before `@effect` or `@reducer`
-```javascript
-class Counter extends React.Component {
- ...
- @throttle(1000)
- @reducer
-  update(state: any) {
-    return { ...this.state, ...state };
-  }
-}
 ```
 
 ## Advanced Usages
