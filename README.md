@@ -84,7 +84,7 @@ sinking(CounterSink, OtherSink1)(Component)
 ```
 
 ## Advanced Usages
-### create trigger
+### trigger
 `@trigger` is used to trigger when effect or reducer action fired, the action name will be `{sink}/{function}`. the parameters should be the same as the orginal action.
 ```javascript
 class CounterSink {
@@ -97,7 +97,7 @@ class CounterSink {
 }
 ```
 
-### create reloader
+### reloader
 `@reloader` or `SinkFactory.addReloader` is used for fire a trigger event when trigger just been dynamically added. 
 ```javascript
 class CounterSink {
@@ -115,7 +115,7 @@ or
 SinkFactory.addReloader('counter/updateAll', [inital paramters]);
 ```
 
-### use deepsking
+### deepsking
 `@deepsinking` allow you to use any function or property in sink when connect to component, which `@sinking` will only allowed to use effect and reducer
 ```javascript
 @deepsking(CounterSink, OtherSink1, OtherSink2)
@@ -124,7 +124,33 @@ class Counter extends React.Component {
 }
 ```
 
-### sink outside of component
+### debounce
+`@debounce` allow you to take the last dispatch with in the wait time, need to be used before `@effect` or `@reducer`
+```javascript
+class Counter extends React.Component {
+ ...
+ @debounce(300)
+ @reducer
+  update(state: any) {
+    return { ...this.state, ...state };
+  }
+}
+```
+
+### throttle
+`@throttle` allow you to take the first dispatch with in the wait time, need to be used before `@effect` or `@reducer`
+```javascript
+class Counter extends React.Component {
+ ...
+ @throttle(1000)
+ @reducer
+  update(state: any) {
+    return { ...this.state, ...state };
+  }
+}
+```
+
+### use sink without component
 redux-sink allowed you to use sinks without connect to component
 ```javascript
 const counterSink = new CounterSink();
@@ -151,6 +177,8 @@ const store = SinkFactory.createStore({
 - [@reducer](#reducer)
 - [@effect](#effect)
 - [@trigger](#trigger)
+- [@debounce](#debounce)
+- [@throttle](#throttle)
 - [@SinkFactory](#sinkFactory)
 - [@SinkBuilder](#sinkBuilder)
 
@@ -173,6 +201,12 @@ use to bind extra event when action fires
 
 ### @reloader
 use to fire trigger event when trigger dynamic loaded
+
+### @debounce
+use before the `@reducer` or `@effect`, to take the latest dispatch call, based on `![lodash/debounce](https://lodash.com/docs/4.17.11#debounce)` 
+
+### @throttle
+use before the `@reducer` or `@effect`, to take the first dispatch call, based on `![lodash/throttle](https://lodash.com/docs/4.17.11#throttle)` 
 
 ### SinkFactory
 main registry class for all sinks, manage the store and all loaded sinks
