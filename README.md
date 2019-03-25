@@ -182,8 +182,8 @@ export function throttle(wait: number, option?: any) {
 ```
 #### use debounce/throttle
 ```javascript
-import { debounce } from './debounce.ts';
-import { throttle } from './throttle.ts';
+import { debounce } from './debounce';
+import { throttle } from './throttle';
 
 class Counter extends React.Component {
  ...
