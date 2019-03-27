@@ -1,6 +1,6 @@
 import { ReducersMapObject, Store, Reducer } from 'redux';
 import { buildReducers } from './buildReducers';
-import { PayloadHandler, StoreConfiguration } from './typings';
+import { PayloadHandler, StoreConfiguration, ISinkFacotry } from './typings';
 import { configureStore } from './configureStore';
 import { effectMiddleware } from './effectsMiddleware';
 import { triggerMiddleware } from './triggerMiddleware';

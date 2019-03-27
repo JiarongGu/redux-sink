@@ -9,26 +9,15 @@ export function sink(namespace: string) {
   return function <T extends Constructor>(constructor: T) {
     const prototype = constructor.prototype;
     const sinkBuilder = SinkBuilder.get(prototype);
+    sinkBuilder.namespace = namespace;
 
     return class extends constructor {
       constructor(...args: Array<any>) {
         super(...args);
 
-        // do not build second time
-        if (!sinkBuilder.built) {
-          const properties = Object.keys(this).reduce((properties: any, key) => {
-            properties[key] = this[key];
-            return properties;
-          }, {});
-
-          sinkBuilder.properties = properties;
-          sinkBuilder.build(namespace, prototype);
-        }
-
-        // remove all properties, so we only get them from prototype
-        Object.keys(sinkBuilder.properties).forEach((key) => {
-          delete this[key]
-        });
+        // build sink, apply sink properties to prototype
+        sinkBuilder.build();
+        sinkBuilder.apply(prototype, this);
       }
     };
   }

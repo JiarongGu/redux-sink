@@ -3,10 +3,13 @@
   "version": "0.2.10",
   "description": "redux sink for less redux boilerplate",
   "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
   "files": [
     "lib/**/*"
   ],
+  "directories": {
+    "lib": "lib"
+  },
   "scripts": {
     "build": "rm -rf lib/ && node ./node_modules/typescript/bin/tsc",
     "test": "mocha -r ts-node/register tests/**/*.test.ts*"
@@ -25,6 +28,9 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/JiarongGu/redux-sink/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "homepage": "https://github.com/JiarongGu/redux-sink#readme",
   "dependencies": {
