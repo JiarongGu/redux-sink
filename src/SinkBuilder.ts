@@ -3,6 +3,7 @@ import { ActionFunction, TriggerEvent, PayloadHandler, Action, ISinkFacotry } fr
 import { SinkFactory } from './SinkFactory';
 
 export class SinkBuilder {
+  _state?: any;
   // basic reducer config
   namespace!: string;
   stateProperty?: string;
@@ -20,11 +21,12 @@ export class SinkBuilder {
   triggers: Array<TriggerEvent>;
   reloaders: Array<string>;
 
+  // build status
   built: boolean;
   applied: boolean;
-
-  _state?: any;
-  _factory: ISinkFacotry;
+  
+  // factory that can be replaced
+  factory: ISinkFacotry;
 
   constructor() {
     this.reducers = {};
@@ -39,7 +41,7 @@ export class SinkBuilder {
     this.properties = {};
     this.built = false;
     this.applied = false;
-    this._factory = SinkFactory;
+    this.factory = SinkFactory;
   }
 
   static get(prototype: any): SinkBuilder {
@@ -49,51 +51,59 @@ export class SinkBuilder {
     return prototype._sinkBuilder;
   }
 
-  build() {
-    if (this.built) 
+  static build(prototype: any) {
+    const builder = SinkBuilder.get(prototype);
+    if (builder.built) 
       return;
+    
+    const factory = builder.factory;
+    const namespace = builder.namespace;
+    const actions = builder.actions;
+    const reducers = builder.reducers;
+    const effects = builder.effects;
+    const reloaders = builder.reloaders;
+    const triggers = builder.triggers;
 
     // create reducer if there is state and reducers
-    const reducerKeys = Object.keys(this.reducers);
-    if (this.stateProperty && reducerKeys.length > 0) {
-      const currentState = this._factory.store && this._factory.store.getState();
-      const sinkState = currentState && currentState[this.namespace] || this.properties[this.stateProperty];
+    const reducerKeys = Object.keys(builder.reducers);
+    if (builder.stateProperty && reducerKeys.length > 0) {
+      const currentState = factory.store && factory.store.getState();
+      const sinkState = currentState && currentState[namespace] || builder.properties[builder.stateProperty];
       const preloadedState = sinkState === undefined ? null : sinkState;
 
-      this._state = preloadedState;
+      builder._state = preloadedState;
       const sinkStateUpdater = (state: any) => {
-        this._state = state
+        builder._state = state
       };
 
       const mergedReducers: { [key: string]: PayloadHandler } = {};
 
       reducerKeys.forEach(key => {
-        this.actions[key] = `${this.namespace}/${key}`;
-        mergedReducers[this.actions[key]] = this.reducers[key];
+        actions[key] = `${namespace}/${key}`;
+        mergedReducers[actions[key]] = reducers[key];
       });
 
       const reducer = combineReducer(preloadedState, mergedReducers);
-
-      this._factory.addReducer(this.namespace, reducer, sinkStateUpdater);
+      factory.addReducer(namespace, reducer, sinkStateUpdater);
     }
 
     // register effects
-    Object.keys(this.effects).forEach(key => {
-      this.actions[key] = `${this.namespace}/${key}`;
-      this._factory.addEffect(this.actions[key], this.effects[key]);
+    Object.keys(effects).forEach(key => {
+      actions[key] = `${namespace}/${key}`;
+      factory.addEffect(actions[key], effects[key]);
     });
 
     // added reloadable action
-    this.reloaders.forEach(reloader => {
-      this._factory.addReloader(this.actions[reloader], null);
+    reloaders.forEach(reloader => {
+      factory.addReloader(actions[reloader], null);
     })
 
     // register subscribe
-    this.triggers.forEach(trigger => {
-      this._factory.addTrigger(trigger.action, trigger.handler, trigger.priority);
+    triggers.forEach(trigger => {
+      factory.addTrigger(trigger.action, trigger.handler, trigger.priority);
     });
 
-    this.built = true;
+    builder.built = true;
   }
 
   apply(prototype: any, instance: any) {
@@ -127,7 +137,7 @@ export class SinkBuilder {
   }
 
   dispatch(name: string) {
-    const dispatch = this._factory.store && this._factory.store.dispatch;
+    const dispatch = this.factory.store && this.factory.store.dispatch;
     return (payload: Array<any>) => dispatch && dispatch({
       type: this.actions[name],
       payload: payload
