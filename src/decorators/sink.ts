@@ -17,7 +17,7 @@ export function sink(namespace: string) {
         super(...args);
 
         // build sink, apply sink properties to prototype
-        sinkBuilder.build(SinkFactory);
+        sinkBuilder.build(SinkFactory, this);
         sinkBuilder.apply(prototype, this);
       }
     };

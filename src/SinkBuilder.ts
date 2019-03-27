@@ -1,5 +1,5 @@
 
-import { ActionFunction, TriggerEvent, PayloadHandler, Action, ISinkFactory } from './typings';
+import { TriggerEvent, PayloadHandler, Action, ISinkFactory } from './typings';
 
 export class SinkBuilder {
   _state?: any;
@@ -11,12 +11,8 @@ export class SinkBuilder {
   reducers: { [key: string]: PayloadHandler };
   effects: { [key: string]: PayloadHandler };
 
-  // inital value of the sink
-  properties: { [key: string]: any };
-
   // handlers and actions
   actions: { [key: string]: string };
-  actionFunctions: { [key: string]: ActionFunction };
 
   // triggers and reloaders
   triggers: { [key: string]: TriggerEvent };
@@ -35,9 +31,6 @@ export class SinkBuilder {
 
     this.actions = {};
 
-    this.actionFunctions = {};
-    this.properties = {};
-
     this.dispatches = {};
 
     this.built = false;
@@ -50,7 +43,7 @@ export class SinkBuilder {
     return prototype._sinkBuilder;
   }
 
-  build(factory: ISinkFactory) {
+  build(factory: ISinkFactory, instance: any) {
     if (this.built)
       return;
 
@@ -61,7 +54,7 @@ export class SinkBuilder {
     const reducerKeys = Object.keys(this.reducers);
     if (this.stateProperty && reducerKeys.length > 0) {
       const currentState = factory.store && factory.store.getState();
-      const sinkState = currentState && currentState[this.namespace] || this.properties[this.stateProperty];
+      const sinkState = currentState && currentState[this.namespace] || instance[this.stateProperty];
       const preloadedState = sinkState === undefined ? null : sinkState;
 
       this._state = preloadedState;
@@ -110,17 +103,12 @@ export class SinkBuilder {
   }
 
   apply(prototype: any, instance: any) {
-    // apply all properties to prototype only once
+    const properties = Object.keys(instance);
+    
     if (!prototype._sinkApplied) {
-      // get properties from first instance
-      this.properties = Object.keys(instance).reduce((properties: any, key) => {
-        properties[key] = instance[key];
-        return properties;
-      }, {});
-
       // set default prototype values
-      Object.keys(this.properties).forEach((key) => {
-        prototype[key] = this.properties[key];
+      properties.forEach((key) => {
+        prototype[key] = instance[key];
       });
 
       // match the prototype state to sink state
@@ -134,7 +122,7 @@ export class SinkBuilder {
     }
 
     // remove all properties, so we only get them from prototype
-    Object.keys(this.properties).forEach((key) => {
+    properties.forEach((key) => {
       delete instance[key]
     });
   }
