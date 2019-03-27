@@ -5,19 +5,22 @@ import { Store } from 'redux';
 import { renderToString } from 'react-dom/server';
 import { sinking, deepsinking } from '../src/decorators';
 import { TestSink, Test2Sink } from './sinks';
-import { CommonSinkFactory, createSinkStore } from '../src/SinkFactory';
+import { SinkFactory } from '../src/SinkFactory';
 import { StoreConfiguration } from '../src/typings';
+import { SinkBuilder } from '../src/SinkBuilder';
 
 export function initalizeStore(config?: StoreConfiguration) {
-  const store = createSinkStore(config);
+  const store = SinkFactory.createStore(config);
   // reset sinks
-  CommonSinkFactory.sinkBuilders = [];
+  SinkBuilder.get(TestSink).built = false;
+  SinkBuilder.get(Test2Sink).built = false;
   return store;
 }
 
 export function resetStore() {
-  CommonSinkFactory.applyReduxSinkStore(undefined as any);
-  CommonSinkFactory.sinkBuilders = [];
+  SinkFactory.applyReduxSinkStore(undefined as any);
+  SinkBuilder.get(TestSink).built = false;
+  SinkBuilder.get(Test2Sink).built = false;
 }
 
 describe('redux sink', () => {
@@ -47,7 +50,7 @@ describe('redux sink', () => {
     resetStore();
     const state = { name: 'initalized name before store' };
     const testSink = new TestSink();
-    const store = CommonSinkFactory.createStore({ preloadedState: { testSink: state } });
+    const store = SinkFactory.createStore({ preloadedState: { testSink: state } });
 
     assert.equal(state, testSink.state);
   });
@@ -84,7 +87,7 @@ describe('redux sink', () => {
       return <div>{props.testSink.state!.name}</div>
     }
     const app = createApp(store, sinking(TestSink), TestComponent);
-    assert.equal('<div>test name</div>', renderToString(app));
+    assert.equal(renderToString(app), '<div>test name</div>');
   });
 
   it('can connect to component with non-state sink', () => {
@@ -95,7 +98,7 @@ describe('redux sink', () => {
     }
     test2Sink.setName('test name');
     const app = createApp(store, sinking(TestSink), TestComponent);
-    assert.equal('<div>test name</div>', renderToString(app));
+    assert.equal(renderToString(app), '<div>test name</div>');
   });
 
   it('can use other function from deepsinking', () => {
@@ -107,7 +110,7 @@ describe('redux sink', () => {
     }
     test2Sink.setName('test name');
     const app = createApp(store, deepsinking(Test2Sink), TestComponent);
-    assert.equal('<div>test name</div>', renderToString(app));
+    assert.equal(renderToString(app), '<div>test name</div>');
   });
 })
 

@@ -1,8 +1,7 @@
 import { MiddlewareAPI, Dispatch } from 'redux';
-import { Action } from './typings';
-import { SinkFactory } from './SinkFactory';
+import { Action, ISinkFactory } from './typings';
 
-export function createEffectMiddleware(factory: SinkFactory) {
+export function createEffectMiddleware(factory: ISinkFactory) {
   return (store: MiddlewareAPI<any>) => (next: Dispatch<Action>) => (action: Action) => {
     const handler = factory.effectHandlers.get(action.type);
   

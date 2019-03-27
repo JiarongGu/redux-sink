@@ -1,8 +1,7 @@
 import { MiddlewareAPI, Dispatch, AnyAction } from 'redux';
-import { Action } from './typings';
-import { SinkFactory } from './SinkFactory';
+import { Action, ISinkFactory } from './typings';
 
-export function createTriggerMiddleware(factory: SinkFactory) {
+export function createTriggerMiddleware(factory: ISinkFactory) {
   return (store: MiddlewareAPI<any>) => (next: Dispatch<AnyAction>) => (action: Action) => {
     if (factory.reloaders[action.type] !== undefined) {
       factory.reloaders[action.type] = action.payload;

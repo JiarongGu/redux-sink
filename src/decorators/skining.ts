@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { SinkBuilder } from '../SinkBuilder';
 import { Constructor } from '../typings';
-import { CommonSinkFactory } from '../SinkFactory';
 import { ensureSinkBuilt } from '../ensureSinksBuilt';
 
 /**
@@ -10,7 +9,7 @@ import { ensureSinkBuilt } from '../ensureSinksBuilt';
  * @param sinks array args of sinks
  */
 export function sinking(...sinks: Array<Constructor>) {
-  const sinkBuilders = sinks.map(sink => ensureSinkBuilt(sink, CommonSinkFactory));
+  const sinkBuilders = sinks.map(sink => ensureSinkBuilt(sink));
   const namespaces = sinkBuilders.map(sink => sink.namespace);
 
   return connect(
@@ -25,7 +24,7 @@ export function sinking(...sinks: Array<Constructor>) {
  * @param sinks array args of sinks
  */
 export function deepsinking(...sinks: Array<Constructor>) {
-  const sinkBuilders = sinks.map(sink => ensureSinkBuilt(sink, CommonSinkFactory));
+  const sinkBuilders = sinks.map(sink => ensureSinkBuilt(sink));
   const namespaces = sinkBuilders.map(sink => sink.namespace);
   const prototypes = sinks.map(sink => Object.getPrototypeOf(sink.prototype));
 

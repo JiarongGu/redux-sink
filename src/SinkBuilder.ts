@@ -1,11 +1,9 @@
 
-import { ActionFunction, TriggerEvent, PayloadHandler, Action } from './typings';
-import { SinkFactory } from './SinkFactory';
-import { Dispatch } from 'redux';
+import { ActionFunction, TriggerEvent, PayloadHandler, Action, ISinkFactory } from './typings';
 
 export class SinkBuilder {
   _state?: any;
-  _dispatch?: Dispatch;
+  _dispatch?: any;
   
   // basic reducer config
   namespace!: string;
@@ -24,6 +22,10 @@ export class SinkBuilder {
   triggers: { [key: string]: TriggerEvent };
   reloaders: { [key: string]: string };
 
+  dispatches: { [key:string]: Function };
+
+  built: boolean;
+
   constructor() {
     this.reducers = {};
     this.effects = {};
@@ -35,6 +37,10 @@ export class SinkBuilder {
 
     this.actionFunctions = {};
     this.properties = {};
+
+    this.dispatches = {};
+
+    this.built = false;
   }
 
   static get(prototype: any): SinkBuilder {
@@ -44,13 +50,13 @@ export class SinkBuilder {
     return prototype._sinkBuilder;
   }
 
-  build(factory: SinkFactory) {
-    if (!factory || factory.contains(this))
+  build(factory: ISinkFactory) {
+    if (this.built)
       return;
 
     // set dispatch from factory
-    this._dispatch = factory.store && factory.store.dispatch;
-
+    this._dispatch = (action: any) => factory.store && factory.store.dispatch(action);
+    
     // create reducer if there is state and reducers
     const reducerKeys = Object.keys(this.reducers);
     if (this.stateProperty && reducerKeys.length > 0) {
@@ -91,7 +97,16 @@ export class SinkBuilder {
       factory.addTrigger(trigger.action, trigger.handler, trigger.priority);
     });
 
-    factory.sinkBuilders.push(this);
+    // form dispatch collection
+    this.dispatches = Object.keys(this.actions).reduce((accumulate: any, key) => {
+      const dispatch = this.dispatch(key);
+      accumulate[key] = function () {
+        dispatch(Array.from(arguments));
+      };
+      return accumulate;
+    }, {});
+
+    this.built = true;
   }
 
   apply(prototype: any, instance: any) {
@@ -130,16 +145,6 @@ export class SinkBuilder {
       type: this.actions[name],
       payload: payload
     });
-  }
-
-  get dispatches() {
-    return Object.keys(this.actions).reduce((accumulate: any, key) => {
-      const dispatch = this.dispatch(key);
-      accumulate[key] = function () {
-        dispatch(Array.from(arguments));
-      };
-      return accumulate;
-    }, {});
   }
 }
 
