@@ -2,13 +2,15 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { SinkBuilder } from '../SinkBuilder';
 import { Constructor } from '../typings';
+import { CommonSinkFactory } from '../SinkFactory';
+import { ensureSinkBuilt } from '../ensureSinksBuilt';
 
 /**
  * connect sinks with component, only connect state, reducers and effects
  * @param sinks array args of sinks
  */
 export function sinking(...sinks: Array<Constructor>) {
-  const sinkBuilders = ensureSinksBuilt(sinks);
+  const sinkBuilders = sinks.map(sink => ensureSinkBuilt(sink, CommonSinkFactory));
   const namespaces = sinkBuilders.map(sink => sink.namespace);
 
   return connect(
@@ -23,7 +25,7 @@ export function sinking(...sinks: Array<Constructor>) {
  * @param sinks array args of sinks
  */
 export function deepsinking(...sinks: Array<Constructor>) {
-  const sinkBuilders = ensureSinksBuilt(sinks);
+  const sinkBuilders = sinks.map(sink => ensureSinkBuilt(sink, CommonSinkFactory));
   const namespaces = sinkBuilders.map(sink => sink.namespace);
   const prototypes = sinks.map(sink => Object.getPrototypeOf(sink.prototype));
 
@@ -32,14 +34,6 @@ export function deepsinking(...sinks: Array<Constructor>) {
     createDeepMapDispatchToProps(prototypes),
     createMergeProps(sinkBuilders)
   ) as any
-}
-
-function ensureSinksBuilt(sinks: Array<Constructor>) {
-  return sinks.map(sink => { 
-    const sinkBuilder = SinkBuilder.get(sink.prototype);
-    if (!sinkBuilder.built) new sink();
-    return sinkBuilder;
-  });
 }
 
 function createMapStateToProps(namespaces: Array<string>) {

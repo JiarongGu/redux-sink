@@ -5,22 +5,19 @@ import { Store } from 'redux';
 import { renderToString } from 'react-dom/server';
 import { sinking, deepsinking } from '../src/decorators';
 import { TestSink, Test2Sink } from './sinks';
-import { SinkFactory } from '../src/SinkFactory';
-import { SinkBuilder } from '../src/SinkBuilder';
+import { CommonSinkFactory, createSinkStore } from '../src/SinkFactory';
 import { StoreConfiguration } from '../src/typings';
 
 export function initalizeStore(config?: StoreConfiguration) {
-  const store = SinkFactory.createStore(config);
+  const store = createSinkStore(config);
   // reset sinks
-  SinkBuilder.get(TestSink.prototype).built = false;
-  SinkBuilder.get(Test2Sink.prototype).built = false;
+  CommonSinkFactory.sinkBuilders = [];
   return store;
 }
 
 export function resetStore() {
-  SinkFactory.applyReduxSinkStore(undefined as any);
-  SinkBuilder.get(TestSink.prototype).built = false;
-  SinkBuilder.get(Test2Sink.prototype).built = false;
+  CommonSinkFactory.applyReduxSinkStore(undefined as any);
+  CommonSinkFactory.sinkBuilders = [];
 }
 
 describe('redux sink', () => {
@@ -50,7 +47,7 @@ describe('redux sink', () => {
     resetStore();
     const state = { name: 'initalized name before store' };
     const testSink = new TestSink();
-    const store = SinkFactory.createStore({ preloadedState: { testSink: state } });
+    const store = CommonSinkFactory.createStore({ preloadedState: { testSink: state } });
 
     assert.equal(state, testSink.state);
   });

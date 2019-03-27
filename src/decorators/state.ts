@@ -7,9 +7,5 @@ import { SinkBuilder } from '../SinkBuilder';
  */
 export function state(target: any, name: string) {
   const sinkBuilder = SinkBuilder.get(target);
-  if (!sinkBuilder.built) {
-    if (sinkBuilder.stateProperty === undefined) {
-      sinkBuilder.stateProperty = name;
-    }
-  }
+  sinkBuilder.stateProperty = name;
 }

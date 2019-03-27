@@ -1,9 +1,12 @@
 
-import { ActionFunction, TriggerEvent, PayloadHandler, Action, ISinkFacotry } from './typings';
+import { ActionFunction, TriggerEvent, PayloadHandler, Action } from './typings';
 import { SinkFactory } from './SinkFactory';
+import { Dispatch } from 'redux';
 
 export class SinkBuilder {
   _state?: any;
+  _dispatch?: Dispatch;
+  
   // basic reducer config
   namespace!: string;
   stateProperty?: string;
@@ -18,30 +21,20 @@ export class SinkBuilder {
   actionFunctions: { [key: string]: ActionFunction };
 
   // triggers and reloaders
-  triggers: Array<TriggerEvent>;
-  reloaders: Array<string>;
-
-  // build status
-  built: boolean;
-  applied: boolean;
-  
-  // factory that can be replaced
-  factory: ISinkFacotry;
+  triggers: { [key: string]: TriggerEvent };
+  reloaders: { [key: string]: string };
 
   constructor() {
     this.reducers = {};
     this.effects = {};
 
-    this.triggers = [];
-    this.reloaders = [];
+    this.triggers = {};
+    this.reloaders = {};
 
     this.actions = {};
 
     this.actionFunctions = {};
     this.properties = {};
-    this.built = false;
-    this.applied = false;
-    this.factory = SinkFactory;
   }
 
   static get(prototype: any): SinkBuilder {
@@ -51,64 +44,59 @@ export class SinkBuilder {
     return prototype._sinkBuilder;
   }
 
-  static build(prototype: any) {
-    const builder = SinkBuilder.get(prototype);
-    if (builder.built) 
+  build(factory: SinkFactory) {
+    if (!factory || factory.contains(this))
       return;
-    
-    const factory = builder.factory;
-    const namespace = builder.namespace;
-    const actions = builder.actions;
-    const reducers = builder.reducers;
-    const effects = builder.effects;
-    const reloaders = builder.reloaders;
-    const triggers = builder.triggers;
+
+    // set dispatch from factory
+    this._dispatch = factory.store && factory.store.dispatch;
 
     // create reducer if there is state and reducers
-    const reducerKeys = Object.keys(builder.reducers);
-    if (builder.stateProperty && reducerKeys.length > 0) {
+    const reducerKeys = Object.keys(this.reducers);
+    if (this.stateProperty && reducerKeys.length > 0) {
       const currentState = factory.store && factory.store.getState();
-      const sinkState = currentState && currentState[namespace] || builder.properties[builder.stateProperty];
+      const sinkState = currentState && currentState[this.namespace] || this.properties[this.stateProperty];
       const preloadedState = sinkState === undefined ? null : sinkState;
 
-      builder._state = preloadedState;
+      this._state = preloadedState;
       const sinkStateUpdater = (state: any) => {
-        builder._state = state
+        this._state = state
       };
 
       const mergedReducers: { [key: string]: PayloadHandler } = {};
 
       reducerKeys.forEach(key => {
-        actions[key] = `${namespace}/${key}`;
-        mergedReducers[actions[key]] = reducers[key];
+        this.actions[key] = `${this.namespace}/${key}`;
+        mergedReducers[this.actions[key]] = this.reducers[key];
       });
 
       const reducer = combineReducer(preloadedState, mergedReducers);
-      factory.addReducer(namespace, reducer, sinkStateUpdater);
+      factory.addReducer(this.namespace, reducer, sinkStateUpdater);
     }
 
     // register effects
-    Object.keys(effects).forEach(key => {
-      actions[key] = `${namespace}/${key}`;
-      factory.addEffect(actions[key], effects[key]);
+    Object.keys(this.effects).forEach(key => {
+      this.actions[key] = `${this.namespace}/${key}`;
+      factory.addEffect(this.actions[key], this.effects[key]);
     });
 
     // added reloadable action
-    reloaders.forEach(reloader => {
-      factory.addReloader(actions[reloader], null);
+    Object.keys(this.reloaders).forEach(key => {
+      factory.addReloader(this.actions[this.reloaders[key]], null);
     })
 
     // register subscribe
-    triggers.forEach(trigger => {
+    Object.keys(this.triggers).forEach(key => {
+      const trigger = this.triggers[key];
       factory.addTrigger(trigger.action, trigger.handler, trigger.priority);
     });
 
-    builder.built = true;
+    factory.sinkBuilders.push(this);
   }
 
   apply(prototype: any, instance: any) {
     // apply all properties to prototype only once
-    if (!this.applied) {
+    if (!prototype._sinkApplied) {
       // get properties from first instance
       this.properties = Object.keys(instance).reduce((properties: any, key) => {
         properties[key] = instance[key];
@@ -127,7 +115,7 @@ export class SinkBuilder {
           get: () => this._state
         });
       }
-      this.applied = true;
+      prototype._sinkApplied = true;
     }
 
     // remove all properties, so we only get them from prototype
@@ -137,7 +125,7 @@ export class SinkBuilder {
   }
 
   dispatch(name: string) {
-    const dispatch = this.factory.store && this.factory.store.dispatch;
+    const dispatch = this._dispatch;
     return (payload: Array<any>) => dispatch && dispatch({
       type: this.actions[name],
       payload: payload

@@ -1,5 +1,6 @@
 import { SinkBuilder } from '../SinkBuilder';
 import { Constructor } from '../typings';
+import { CommonSinkFactory } from '../SinkFactory';
 
 /**
  * create sink based on class, sink instance will be shared in prototype scope
@@ -10,13 +11,13 @@ export function sink(namespace: string) {
     const prototype = constructor.prototype;
     const sinkBuilder = SinkBuilder.get(prototype);
     sinkBuilder.namespace = namespace;
-
+    
     return class extends constructor {
       constructor(...args: Array<any>) {
         super(...args);
 
         // build sink, apply sink properties to prototype
-        SinkBuilder.build(prototype);
+        sinkBuilder.build(CommonSinkFactory);
         sinkBuilder.apply(prototype, this);
       }
     };

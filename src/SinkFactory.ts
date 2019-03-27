@@ -1,20 +1,29 @@
 import { ReducersMapObject, Store, Reducer } from 'redux';
 import { buildReducers } from './buildReducers';
-import { PayloadHandler, StoreConfiguration, ISinkFacotry } from './typings';
+import { PayloadHandler, StoreConfiguration, Action } from './typings';
 import { configureStore } from './configureStore';
-import { effectMiddleware } from './effectsMiddleware';
-import { triggerMiddleware } from './triggerMiddleware';
+import { createEffectMiddleware } from './createEffectsMiddleware';
+import { createTriggerMiddleware } from './createTriggerMiddleware';
+import { SinkBuilder } from './SinkBuilder';
 
 export class SinkFactory {
-  static _store?: Store;
-  static reducers: ReducersMapObject<any, any> = {};
-  static sinkStateUpdaters: { [key: string]: (state: any) => void } = {};
-  static effectHandlers = new Map<string, PayloadHandler>();
-  static triggerHandlers = new Map<string, Array<{ priority: number, handler: PayloadHandler }>>();
-  static reloaders: { [key: string]: any } = {};
+  _store?: Store;
+  reducers: ReducersMapObject<any, any> = {};
+  sinkStateUpdaters: { [key: string]: (state: any) => void } = {};
 
-  static createStore<TState = any>(config?: StoreConfiguration<TState>) {
-    let middlewares = [triggerMiddleware, effectMiddleware];
+  effectHandlers = new Map<string, PayloadHandler>();
+  triggerHandlers = new Map<string, Array<{ priority: number, handler: PayloadHandler }>>();
+
+  reloaders: { [key: string]: any } = {};
+  effectTasks: Array<Promise<any>> = [];
+  sinkBuilders: Array<SinkBuilder> = [];
+
+  createStore<TState = any>(config?: StoreConfiguration<TState>) {
+    let middlewares = [
+      createTriggerMiddleware(this), 
+      createEffectMiddleware(this)
+    ];
+
     if (config && config.middlewares)
       middlewares = middlewares.concat(config.middlewares);
 
@@ -23,7 +32,7 @@ export class SinkFactory {
     return store;
   }
 
-  static applyReduxSinkStore(store: Store) {
+  applyReduxSinkStore(store: Store) {
     this._store = store;
     if (!this._store) return;
 
@@ -32,7 +41,7 @@ export class SinkFactory {
     this.rebuildReducer();
   }
 
-  static addReducer(namespace: string, reducer: Reducer<any, any>, sinkStateUpdater: (state: any) => void) {
+  addReducer(namespace: string, reducer: Reducer<any, any>, sinkStateUpdater: (state: any) => void) {
     if (!this._store) return;
     
     this.reducers[namespace] = reducer;
@@ -40,11 +49,11 @@ export class SinkFactory {
     this.rebuildReducer();
   }
 
-  static addEffect(action: string, handler: PayloadHandler) {
+  addEffect(action: string, handler: PayloadHandler) {
     this.effectHandlers.set(action, handler);
   }
   
-  static addTrigger(action: string, handler: PayloadHandler, priority?: number) {
+  addTrigger(action: string, handler: PayloadHandler, priority?: number) {
     let handlers = this.triggerHandlers.get(action);
     if (!handlers) {
       this.triggerHandlers.set(action, handlers = []);
@@ -56,16 +65,32 @@ export class SinkFactory {
       handler(this.reloaders[action]);
   }
 
-  static addReloader(action: string, payload: any = null) {
+  addReloader(action: string, payload: any = null) {
     this.reloaders[action] = payload;
   }
 
-  static rebuildReducer() {
+  rebuildReducer() {
     const reducer = buildReducers(this.reducers);
     this._store!.replaceReducer(reducer);
   }
 
-  static get store() {
+  async runTriggerEvents(action: Action) {
+    const triggers = this.triggerHandlers.get(action.type);
+    if (triggers)
+      await Promise.all(triggers.map(trigger => trigger.handler(action.payload)));
+  }
+
+  contains(builder: SinkBuilder) {
+    return this.sinkBuilders.indexOf(builder) > 0;
+  }
+
+  get store() {
     return this._store;
   }
+}
+
+export const CommonSinkFactory = new SinkFactory();
+
+export function createSinkStore<TState = any> (config?: StoreConfiguration<TState>) {
+  return CommonSinkFactory.createStore(config);
 }

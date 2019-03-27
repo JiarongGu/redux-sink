@@ -1,18 +1,16 @@
 
 import { SinkBuilder } from '../SinkBuilder';
 import { Constructor } from '../typings';
+import { CommonSinkFactory } from '../SinkFactory';
+import { ensureSinkBuilt } from '../ensureSinksBuilt';
 
-export function trigger(action: string, priority?: number, ensure?: Constructor) {
+export function trigger(action: string, priority?: number, sink?: Constructor) {
   // ensure sink built
-  if (ensure && !SinkBuilder.get(ensure.prototype).built)
-    new ensure();
+  if (sink) ensureSinkBuilt(sink, CommonSinkFactory);
 
   return function (target: any, name: string, descriptor: PropertyDescriptor) {
     const sinkBuilder = SinkBuilder.get(target);
-    if (!sinkBuilder.built) {
-      const handler = descriptor.value.bind(target);
-      sinkBuilder.triggers.push({ handler, action, priority });
-    }
-    return descriptor;
+    const handler = descriptor.value.bind(target);
+    sinkBuilder.triggers[action] = { handler, action, priority };
   }
 }

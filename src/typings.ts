@@ -32,11 +32,3 @@ export interface DevtoolOptions {
   disabled?: boolean,
   [key: string]: any,
 }
-
-export interface ISinkFacotry {
-  addReducer(namespace: string, reducer: Reducer<any, any>, sinkStateUpdater: (state: any) => void);
-  addEffect(action: string, handler: PayloadHandler);
-  addTrigger(action: string, handler: PayloadHandler, priority?: number);
-  addReloader(action: string, payload: any);
-  store?: Store;
-}
