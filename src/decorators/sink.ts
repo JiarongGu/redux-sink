@@ -15,8 +15,8 @@ export function sink(namespace: string) {
     return class extends constructor {
       constructor(...args: Array<any>) {
         super(...args);
-        sinkBuilder.build(SinkFactory, this);
         sinkBuilder.apply(this);
+        sinkBuilder.build(SinkFactory);
       }
     };
   }

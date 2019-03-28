@@ -1,5 +1,6 @@
 
 import { TriggerEvent, PayloadHandler, Action, ISinkFactory } from './typings';
+import { ensureSinkBuilt } from './ensureSinksBuilt';
 
 export class SinkBuilder {
   __sinkPrototype___: any;
@@ -8,6 +9,7 @@ export class SinkBuilder {
 
   // basic reducer config
   namespace!: string;
+  sinkState?: any;
   stateProperty?: string;
   reducers: { [key: string]: PayloadHandler };
   effects: { [key: string]: PayloadHandler };
@@ -45,7 +47,7 @@ export class SinkBuilder {
     return prototype.__sinkBuilder__;
   }
 
-  build(factory: ISinkFactory, instance: any) {
+  build(factory: ISinkFactory) {
     if (this.built)
       return;
     // set dispatch from factory
@@ -55,7 +57,7 @@ export class SinkBuilder {
     const reducerKeys = Object.keys(this.reducers);
     if (this.stateProperty && reducerKeys.length > 0) {
       const storeState = factory.store && factory.store.getState();
-      const sinkState = storeState && storeState[this.namespace] || instance[this.stateProperty];
+      const sinkState = storeState && storeState[this.namespace] || this.sinkState;
       const preloadedState = sinkState === undefined ? null : sinkState;
       this.__state__ = preloadedState;
 
@@ -88,6 +90,9 @@ export class SinkBuilder {
     // register subscribe
     Object.keys(this.triggers).forEach(key => {
       const trigger = this.triggers[key];
+      if (trigger.sink) 
+        ensureSinkBuilt(trigger.sink);
+      
       factory.addTrigger(trigger.action, trigger.handler, trigger.priority);
     });
 
@@ -115,6 +120,8 @@ export class SinkBuilder {
 
       // match the prototype state to sink state
       if (this.stateProperty) {
+        this.sinkState = instance[this.stateProperty];
+
         Object.defineProperty(prototype, this.stateProperty, {
           get: () => this.__state__,
           set: (value) => { this.__state__ = value }
@@ -138,7 +145,7 @@ export class SinkBuilder {
   }
 }
 
-function combineReducer(preloadedState, reducers: { [key: string]: PayloadHandler }) {
+function combineReducer(preloadedState: any, reducers: { [key: string]: PayloadHandler }) {
   return function (state: any, action: Action) {
     const reducer = reducers[action.type];
     if (reducer)

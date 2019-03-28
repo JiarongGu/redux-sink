@@ -17,7 +17,8 @@ export type ActionFunction = (...args: Array<any>) => Action;
 export interface TriggerEvent {
   action: string;
   handler: PayloadHandler;
-  priority?: number
+  priority?: number;
+  sink?: Constructor;
 };
 
 export interface StoreConfiguration<TState = any> {
