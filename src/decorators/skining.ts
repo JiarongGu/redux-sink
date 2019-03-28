@@ -52,7 +52,7 @@ function createMapDispatchToProps(sinkBuilders: Array<SinkBuilder>) {
   };
 }
 
-const ignoredProperties = ['constructor', '_sinkBuilder'];
+const ignoredProperties = ['constructor', '__sinkBuilder__'];
 function createDeepMapDispatchToProps(prototypes: Array<any>) {
   return function (dispatch: Dispatch) {
     return prototypes.reduce((accumulate: any, prototype) => {
