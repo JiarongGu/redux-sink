@@ -6,7 +6,7 @@ import { createEffectMiddleware } from './createEffectsMiddleware';
 import { createTriggerMiddleware } from './createTriggerMiddleware';
 
 export class SinkFactory {
-  static _store?: Store;
+  static __store__?: Store;
   static reducers: ReducersMapObject<any, any> = {};
   static sinkStateUpdaters: { [key: string]: (state: any) => void } = {};
 
@@ -31,16 +31,16 @@ export class SinkFactory {
   }
 
   static applyReduxSinkStore(store: Store) {
-    this._store = store;
-    if (!this._store) return;
+    this.__store__ = store;
+    if (!this.__store__) return;
 
-    const state = this._store.getState() || {};
+    const state = this.__store__.getState() || {};
     Object.keys(this.sinkStateUpdaters).forEach(key => this.sinkStateUpdaters[key](state[key]));
     this.rebuildReducer();
   }
 
   static addReducer(namespace: string, reducer: Reducer<any, any>, sinkStateUpdater: (state: any) => void) {
-    if (!this._store) return;
+    if (!this.__store__) return;
 
     this.reducers[namespace] = reducer;
     this.sinkStateUpdaters[namespace] = sinkStateUpdater;
@@ -69,7 +69,7 @@ export class SinkFactory {
 
   static rebuildReducer() {
     const reducer = buildReducers(this.reducers);
-    this._store!.replaceReducer(reducer);
+    this.__store__!.replaceReducer(reducer);
   }
 
   static async runTriggerEvents(action: Action) {
@@ -79,6 +79,6 @@ export class SinkFactory {
   }
 
   static get store() {
-    return this._store;
+    return this.__store__;
   }
 }

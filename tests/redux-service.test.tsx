@@ -4,23 +4,24 @@ import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { renderToString } from 'react-dom/server';
 import { sinking, deepsinking } from '../src/decorators';
-import { TestSink, Test2Sink } from './sinks';
+import { TestSink, Test2Sink, TestSink3 } from './sinks';
 import { SinkFactory } from '../src/SinkFactory';
 import { StoreConfiguration } from '../src/typings';
 import { SinkBuilder } from '../src/SinkBuilder';
 
 export function initalizeStore(config?: StoreConfiguration) {
   const store = SinkFactory.createStore(config);
-  // reset sinks
-  SinkBuilder.get(TestSink).built = false;
-  SinkBuilder.get(Test2Sink).built = false;
+  SinkBuilder.get(TestSink.prototype).built = false;
+  SinkBuilder.get(Test2Sink.prototype).built = false;
+  SinkBuilder.get(TestSink3.prototype).built = false;
   return store;
 }
 
 export function resetStore() {
   SinkFactory.applyReduxSinkStore(undefined as any);
-  SinkBuilder.get(TestSink).built = false;
-  SinkBuilder.get(Test2Sink).built = false;
+  SinkBuilder.get(TestSink.prototype).built = false;
+  SinkBuilder.get(Test2Sink.prototype).built = false;
+  SinkBuilder.get(TestSink3.prototype).built = false;
 }
 
 describe('redux sink', () => {
@@ -29,6 +30,13 @@ describe('redux sink', () => {
     const store = initalizeStore({ preloadedState: { testSink: state } });
     const testSink = new TestSink();
     assert.equal(state, testSink.state);
+  });
+
+  it('can state match after instance applied', () => {
+    const store = initalizeStore();
+    const testSink = new TestSink3();
+    const state = store.getState() as any;
+    assert.equal(testSink.name, state['testSink3']);
   });
 
   it('can share state between instance', () => {

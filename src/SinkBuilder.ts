@@ -2,9 +2,10 @@
 import { TriggerEvent, PayloadHandler, Action, ISinkFactory } from './typings';
 
 export class SinkBuilder {
-  _state?: any;
-  _dispatch?: any;
-  
+  __sinkPrototype___: any;
+  __state__?: any;
+  __dispatch__?: any;
+
   // basic reducer config
   namespace!: string;
   stateProperty?: string;
@@ -18,11 +19,11 @@ export class SinkBuilder {
   triggers: { [key: string]: TriggerEvent };
   reloaders: { [key: string]: string };
 
-  dispatches: { [key:string]: Function };
+  dispatches: { [key: string]: Function };
 
   built: boolean;
 
-  constructor() {
+  constructor(sink: any) {
     this.reducers = {};
     this.effects = {};
 
@@ -34,32 +35,32 @@ export class SinkBuilder {
     this.dispatches = {};
 
     this.built = false;
+    this.__sinkPrototype___ = sink;
   }
 
   static get(prototype: any): SinkBuilder {
-    if (!prototype._sinkBuilder) {
-      prototype._sinkBuilder = new SinkBuilder();
+    if (!prototype.__sinkBuilder__) {
+      prototype.__sinkBuilder__ = new SinkBuilder(prototype);
     }
-    return prototype._sinkBuilder;
+    return prototype.__sinkBuilder__;
   }
 
   build(factory: ISinkFactory, instance: any) {
     if (this.built)
       return;
-
     // set dispatch from factory
-    this._dispatch = (action: any) => factory.store && factory.store.dispatch(action);
-    
+    this.__dispatch__ = (action: any) => factory.store && factory.store.dispatch(action);
+
     // create reducer if there is state and reducers
     const reducerKeys = Object.keys(this.reducers);
     if (this.stateProperty && reducerKeys.length > 0) {
-      const currentState = factory.store && factory.store.getState();
-      const sinkState = currentState && currentState[this.namespace] || instance[this.stateProperty];
+      const storeState = factory.store && factory.store.getState();
+      const sinkState = storeState && storeState[this.namespace] || instance[this.stateProperty];
       const preloadedState = sinkState === undefined ? null : sinkState;
+      this.__state__ = preloadedState;
 
-      this._state = preloadedState;
       const sinkStateUpdater = (state: any) => {
-        this._state = state
+        this.__state__ = state
       };
 
       const mergedReducers: { [key: string]: PayloadHandler } = {};
@@ -102,10 +103,11 @@ export class SinkBuilder {
     this.built = true;
   }
 
-  apply(prototype: any, instance: any) {
+  apply(instance: any) {
     const properties = Object.keys(instance);
-    
-    if (!prototype._sinkApplied) {
+    const prototype = this.__sinkPrototype___;
+
+    if (!prototype.__sinkApplied__) {
       // set default prototype values
       properties.forEach((key) => {
         prototype[key] = instance[key];
@@ -114,11 +116,11 @@ export class SinkBuilder {
       // match the prototype state to sink state
       if (this.stateProperty) {
         Object.defineProperty(prototype, this.stateProperty, {
-          set: (value) => { this._state = value },
-          get: () => this._state
+          get: () => this.__state__,
+          set: (value) => { this.__state__ = value }
         });
       }
-      prototype._sinkApplied = true;
+      prototype.__sinkApplied__ = true;
     }
 
     // remove all properties, so we only get them from prototype
@@ -128,7 +130,7 @@ export class SinkBuilder {
   }
 
   dispatch(name: string) {
-    const dispatch = this._dispatch;
+    const dispatch = this.__dispatch__;
     return (payload: Array<any>) => dispatch && dispatch({
       type: this.actions[name],
       payload: payload
@@ -136,7 +138,7 @@ export class SinkBuilder {
   }
 }
 
-function combineReducer(preloadedState: any, reducers: { [key: string]: PayloadHandler }) {
+function combineReducer(preloadedState, reducers: { [key: string]: PayloadHandler }) {
   return function (state: any, action: Action) {
     const reducer = reducers[action.type];
     if (reducer)
