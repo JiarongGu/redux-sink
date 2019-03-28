@@ -4,6 +4,8 @@ import { PayloadHandler, StoreConfiguration, Action } from './typings';
 import { configureStore } from './configureStore';
 import { createEffectMiddleware } from './createEffectsMiddleware';
 import { createTriggerMiddleware } from './createTriggerMiddleware';
+import { SinkBuilder } from './SinkBuilder';
+import { ensureSinkBuilt } from './ensureSinksBuilt';
 
 export class SinkFactory {
   static __store__?: Store;
@@ -47,6 +49,40 @@ export class SinkFactory {
     this.rebuildReducer();
   }
 
+  static addSink(builder: SinkBuilder) {
+    const reducerKeys = Object.keys(builder.reducers);
+    if (builder.stateProperty && reducerKeys.length > 0) {
+      const reducers = reducerKeys.reduce((accumulated,  key) => (
+        accumulated[builder.actions[key]] = builder.reducers[key], accumulated
+      ), {});
+
+      const reducer = combineReducer(builder.state, reducers);
+      this.addReducer(builder.namespace, reducer, builder.setState.bind(builder));
+    }
+
+    // ensure tigger built
+    Object.keys(builder.triggers).forEach(key => {
+      const sink = builder.triggers[key].sink;
+      if (sink) ensureSinkBuilt(sink);
+    });
+
+    // create reducer if there is state and reducers
+    Object.keys(builder.effects).forEach(key => 
+      this.addEffect(builder.actions[key], builder.effects[key])
+    );
+
+    // added reloadable action
+    Object.keys(builder.reloaders).forEach(key => {
+      this.addReloader(builder.actions[builder.reloaders[key]], null);
+    })
+
+    // register subscribe
+    Object.keys(builder.triggers).forEach(key => {
+      const trigger = builder.triggers[key];
+      this.addTrigger(trigger.action, trigger.handler, trigger.priority);
+    });
+  }
+
   static addEffect(action: string, handler: PayloadHandler) {
     this.effectHandlers.set(action, handler);
   }
@@ -80,5 +116,14 @@ export class SinkFactory {
 
   static get store() {
     return this.__store__;
+  }
+}
+
+function combineReducer(preloadedState: any, reducers: { [key: string]: PayloadHandler }) {
+  return function (state: any, action: Action) {
+    const reducer = reducers[action.type];
+    if (reducer)
+      return reducer(action.payload);
+    return state === undefined ? preloadedState : state;
   }
 }

@@ -1,4 +1,5 @@
 import { Middleware, Store } from 'redux';
+import { SinkBuilder } from './SinkBuilder';
 
 export type Constructor<T = any, A = any> = { new(...args: Array<A>): T };
 
@@ -45,5 +46,6 @@ export interface ISinkFactory {
   addEffect: (action: string, handler: PayloadHandler) => void;
   addTrigger: (action: string, handler: PayloadHandler, priority?: number) => void;
   addReloader: (action: string, payload: any) => void;
+  addSink: (builder: SinkBuilder) => void;
   runTriggerEvents: (action: Action) => Promise<any>;
 }
