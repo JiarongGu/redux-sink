@@ -1,7 +1,8 @@
 
 import { TriggerEvent, PayloadHandler, Action, ISinkFactory } from './typings';
-import { ensureSinkBuilt } from './ensureSinksBuilt';
 import { Store } from 'redux';
+
+const ignoredProperties = ['constructor', '__sinkBuilder__'];
 
 export class SinkBuilder {
   __sinkPrototype___: any;
@@ -88,6 +89,19 @@ export class SinkBuilder {
       return accumulate;
     }, {});
 
+    const properties = Object
+      .getOwnPropertyNames(this.__sinkPrototype___)
+      .filter(x => !ignoredProperties.includes(x))
+      .reduce((accumulate: any, name) => {
+        let property = this.__sinkPrototype___[name];
+        if (property instanceof Function) {
+          property = property.bind(this.__sinkPrototype___);
+        }
+        accumulate[name] = property;
+        return accumulate;
+      }, {});
+
+    console.log(properties);
     this.built = true;
   }
 

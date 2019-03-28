@@ -33,6 +33,10 @@ export class TestSink {
     return 'effect success';
   }
 
+  setNameOwnProps(name: string) {
+    this.setName(name);
+  }
+
   @trigger('testSink/setName')
   trigger(name: string) {
     this.setCopy(name);
