@@ -88,13 +88,17 @@ describe('redux sink', () => {
   });
 
   it('can connect to component with state sink', () => {
-    const store = initalizeStore();
-    const testSink = new TestSink();
-    testSink.setAll('test name', 'test value');
+    const state = { name: 'initalized name' };
+    const store = initalizeStore({ preloadedState: { testSink: state } });
+
     const TestComponent = (props: { testSink: TestSink }) => {
       return <div>{props.testSink.state!.name}</div>
     }
     const app = createApp(store, sinking(TestSink), TestComponent);
+    assert.equal(renderToString(app), '<div>initalized name</div>');
+    
+    const testSink = new TestSink();
+    testSink.setAll('test name', 'test value');
     assert.equal(renderToString(app), '<div>test name</div>');
   });
 
