@@ -88,20 +88,7 @@ export class SinkBuilder {
       };
       return accumulate;
     }, {});
-
-    const properties = Object
-      .getOwnPropertyNames(this.__sinkPrototype___)
-      .filter(x => !ignoredProperties.includes(x))
-      .reduce((accumulate: any, name) => {
-        let property = this.__sinkPrototype___[name];
-        if (property instanceof Function) {
-          property = property.bind(this.__sinkPrototype___);
-        }
-        accumulate[name] = property;
-        return accumulate;
-      }, {});
-
-    console.log(properties);
+    
     this.built = true;
   }
 

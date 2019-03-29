@@ -19,22 +19,6 @@ export function sinking(...sinks: Array<Constructor>) {
   ) as any
 }
 
-/**
- * deep connect sinks with component, will connect all properies
- * @param sinks array args of sinks
- */
-export function deepsinking(...sinks: Array<Constructor>) {
-  const sinkBuilders = sinks.map(sink => ensureSinkBuilt(sink));
-  const namespaces = sinkBuilders.map(sink => sink.namespace);
-  const prototypes = sinks.map(sink => Object.getPrototypeOf(sink.prototype));
-
-  return connect(
-    createMapStateToProps(namespaces),
-    createDeepMapDispatchToProps(prototypes),
-    createMergeProps(sinkBuilders)
-  ) as any
-}
-
 function createMapStateToProps(namespaces: Array<string>) {
   return function (state: any) {
     return namespaces.reduce((accumulate: any, namespace) => {
@@ -49,20 +33,6 @@ function createMapDispatchToProps(sinkBuilders: Array<SinkBuilder>) {
     return sinkBuilders.reduce((accumulate: any, sinkBuilder) => (
       accumulate[sinkBuilder.namespace] = sinkBuilder.dispatches, accumulate
     ), {});
-  };
-}
-
-const ignoredProperties = ['constructor', '__sinkBuilder__'];
-function createDeepMapDispatchToProps(prototypes: Array<any>) {
-  return function (dispatch: Dispatch) {
-    return prototypes.reduce((accumulate: any, prototype) => {
-      const sinkBuilder = SinkBuilder.get(prototype);
-      accumulate[sinkBuilder.namespace] = 
-        Object.getOwnPropertyNames(prototype)
-          .filter(x => !ignoredProperties.includes(x))
-          .reduce((a: any, c) => ( a[c] = prototype[c], a ), {});
-      return accumulate;
-    }, {});
   };
 }
 

@@ -126,15 +126,6 @@ or
 SinkFactory.addReloader('counter/updateAll', [inital paramters]);
 ```
 
-### Use deepsking
-`@deepsinking` allow you to use any function or property in sink when connect to component, which `@sinking` will only allowed to use effect and reducer
-```javascript
-@deepsking(CounterSink, OtherSink1, OtherSink2)
-class Counter extends React.Component {
- ...
-}
-```
-
 ### Use sink without component
 redux-sink allowed you to use sinks without connect to component
 ```javascript
