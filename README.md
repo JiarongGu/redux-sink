@@ -12,8 +12,6 @@ Redux-Sink is decorater based redux for less boilerplate, no action, no seprated
   * [Step 3: sinking](#step-3-sinking)
 - [Advanced usages](#advanced-usages)
   * [Create trigger](#create-trigger)
-  * [Create reloader](#create-reloader)
-  * [Use deepsking](#use-deepsking)
   * [Use sink without component](#use-sink-without-component)
   * [Create store with configs](#create-store-with-configs)
   * [Use debounce/throttle](#use-debouncethrottle)
@@ -106,24 +104,6 @@ class CounterSink {
       this.increment(increase);
     }
 }
-```
-
-### Create reloader
-`@reloader` or `SinkFactory.addReloader` is used for fire a trigger event when trigger just been dynamically added. 
-```javascript
-class CounterSink {
-  ...
-  @effect
-  @reloader
-  async updateAll(increase: number, decrease: number) {
-    this.increment(increase);
-    this.decrement(decrease);
-  }
-}
-```
-or   
-```javascript
-SinkFactory.addReloader('counter/updateAll', [inital paramters]);
 ```
 
 ### Use sink without component
