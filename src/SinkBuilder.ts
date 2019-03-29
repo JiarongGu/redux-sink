@@ -2,11 +2,9 @@
 import { TriggerEvent, PayloadHandler, Action, ISinkFactory } from './typings';
 import { Store } from 'redux';
 
-const ignoredProperties = ['constructor', '__sinkBuilder__'];
-
 export class SinkBuilder {
-  __sinkPrototype___: any;
-  __store__?: Store;
+  sinkPrototype: any;
+  store?: Store;
 
   state?: any;
 
@@ -16,14 +14,12 @@ export class SinkBuilder {
   reducers: { [key: string]: PayloadHandler };
   effects: { [key: string]: PayloadHandler };
 
-  // handlers and actions
-  actions: { [key: string]: string };
-
   // triggers and reloaders
   triggers: { [key: string]: TriggerEvent };
   reloaders: { [key: string]: string };
 
-  dispatches: { [key: string]: Function };
+  _dispatches?: { [key: string]: Function };
+  _actions?: { [key: string]: string };
 
   built: boolean;
 
@@ -34,12 +30,8 @@ export class SinkBuilder {
     this.triggers = {};
     this.reloaders = {};
 
-    this.actions = {};
-
-    this.dispatches = {};
-
     this.built = false;
-    this.__sinkPrototype___ = sink;
+    this.sinkPrototype = sink;
   }
 
   static get(prototype: any): SinkBuilder {
@@ -58,43 +50,51 @@ export class SinkBuilder {
       return;
     
     // set store from factory
-    this.__store__ = factory.store;
+    this.store = factory.store;
 
     // update state if there is preloaded from store
-    if (this.__store__) {
-      const storeState = this.__store__.getState();
+    if (this.store) {
+      const storeState = this.store.getState();
       const preloadedState = storeState && storeState[this.namespace];
       if (preloadedState !== undefined) {
         this.state = preloadedState
       }
     }
 
-    // add all action events
-    Object.keys(this.reducers).forEach(key => {
-      this.actions[key] = `${this.namespace}/${key}`;
-    });
-
-    Object.keys(this.effects).forEach(key => {
-      this.actions[key] = `${this.namespace}/${key}`;
-    });
-
     factory.addSink(this);
-
-    // form dispatch collection
-    this.dispatches = Object.keys(this.actions).reduce((accumulate: any, key) => {
-      const dispatch = this.dispatch(key);
-      accumulate[key] = function () {
-        dispatch(Array.from(arguments));
-      };
-      return accumulate;
-    }, {});
     
     this.built = true;
   }
 
+  get actions() {
+    if (!this._actions)
+    {
+      const reducers = Object.keys(this.reducers);
+      const effects = Object.keys(this.effects);
+      this._actions = [...reducers, ...effects]
+        .reduce((accumulate, current) => (
+          accumulate[current] = `${this.namespace}/${current}`, accumulate
+        ), {});
+    }
+    return this._actions;
+  }
+
+  get dispatches() {
+    if (!this._dispatches) {
+      this._dispatches = Object.keys(this.actions).reduce((accumulate: any, key) => {
+        const dispatch = this.dispatch(key);
+        accumulate[key] = function () {
+          dispatch(Array.from(arguments));
+        };
+        return accumulate;
+      }, {});
+    }
+    return this._dispatches;
+  }
+
   apply(instance: any) {
     const properties = Object.keys(instance);
-    const prototype = this.__sinkPrototype___;
+    const prototype = this.sinkPrototype;
 
     if (!prototype.__sinkApplied__) {
       // set default prototype values
@@ -121,7 +121,7 @@ export class SinkBuilder {
   }
 
   dispatch(name: string) {
-    const dispatch = this.__store__ && this.__store__.dispatch;
+    const dispatch = this.store && this.store.dispatch;
     return (payload: Array<any>) => dispatch && dispatch({
       type: this.actions[name],
       payload: payload
