@@ -11,7 +11,7 @@ export function effect(target: any, name: string, descriptor: PropertyDescriptor
   const handler = descriptor.value.bind(target);
 
   sinkBuilder.effects[name] = (payload: Array<any>) => handler(...payload);
-  descriptor.value = function() { 
-    return sinkBuilder.dispatch(name)(Array.from(arguments)); 
+  descriptor.value = function () {
+    return sinkBuilder.dispatch(name)(Array.from(arguments));
   };
 }

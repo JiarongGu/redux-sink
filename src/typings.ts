@@ -39,13 +39,8 @@ export interface ISinkFactory {
   store?: Store;
   effectHandlers: Map<string, PayloadHandler>;
   triggerHandlers: Map<string, Array<{ priority: number, handler: PayloadHandler }>>;
-  reloaders: { [key: string]: any };
+  payloads: { [key: string]: any };
   effectTasks: Array<Promise<any>>;
-
-  addReducer: (namespace: string, reducer: Reducer<any, any>, sinkStateUpdater: (state: any) => void) => void;
-  addEffect: (action: string, handler: PayloadHandler) => void;
-  addTrigger: (action: string, handler: PayloadHandler, priority?: number) => void;
-  addReloader: (action: string, payload: any) => void;
-  addSink: (builder: SinkBuilder) => void;
+  
   runTriggerEvents: (action: Action) => Promise<any>;
 }

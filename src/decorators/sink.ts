@@ -11,12 +11,12 @@ export function sink(namespace: string) {
     const prototype = constructor.prototype;
     const sinkBuilder = SinkBuilder.get(prototype);
     sinkBuilder.namespace = namespace;
-    
+
     return class extends constructor {
       constructor(...args: Array<any>) {
         super(...args);
         sinkBuilder.apply(this);
-        sinkBuilder.build(SinkFactory);
+        SinkFactory.addSink(sinkBuilder);
       }
     };
   }

@@ -1,15 +1,14 @@
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 import { SinkBuilder } from '../SinkBuilder';
+import { SinkFactory } from '../SinkFactory';
 import { Constructor } from '../typings';
-import { ensureSinkBuilt } from '../ensureSinksBuilt';
 
 /**
  * connect sinks with component, only connect state, reducers and effects
  * @param sinks array args of sinks
  */
 export function sinking(...sinks: Array<Constructor>) {
-  const sinkBuilders = sinks.map(sink => ensureSinkBuilt(sink));
+  const sinkBuilders = sinks.map(sink => SinkFactory.ensureSinkBuilt(sink));
   const namespaces = sinkBuilders.map(sink => sink.namespace);
 
   return connect(
@@ -29,7 +28,7 @@ function createMapStateToProps(namespaces: Array<string>) {
 }
 
 function createMapDispatchToProps(sinkBuilders: Array<SinkBuilder>) {
-  return function (dispatch: Dispatch) {
+  return function () {
     return sinkBuilders.reduce((accumulate: any, sinkBuilder) => (
       accumulate[sinkBuilder.namespace] = sinkBuilder.dispatches, accumulate
     ), {});

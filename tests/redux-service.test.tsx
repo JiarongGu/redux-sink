@@ -7,21 +7,16 @@ import { sinking } from '../src/decorators';
 import { TestSink, Test2Sink, TestSink3 } from './sinks';
 import { SinkFactory } from '../src/SinkFactory';
 import { StoreConfiguration } from '../src/typings';
-import { SinkBuilder } from '../src/SinkBuilder';
 
 export function initalizeStore(config?: StoreConfiguration) {
   const store = SinkFactory.createStore(config);
-  SinkBuilder.get(TestSink.prototype).built = false;
-  SinkBuilder.get(Test2Sink.prototype).built = false;
-  SinkBuilder.get(TestSink3.prototype).built = false;
+  SinkFactory.container.sinks = {};
   return store;
 }
 
 export function resetStore() {
-  SinkFactory.applyReduxSinkStore(undefined as any);
-  SinkBuilder.get(TestSink.prototype).built = false;
-  SinkBuilder.get(Test2Sink.prototype).built = false;
-  SinkBuilder.get(TestSink3.prototype).built = false;
+  SinkFactory.container.applyReduxSinkStore(undefined as any);
+  SinkFactory.container.sinks = {};
 }
 
 describe('redux sink', () => {

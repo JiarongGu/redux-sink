@@ -13,8 +13,8 @@ export function configureStore<TState = any>(config?: StoreConfiguration<TState>
     middlewares = config.middlewares || [];
 
     if (config.devtoolOptions && !config.devtoolOptions.disabled) {
-      const { disabled, devToolCompose, ...options } =  config.devtoolOptions;
-      finalCompose = config.devtoolOptions.devToolCompose(config.devtoolOptions); 
+      const { disabled, devToolCompose, ...options } = config.devtoolOptions;
+      finalCompose = config.devtoolOptions.devToolCompose(config.devtoolOptions);
     }
   }
 
@@ -26,4 +26,3 @@ export function configureStore<TState = any>(config?: StoreConfiguration<TState>
     return createStore(combinedReducer as any, composedMiddlewares);
   return createStore(combinedReducer as any, preloadedState, composedMiddlewares);
 }
-

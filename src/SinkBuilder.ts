@@ -1,36 +1,30 @@
 
-import { TriggerEvent, PayloadHandler, Action, ISinkFactory } from './typings';
+import { TriggerEvent, PayloadHandler } from './typings';
 import { Store } from 'redux';
 
 export class SinkBuilder {
-  sinkPrototype: any;
-  store?: Store;
-
   state?: any;
+  sinkPrototype: any;
 
-  // basic reducer config
+  // configured by decorator
   namespace!: string;
   stateProperty?: string;
   reducers: { [key: string]: PayloadHandler };
   effects: { [key: string]: PayloadHandler };
-
-  // triggers and reloaders
   triggers: { [key: string]: TriggerEvent };
-  reloaders: { [key: string]: string };
 
+  // auto generated
   _dispatches?: { [key: string]: Function };
   _actions?: { [key: string]: string };
 
-  built: boolean;
+  // configured by SinkContainer
+  getStore?: () => Store | undefined;
 
   constructor(sink: any) {
     this.reducers = {};
     this.effects = {};
 
     this.triggers = {};
-    this.reloaders = {};
-
-    this.built = false;
     this.sinkPrototype = sink;
   }
 
@@ -40,35 +34,13 @@ export class SinkBuilder {
     }
     return prototype.__sinkBuilder__;
   }
-  
+
   setState(state: any) {
     this.state = state
   };
 
-  build(factory: ISinkFactory) {
-    if (this.built)
-      return;
-    
-    // set store from factory
-    this.store = factory.store;
-
-    // update state if there is preloaded from store
-    if (this.store) {
-      const storeState = this.store.getState();
-      const preloadedState = storeState && storeState[this.namespace];
-      if (preloadedState !== undefined) {
-        this.state = preloadedState
-      }
-    }
-
-    factory.addSink(this);
-    
-    this.built = true;
-  }
-
   get actions() {
-    if (!this._actions)
-    {
+    if (!this._actions) {
       const reducers = Object.keys(this.reducers);
       const effects = Object.keys(this.effects);
       this._actions = [...reducers, ...effects]
@@ -121,7 +93,8 @@ export class SinkBuilder {
   }
 
   dispatch(name: string) {
-    const dispatch = this.store && this.store.dispatch;
+    const store = this.getStore && this.getStore();
+    const dispatch = store && store.dispatch;
     return (payload: Array<any>) => dispatch && dispatch({
       type: this.actions[name],
       payload: payload

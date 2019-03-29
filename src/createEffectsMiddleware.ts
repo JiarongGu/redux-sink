@@ -1,23 +1,24 @@
 import { MiddlewareAPI, Dispatch } from 'redux';
-import { Action, ISinkFactory } from './typings';
+import { Action } from './typings';
+import { SinkContainer } from './SinkContainer';
 
-export function createEffectMiddleware(factory: ISinkFactory) {
+export function createEffectMiddleware(container: SinkContainer) {
   return (store: MiddlewareAPI<any>) => (next: Dispatch<Action>) => (action: Action) => {
-    const handler = factory.effectHandlers.get(action.type);
-  
+    const handler = container.effectHandlers.get(action.type);
+
     if (handler) {
       const task = handler(action.payload);
-  
+
       // push promise task to queue
       if (task && task.then) {
-        factory.effectTasks.push(task.then((response: any) => {
-          factory.effectTasks.splice(factory.effectTasks.indexOf(task), 1);
+        container.effectTasks.push(task.then((response: any) => {
+          container.effectTasks.splice(container.effectTasks.indexOf(task), 1);
           return response;
         }));
       }
       return task;
     }
-  
+
     return next(action);
   };
 }
