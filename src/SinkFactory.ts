@@ -20,7 +20,11 @@ export class SinkFactory {
     if (config && config.middlewares)
       middlewares = middlewares.concat(config.middlewares);
 
+    if (config && config.reducers)
+      Object.assign(this.container.reducers, config.reducers);
+
     const store = configureStore({ ...config, middlewares });
+    
     this.container.setStore(store);
     return store;
   }
