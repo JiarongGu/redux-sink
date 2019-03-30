@@ -15,7 +15,10 @@ export function sink(namespace: string) {
     return class extends constructor {
       constructor(...args: Array<any>) {
         super(...args);
+        // transform class into sink
         sinkBuilder.apply(this);
+
+        // apply skin with factory settings
         SinkFactory.addSink(sinkBuilder);
       }
     };

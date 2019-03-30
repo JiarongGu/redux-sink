@@ -17,13 +17,12 @@ export type ActionFunction = (...args: Array<any>) => Action;
 
 export interface TriggerOptions {
   priority?: number;
-  sink?: Constructor;
+  fireOnInit?: boolean;
 }
 
 export interface TriggerEvent {
   action: string;
   handler: PayloadHandler;
-  reload: boolean;
   options?: TriggerOptions;
 };
 

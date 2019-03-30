@@ -27,7 +27,9 @@ export class SinkFactory {
   }
 
   static ensureSinkBuilt(sink: Constructor) {
-    return this.container.ensureSinkBuilt(sink);
+    const sinkBuilder = SinkBuilder.get(sink.prototype);
+    if (!this.container.sinks[sinkBuilder.namespace]) new sink();
+    return sinkBuilder;
   }
 
   static async runTriggerEvents(action: Action) {

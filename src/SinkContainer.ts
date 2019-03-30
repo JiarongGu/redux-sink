@@ -47,18 +47,20 @@ export class SinkContainer {
     this.effectHandlers.set(action, handler);
   }
 
-  addTrigger(action: string, handler: PayloadHandler, reload: boolean, options?: TriggerOptions) {
+  addTrigger(action: string, handler: PayloadHandler, options?: TriggerOptions) {
     let handlers = this.triggerHandlers.get(action);
     if (!handlers) {
       this.triggerHandlers.set(action, handlers = []);
     }
-    const priority = options && options.priority;
-    handlers.push({ handler, priority: priority || 0 });
+    const priority = options && options.priority || 0;
+    const fireOnInit = options && options.fireOnInit;
+
+    handlers.push({ handler, priority });
     
-    if (priority)
+    if (priority > 0)
       handlers.sort((a, b) => b.priority - a.priority);
 
-    if (reload && this.payloads[action] !== undefined)
+    if (fireOnInit && this.payloads[action] !== undefined)
       handler(this.payloads[action]);
   }
 
@@ -86,13 +88,6 @@ export class SinkContainer {
       this.addReducer(builder.namespace, reducer);
     }
 
-    // ensure tigger built
-    Object.keys(builder.triggers).forEach(key => {
-      const options = builder.triggers[key].options;
-      if (options && options.sink)
-        this.ensureSinkBuilt(options.sink);
-    });
-
     // create reducer if there is state and reducers
     Object.keys(builder.effects).forEach(key =>
       this.addEffect(builder.actions[key], builder.effects[key])
@@ -101,14 +96,8 @@ export class SinkContainer {
     // register subscribe
     Object.keys(builder.triggers).forEach(key => {
       const trigger = builder.triggers[key];
-      this.addTrigger(trigger.action, trigger.handler, trigger.reload, trigger.options);
+      this.addTrigger(trigger.action, trigger.handler, trigger.options);
     });
-  }
-
-  ensureSinkBuilt(sink: Constructor) {
-    const sinkBuilder = SinkBuilder.get(sink.prototype);
-    if (!this.sinks[sinkBuilder.namespace]) new sink();
-    return sinkBuilder;
   }
 
   rebuildReducer() {
