@@ -22,7 +22,7 @@ export class SinkContainer {
       await Promise.all(triggers.map(trigger => trigger.handler(action.payload)));
   }
 
-  applyReduxSinkStore(store: Store) {
+  setStore(store: Store) {
     this.store = store;
     if (!this.store) return;
 

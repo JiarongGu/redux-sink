@@ -18,7 +18,7 @@ export class SinkFactory {
       middlewares = middlewares.concat(config.middlewares);
 
     const store = configureStore({ ...config, middlewares });
-    this.container.applyReduxSinkStore(store);
+    this.container.setStore(store);
     return store;
   }
 
