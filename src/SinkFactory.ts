@@ -5,6 +5,9 @@ import { createTriggerMiddleware } from './createTriggerMiddleware';
 import { SinkBuilder } from './SinkBuilder';
 import { SinkContainer } from './SinkContainer';
 
+/**
+ * default sink container for create store and bind sinks
+ */
 export class SinkFactory {
   static container = new SinkContainer();
 

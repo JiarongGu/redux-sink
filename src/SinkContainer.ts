@@ -1,5 +1,5 @@
 import { ReducersMapObject, Store, Reducer } from 'redux';
-import { PayloadHandler, Action, Constructor, TriggerOptions } from './typings';
+import { PayloadHandler, Action, TriggerOptions } from './typings';
 import { SinkBuilder } from './SinkBuilder';
 import { buildReducers } from './buildReducers';
 import { combineReducer } from './combineReducer';
@@ -47,10 +47,10 @@ export class SinkContainer {
     this.effectHandlers.set(action, handler);
   }
 
-  addTrigger(action: string, handler: PayloadHandler, options?: TriggerOptions) {
-    let handlers = this.triggerHandlers.get(action);
+  addTrigger(actionType: string, handler: PayloadHandler, options?: TriggerOptions) {
+    let handlers = this.triggerHandlers.get(actionType);
     if (!handlers) {
-      this.triggerHandlers.set(action, handlers = []);
+      this.triggerHandlers.set(actionType, handlers = []);
     }
     const priority = options && options.priority || 0;
     const fireOnInit = options && options.fireOnInit;
@@ -60,8 +60,8 @@ export class SinkContainer {
     if (priority > 0)
       handlers.sort((a, b) => b.priority - a.priority);
 
-    if (fireOnInit && this.payloads[action] !== undefined)
-      handler(this.payloads[action]);
+    if (fireOnInit && this.payloads[actionType] !== undefined)
+      handler(this.payloads[actionType]);
   }
 
   addSink(builder: SinkBuilder) {
@@ -96,7 +96,7 @@ export class SinkContainer {
     // register subscribe
     Object.keys(builder.triggers).forEach(key => {
       const trigger = builder.triggers[key];
-      this.addTrigger(trigger.action, trigger.handler, trigger.options);
+      this.addTrigger(trigger.actionType, trigger.handler, trigger.options);
     });
   }
 

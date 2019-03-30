@@ -21,7 +21,7 @@ export interface TriggerOptions {
 }
 
 export interface TriggerEvent {
-  action: string;
+  actionType: string;
   handler: PayloadHandler;
   options?: TriggerOptions;
 };
