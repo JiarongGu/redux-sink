@@ -16,10 +16,13 @@ export class SinkContainer {
 
   sinks: { [key: string]: SinkBuilder } = {};
 
-  async runTriggerEvents(action: Action) {
+  runTriggerEvents(action: Action) {
     const triggers = this.triggerHandlers.get(action.type);
-    if (triggers)
-      await Promise.all(triggers.map(trigger => trigger.handler(action.payload)));
+    if (triggers) {
+      const tasks = triggers.map(trigger => trigger.handler(action.payload));
+      return Promise.all(tasks);
+    }
+    return Promise.resolve([]);
   }
 
   setStore(store: Store) {

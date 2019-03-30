@@ -43,7 +43,7 @@ export class SinkFactory {
     return this.container.effectTasks;
   }
 
-  static async runTriggerEvents(action: Action) {
+  static runTriggerEvents(action: Action) {
     return this.container.runTriggerEvents(action);
   }
 }
