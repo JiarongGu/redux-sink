@@ -15,7 +15,7 @@ export function initalizeStore(config?: StoreConfiguration) {
 }
 
 export function resetStore() {
-  SinkFactory.container.applyReduxSinkStore(undefined as any);
+  SinkFactory.container.setStore(undefined as any);
   SinkFactory.container.sinks = {};
 }
 
