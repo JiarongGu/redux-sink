@@ -1,5 +1,5 @@
 import { ReducersMapObject, Store, Reducer } from 'redux';
-import { PayloadHandler, Action, Constructor } from './typings';
+import { PayloadHandler, Action, Constructor, TriggerOptions } from './typings';
 import { SinkBuilder } from './SinkBuilder';
 import { buildReducers } from './buildReducers';
 import { combineReducer } from './combineReducer';
@@ -47,15 +47,18 @@ export class SinkContainer {
     this.effectHandlers.set(action, handler);
   }
 
-  addTrigger(action: string, handler: PayloadHandler, priority?: number) {
+  addTrigger(action: string, handler: PayloadHandler, reload: boolean, options?: TriggerOptions) {
     let handlers = this.triggerHandlers.get(action);
     if (!handlers) {
       this.triggerHandlers.set(action, handlers = []);
     }
+    const priority = options && options.priority;
     handlers.push({ handler, priority: priority || 0 });
-    handlers.sort((a, b) => b.priority - a.priority);
+    
+    if (priority)
+      handlers.sort((a, b) => b.priority - a.priority);
 
-    if (this.payloads[action] !== undefined)
+    if (reload && this.payloads[action] !== undefined)
       handler(this.payloads[action]);
   }
 
@@ -85,8 +88,9 @@ export class SinkContainer {
 
     // ensure tigger built
     Object.keys(builder.triggers).forEach(key => {
-      const sink = builder.triggers[key].sink;
-      if (sink) this.ensureSinkBuilt(sink);
+      const options = builder.triggers[key].options;
+      if (options && options.sink)
+        this.ensureSinkBuilt(options.sink);
     });
 
     // create reducer if there is state and reducers
@@ -97,7 +101,7 @@ export class SinkContainer {
     // register subscribe
     Object.keys(builder.triggers).forEach(key => {
       const trigger = builder.triggers[key];
-      this.addTrigger(trigger.action, trigger.handler, trigger.priority);
+      this.addTrigger(trigger.action, trigger.handler, trigger.reload, trigger.options);
     });
   }
 

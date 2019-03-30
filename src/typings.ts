@@ -15,11 +15,16 @@ export type Function = (...args: Array<any>) => any;
 export type PayloadHandler<TPayload = any> = (payload: TPayload) => any;
 export type ActionFunction = (...args: Array<any>) => Action;
 
+export interface TriggerOptions {
+  priority?: number;
+  sink?: Constructor;
+}
+
 export interface TriggerEvent {
   action: string;
   handler: PayloadHandler;
-  priority?: number;
-  sink?: Constructor;
+  reload: boolean;
+  options?: TriggerOptions;
 };
 
 export interface StoreConfiguration<TState = any> {
@@ -33,14 +38,4 @@ export interface DevtoolOptions {
   devToolCompose: Function,
   disabled?: boolean,
   [key: string]: any,
-}
-
-export interface ISinkFactory {
-  store?: Store;
-  effectHandlers: Map<string, PayloadHandler>;
-  triggerHandlers: Map<string, Array<{ priority: number, handler: PayloadHandler }>>;
-  payloads: { [key: string]: any };
-  effectTasks: Array<Promise<any>>;
-  
-  runTriggerEvents: (action: Action) => Promise<any>;
 }
