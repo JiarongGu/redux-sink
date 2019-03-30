@@ -1,6 +1,6 @@
 {
   "name": "redux-sink",
-  "version": "0.2.16",
+  "version": "0.2.18",
   "description": "redux sink for less redux boilerplate",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -11,7 +11,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "rm -rf lib/ && node ./node_modules/typescript/bin/tsc",
+    "build": "rimraf lib/ && node ./node_modules/typescript/bin/tsc",
     "test": "mocha -r ts-node/register tests/**/*.test.ts*"
   },
   "repository": {
@@ -47,6 +47,7 @@
     "react": "*",
     "react-dom": "^16.8.4",
     "react-redux": "*",
+    "rimraf": "^2.6.3",
     "ts-node": "^8.0.3",
     "tslint": "^5.12.1",
     "typescript": "^3.3.3333"

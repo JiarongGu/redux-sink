@@ -31,6 +31,6 @@ export class SinkFactory {
   }
 
   static async runTriggerEvents(action: Action) {
-    return this.container.runTriggerEvents;
+    return this.container.runTriggerEvents(action);
   }
 }
