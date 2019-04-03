@@ -23,28 +23,28 @@ describe('redux sink', () => {
   it('can inherit state from store', () => {
     const state = { name: 'initalized name' };
     const store = initalizeStore({ preloadedState: { testSink: state } });
-    const testSink = new TestSink();
+    const testSink = SinkFactory.get(TestSink);
     assert.equal(state, testSink.state);
   });
 
   it('can state match after instance applied', () => {
     const store = initalizeStore();
-    const testSink = new TestSink3();
+    const testSink = SinkFactory.get(TestSink3);
     const state = store.getState() as any;
     assert.equal(testSink.name, state['testSink3']);
   });
 
   it('can share state between instance', () => {
     const store = initalizeStore();
-    const testSink1 = new TestSink();
-    const testSink2 = new TestSink();
+    const testSink1 = SinkFactory.get(TestSink);
+    const testSink2 = SinkFactory.get(TestSink);
     assert.equal(testSink1.state, testSink2.state);
   });
 
   it('can share property between instance', () => {
     const store = initalizeStore();
-    const testSink1 = new Test2Sink();
-    const testSink2 = new Test2Sink();
+    const testSink1 = SinkFactory.get(Test2Sink);
+    const testSink2 = SinkFactory.get(Test2Sink);
     testSink2.setProp((prop) => { assert.equal(1, prop) });
     testSink1.setProp((prop) => { assert.equal(2, prop) });
   });
@@ -52,7 +52,7 @@ describe('redux sink', () => {
   it('can sink created before store initalized', () => {
     resetStore();
     const state = { name: 'initalized name before store' };
-    const testSink = new TestSink();
+    const testSink = SinkFactory.get(TestSink);
     const store = SinkFactory.createStore({ preloadedState: { testSink: state } });
 
     assert.equal(state, testSink.state);
@@ -60,7 +60,7 @@ describe('redux sink', () => {
 
   it('can call multiple reducers from effect', () => {
     const store = initalizeStore();
-    const testSink = new TestSink();
+    const testSink = SinkFactory.get(TestSink);
     testSink.setAll('test name', 'test value');
     const state = testSink.state;
     assert.equal('test name', state.name);
@@ -69,15 +69,15 @@ describe('redux sink', () => {
 
   it('can sink call reducers from other sink by effect', () => {
     const store = initalizeStore();
-    const testSink = new TestSink();
-    const test2Sink = new Test2Sink();
+    const testSink = SinkFactory.get(TestSink);
+    const test2Sink = SinkFactory.get(Test2Sink);
     test2Sink.setName('new name hahah');
     assert.equal('new name hahah', testSink.state.name);
   });
 
   it('can trigger run when action detected', () => {
     const store = initalizeStore();
-    const testSink = new TestSink();
+    const testSink = SinkFactory.get(TestSink);
     testSink.setAll('test name', 'test value');
     assert.equal('test name', testSink.state.copy);
   });
@@ -92,14 +92,14 @@ describe('redux sink', () => {
     const app = createApp(store, sinking(TestSink), TestComponent);
     assert.equal(renderToString(app), '<div>initalized name</div>');
     
-    const testSink = new TestSink();
+    const testSink = SinkFactory.get(TestSink);
     testSink.setAll('test name', 'test value');
     assert.equal(renderToString(app), '<div>test name</div>');
   });
 
   it('can connect to component with non-state sink', () => {
     const store = initalizeStore();
-    const test2Sink = new Test2Sink();
+    const test2Sink = SinkFactory.get(Test2Sink);
     const TestComponent = (props: { testSink: TestSink }) => {
       return <div>{props.testSink.state!.name}</div>
     }

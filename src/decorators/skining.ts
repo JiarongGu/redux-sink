@@ -1,46 +1,44 @@
 import { connect } from 'react-redux';
-import { SinkBuilder } from '../SinkBuilder';
 import { SinkFactory } from '../SinkFactory';
 import { Constructor } from '../typings';
+import { Sink } from '../Sink';
 
 /**
  * connect sinks with component, only connect state, reducers and effects
  * @param sinks array args of sinks
  */
 export function sinking(...sinks: Array<Constructor>) {
-  const sinkBuilders = sinks.map(sink => SinkFactory.ensureSinkBuilt(sink));
-  const namespaces = sinkBuilders.map(sink => sink.namespace);
-
+  const factorySinks = sinks.map(sink => SinkFactory.getSink(sink));
   return connect(
-    createMapStateToProps(namespaces),
-    createMapDispatchToProps(sinkBuilders),
-    createMergeProps(sinkBuilders)
+    createMapStateToProps(factorySinks),
+    createMapDispatchToProps(factorySinks),
+    createMergeProps(factorySinks)
   ) as any
 }
 
-function createMapStateToProps(namespaces: Array<string>) {
+function createMapStateToProps(sinks: Array<Sink>) {
   return function (state: any) {
-    return namespaces.reduce((accumulate: any, namespace) => {
-      accumulate[namespace] = state && state[namespace];
+    return sinks.reduce((accumulate: any, sink) => {
+      accumulate[sink.namespace] = state && state[sink.namespace];
       return accumulate;
     }, {});
   };
 }
 
-function createMapDispatchToProps(sinkBuilders: Array<SinkBuilder>) {
+function createMapDispatchToProps(sinks: Array<Sink>) {
   return function () {
-    return sinkBuilders.reduce((accumulate: any, sinkBuilder) => (
-      accumulate[sinkBuilder.namespace] = sinkBuilder.dispatches, accumulate
+    return sinks.reduce((accumulate: any, sink) => (
+      accumulate[sink.namespace] = sink.dispatches, accumulate
     ), {});
   };
 }
 
-function createMergeProps(sinkBuilders: Array<SinkBuilder>) {
+function createMergeProps(sinks: Array<Sink>) {
   return function (stateProps: any, dispatchProps: any, ownProps: any) {
-    return sinkBuilders.reduce((accumulate, sinkBuilder) => {
-      const state = sinkBuilder.stateProperty ? { [sinkBuilder.stateProperty]: stateProps[sinkBuilder.namespace] } : undefined;
-      accumulate[sinkBuilder.namespace] = {
-        ...dispatchProps[sinkBuilder.namespace],
+    return sinks.reduce((accumulate, sink) => {
+      const state = sink.stateProperty ? { [sink.stateProperty]: stateProps[sink.namespace] } : undefined;
+      accumulate[sink.namespace] = {
+        ...dispatchProps[sink.namespace],
         ...state
       };
       return accumulate;

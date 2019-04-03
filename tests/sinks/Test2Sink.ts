@@ -1,11 +1,12 @@
 import { TestSink } from './TestSink';
 import { sink, effect } from '../../src/decorators';
+import { SinkFactory } from '../../src';
 
 @sink('test2Sink')
 export class Test2Sink {
   name: string = 'test';
   
-  testSink = new TestSink();
+  testSink = SinkFactory.get(TestSink);
   value = 0;
 
   @effect

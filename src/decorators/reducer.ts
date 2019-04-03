@@ -10,16 +10,5 @@ import { SinkBuilder } from '../SinkBuilder';
  */
 export function reducer(target: any, name: string, descriptor: PropertyDescriptor) {
   const sinkBuilder = SinkBuilder.get(target);
-
-  const reducer = descriptor.value.bind(target);
-
-  sinkBuilder.reducers[name] = (args: Array<any>) => {
-    const newState = reducer(...args);
-    target[sinkBuilder.stateProperty!] = newState;
-    return newState;
-  };
-
-  descriptor.value = function () {
-    return sinkBuilder.dispatch(name)(Array.from(arguments));
-  };
+  sinkBuilder.reducers[name] = descriptor.value;
 }

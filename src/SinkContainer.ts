@@ -3,6 +3,7 @@ import { PayloadHandler, Action, TriggerOptions } from './typings';
 import { SinkBuilder } from './SinkBuilder';
 import { buildReducers } from './buildReducers';
 import { combineReducer } from './combineReducer';
+import { Sink } from './Sink';
 
 export class SinkContainer {
   store?: Store;
@@ -14,7 +15,7 @@ export class SinkContainer {
   triggerHandlers = new Map<string, Array<{ priority: number, handler: PayloadHandler }>>();
   payloads: { [key: string]: any } = {};
 
-  sinks: { [key: string]: SinkBuilder } = {};
+  sinks: { [key: string]: Sink } = {};
 
   runTriggerEvents(action: Action) {
     const triggers = this.triggerHandlers.get(action.type);
@@ -71,34 +72,36 @@ export class SinkContainer {
     if (this.sinks[builder.namespace])
       return;
 
-    this.sinks[builder.namespace] = builder;
-    builder.getStore = () => this.store;
+    const sink = builder.createSink();
+    this.sinks[builder.namespace] = sink;
 
-    const reducerKeys = Object.keys(builder.reducers);
-    if (builder.stateProperty && reducerKeys.length > 0) {
+    sink.getStore = () => this.store;
+
+    const reducerKeys = Object.keys(sink.reducers);
+    if (sink.stateProperty && reducerKeys.length > 0) {
       if (this.store) {
         const storeState = this.store.getState();
-        const preloadedState = storeState && storeState[builder.namespace];
+        const preloadedState = storeState && storeState[sink.namespace];
         if (preloadedState !== undefined)
-          builder.setState(preloadedState);
+          sink.setState(preloadedState);
       }
 
       const reducers = reducerKeys.reduce((accumulated, key) => (
-        accumulated[builder.actions[key]] = builder.reducers[key], accumulated
+        accumulated[sink.actions[key]] = sink.reducers[key], accumulated
       ), {});
 
-      const reducer = combineReducer(builder.state, reducers);
-      this.addReducer(builder.namespace, reducer);
+      const reducer = combineReducer(sink.state, reducers);
+      this.addReducer(sink.namespace, reducer);
     }
 
     // create reducer if there is state and reducers
-    Object.keys(builder.effects).forEach(key =>
-      this.addEffect(builder.actions[key], builder.effects[key])
+    Object.keys(sink.effects).forEach(key =>
+      this.addEffect(sink.actions[key], sink.effects[key])
     );
 
     // register subscribe
-    Object.keys(builder.triggers).forEach(key => {
-      const trigger = builder.triggers[key];
+    Object.keys(sink.triggers).forEach(key => {
+      const trigger = sink.triggers[key];
       this.addTrigger(trigger.actionType, trigger.handler, trigger.options);
     });
   }

@@ -29,14 +29,14 @@ export class SinkFactory {
     return store;
   }
 
-  static addSink(builder: SinkBuilder) {
-    this.container.addSink(builder);
+  static get<TSink>(sink: Constructor<TSink>) {
+    return this.getSink(sink).instance as TSink;
   }
 
-  static ensureSinkBuilt(sink: Constructor) {
-    const sinkBuilder = SinkBuilder.get(sink.prototype);
-    if (!this.container.sinks[sinkBuilder.namespace]) new sink();
-    return sinkBuilder;
+  static getSink(sink: Constructor) {
+    const builder = SinkBuilder.get(sink.prototype);
+    this.container.addSink(builder);
+    return this.container.sinks[builder.namespace];
   }
 
   static get effectTasks() {
