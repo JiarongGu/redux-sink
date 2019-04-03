@@ -11,4 +11,5 @@ import { SinkBuilder } from '../SinkBuilder';
 export function effect(target: any, name: string, descriptor: PropertyDescriptor) {
   const sinkBuilder = SinkBuilder.get(target);
   sinkBuilder.effects[name] = descriptor.value;
+  return descriptor;
 }

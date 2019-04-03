@@ -11,5 +11,6 @@ export function sink(namespace: string) {
     const sinkBuilder = SinkBuilder.get(prototype);
     sinkBuilder.namespace = namespace;
     sinkBuilder.sinkConstructor = constructor;
+    return constructor;
   }
 }

@@ -11,4 +11,5 @@ import { SinkBuilder } from '../SinkBuilder';
 export function reducer(target: any, name: string, descriptor: PropertyDescriptor) {
   const sinkBuilder = SinkBuilder.get(target);
   sinkBuilder.reducers[name] = descriptor.value;
+  return descriptor;
 }
