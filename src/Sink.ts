@@ -9,7 +9,7 @@ export class Sink {
   stateProperty?: string;
   reducers: { [key: string]: PayloadHandler };
   effects: { [key: string]: PayloadHandler };
-  triggers: { [key: string]: TriggerEvent };
+  triggers: Array<TriggerEvent>;
 
   // auto generated
   _dispatches?: { [key: string]: Function };
@@ -20,8 +20,8 @@ export class Sink {
   constructor() {
     this.reducers = {};
     this.effects = {};
-    this.triggers = {};
     this.instance = {};
+    this.triggers = [];
   }
   
   // configured by SinkContainer

@@ -15,11 +15,11 @@ export class SinkBuilder {
   reducers: { [key: string]: Function };
   effects: { [key: string]: Function };
 
-  triggers: { [key: string]: {
+  triggers: Array<{
     actionType: string;
     handler: Function;
     options?: TriggerOptions;
-  }};
+  }>;
 
   // auto generated
   _dispatches?: { [key: string]: Function };
@@ -29,7 +29,7 @@ export class SinkBuilder {
     this.reducers = {};
     this.effects = {};
 
-    this.triggers = {};
+    this.triggers = [];
     this.sinkPrototype = sink;
   }
 
@@ -49,15 +49,13 @@ export class SinkBuilder {
     sink.stateProperty = this.stateProperty;
     const reducerKeys = Object.keys(this.reducers);
     const effectKeys = Object.keys(this.effects);
-    const triggerKeys = Object.keys(this.triggers);
 
     const instanceProperties = Object.keys(instance);
     const ignoredProperties = [ 
       ...staticIgnoredProperties, 
       ...instanceProperties, 
       ...reducerKeys, 
-      ...effectKeys, 
-      ...triggerKeys
+      ...effectKeys,
     ];
 
     const prototypeProperties = Object
@@ -103,14 +101,11 @@ export class SinkBuilder {
       sink.effects[name] = (payload: Array<any>) => effect(...payload);
     });
 
-    triggerKeys.forEach(name => {
-      const trigger = this.triggers[name];
+    this.triggers.forEach(trigger => {
       const bindedHandler = trigger.handler.bind(sink.instance);
       const handler = (action: any) => 
         action.fromSink ? bindedHandler(...action.payload) : bindedHandler(action.payload);
-
-      sink.triggers[name] = { ...trigger, handler };
-      sink.instance[name] = handler;
+      sink.triggers.push({ ...trigger, handler });
     });
 
     return sink;

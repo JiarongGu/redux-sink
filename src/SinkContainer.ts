@@ -102,8 +102,7 @@ export class SinkContainer {
     );
 
     // register subscribe
-    Object.keys(sink.triggers).forEach(key => {
-      const trigger = sink.triggers[key];
+    sink.triggers.forEach(trigger => {
       this.addTrigger(trigger.actionType, trigger.handler, trigger.options);
     });
   }
