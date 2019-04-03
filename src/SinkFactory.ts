@@ -1,9 +1,10 @@
-import { StoreConfiguration, Action, Constructor } from './typings';
+import { StoreConfiguration, Constructor } from './typings';
 import { configureStore } from './configureStore';
 import { createEffectMiddleware } from './createEffectsMiddleware';
 import { createTriggerMiddleware } from './createTriggerMiddleware';
 import { SinkBuilder } from './SinkBuilder';
 import { SinkContainer } from './SinkContainer';
+import { Action } from 'redux';
 
 /**
  * default sink container for create store and bind sinks

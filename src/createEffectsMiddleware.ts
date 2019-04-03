@@ -1,10 +1,9 @@
-import { MiddlewareAPI, Dispatch } from 'redux';
-import { Action } from './typings';
+import { MiddlewareAPI, Dispatch, Action } from 'redux';
 import { SinkContainer } from './SinkContainer';
 
 export function createEffectMiddleware(container: SinkContainer) {
-  return (store: MiddlewareAPI<any>) => (next: Dispatch<Action>) => (action: Action) => {
-    if(action.type) { 
+  return (store: MiddlewareAPI<any>) => (next: Dispatch<Action>) => (action: any) => {
+    if(action.type && action.payload) { 
       const handler = container.effectHandlers.get(action.type);
 
       if (handler) {

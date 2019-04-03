@@ -36,7 +36,8 @@ export class Sink {
     const dispatch = store && store.dispatch;
     return (payload: Array<any>) => dispatch && dispatch({
       type: this.actions[name],
-      payload: payload
+      payload: payload,
+      fromSink: true,
     });
   }
 

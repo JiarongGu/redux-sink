@@ -1,7 +1,6 @@
 
-import { TriggerEvent, Constructor } from './typings';
+import { Constructor, TriggerOptions } from './typings';
 import { Sink } from './Sink';
-import { prototype } from 'mocha';
 
 const staticIgnoredProperties = ['constructor', '__sinkBuilder__'];
 
@@ -13,9 +12,14 @@ export class SinkBuilder {
   // configured by decorator
   namespace!: string;
   stateProperty?: string;
-  reducers: { [key: string]: any };
-  effects: { [key: string]: any };
-  triggers: { [key: string]: TriggerEvent };
+  reducers: { [key: string]: Function };
+  effects: { [key: string]: Function };
+
+  triggers: { [key: string]: {
+    actionType: string;
+    handler: Function;
+    options?: TriggerOptions;
+  }};
 
   // auto generated
   _dispatches?: { [key: string]: Function };
@@ -101,7 +105,10 @@ export class SinkBuilder {
 
     triggerKeys.forEach(name => {
       const trigger = this.triggers[name];
-      const handler = trigger.handler.bind(sink.instance);
+      const bindedHandler = trigger.handler.bind(sink.instance);
+      const handler = (action: any) => 
+        action.fromSink ? bindedHandler(...action.payload) : bindedHandler(action.payload);
+
       sink.triggers[name] = { ...trigger, handler };
       sink.instance[name] = handler;
     });

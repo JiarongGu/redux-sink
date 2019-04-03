@@ -1,5 +1,5 @@
-import { ReducersMapObject, Store, Reducer } from 'redux';
-import { PayloadHandler, Action, TriggerOptions } from './typings';
+import { ReducersMapObject, Store, Reducer, Action } from 'redux';
+import { PayloadHandler, TriggerOptions, TriggerHandler } from './typings';
 import { SinkBuilder } from './SinkBuilder';
 import { buildReducers } from './buildReducers';
 import { combineReducer } from './combineReducer';
@@ -12,15 +12,15 @@ export class SinkContainer {
   effectHandlers = new Map<string, PayloadHandler>();
   effectTasks: Array<Promise<any>> = [];
 
-  triggerHandlers = new Map<string, Array<{ priority: number, handler: PayloadHandler }>>();
-  payloads: { [key: string]: any } = {};
+  triggerHandlers = new Map<string, Array<{ priority: number, handler: TriggerHandler }>>();
+  stagedActions: { [key: string]: any } = {};
 
   sinks: { [key: string]: Sink } = {};
 
   runTriggerEvents(action: Action) {
     const triggers = this.triggerHandlers.get(action.type);
     if (triggers) {
-      const tasks = triggers.map(trigger => trigger.handler(action.payload));
+      const tasks = triggers.map(trigger => trigger.handler(action));
       return Promise.all(tasks);
     }
     return Promise.resolve([]);
@@ -51,7 +51,7 @@ export class SinkContainer {
     this.effectHandlers.set(action, handler);
   }
 
-  addTrigger(actionType: string, handler: PayloadHandler, options?: TriggerOptions) {
+  addTrigger(actionType: string, handler: TriggerHandler, options?: TriggerOptions) {
     let handlers = this.triggerHandlers.get(actionType);
     if (!handlers) {
       this.triggerHandlers.set(actionType, handlers = []);
@@ -64,8 +64,10 @@ export class SinkContainer {
     if (priority > 0)
       handlers.sort((a, b) => b.priority - a.priority);
 
-    if (fireOnInit && this.payloads[actionType] !== undefined)
-      handler(this.payloads[actionType]);
+    if (fireOnInit && this.stagedActions[actionType] !== undefined) {
+      const action = this.stagedActions[actionType];
+      handler(action);
+    }
   }
 
   addSink(builder: SinkBuilder) {

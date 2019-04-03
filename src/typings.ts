@@ -1,13 +1,9 @@
-import { Middleware } from 'redux';
+import { Middleware, Action } from 'redux';
 
 export type Constructor<T = any, A = any> = { new(...args: Array<A>): T };
 
-export interface Action<Payload = any> {
-  type: string;
-  payload?: Payload;
-}
-
 export type PayloadHandler<TPayload = any> = (payload: TPayload) => any;
+export type TriggerHandler = (action: Action) => any;
 
 export interface TriggerOptions {
   priority?: number;
@@ -16,7 +12,7 @@ export interface TriggerOptions {
 
 export interface TriggerEvent {
   actionType: string;
-  handler: PayloadHandler;
+  handler: TriggerHandler;
   options?: TriggerOptions;
 };
 
