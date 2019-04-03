@@ -1,6 +1,9 @@
 
 import { TriggerEvent, Constructor } from './typings';
 import { Sink } from './Sink';
+import { prototype } from 'mocha';
+
+const staticIgnoredProperties = ['constructor', '__sinkBuilder__'];
 
 export class SinkBuilder {
   state?: any;
@@ -40,11 +43,32 @@ export class SinkBuilder {
     // initalize
     sink.namespace = this.namespace;
     sink.stateProperty = this.stateProperty;
-    const properties = Object.keys(instance);
+    const reducerKeys = Object.keys(this.reducers);
+    const effectKeys = Object.keys(this.effects);
+    const triggerKeys = Object.keys(this.triggers);
 
-    properties.forEach((key) => {
+    const instanceProperties = Object.keys(instance);
+    const ignoredProperties = [ 
+      ...staticIgnoredProperties, 
+      ...instanceProperties, 
+      ...reducerKeys, 
+      ...effectKeys, 
+      ...triggerKeys
+    ];
+
+    const prototypeProperties = Object
+      .getOwnPropertyNames(this.sinkPrototype)
+      .filter(name => !ignoredProperties.some(x => x ===name));
+      
+    instanceProperties.forEach((key) => {
       sink.instance[key] = instance[key];
     });
+    
+    prototypeProperties.forEach((key) => {
+      const property = Object.getOwnPropertyDescriptor(this.sinkPrototype, key);
+      if (property !== undefined)
+        Object.defineProperty(sink.instance, key, property);
+    })
 
     if (sink.stateProperty) {
       sink.state = instance[sink.stateProperty];
@@ -55,7 +79,7 @@ export class SinkBuilder {
     }
 
     // set dispatchers
-    Object.keys(this.reducers).forEach(name => {
+    reducerKeys.forEach(name => {
       const reducer = this.reducers[name].bind(sink.instance);
       sink.instance[name] = function () {
         return sink.dispatch(name)(Array.from(arguments));
@@ -67,7 +91,7 @@ export class SinkBuilder {
       };
     });
 
-    Object.keys(this.effects).forEach(name => {
+    effectKeys.forEach(name => {
       const effect = this.effects[name].bind(sink.instance);
       sink.instance[name] = function () {
         return sink.dispatch(name)(Array.from(arguments));
@@ -75,10 +99,11 @@ export class SinkBuilder {
       sink.effects[name] = (payload: Array<any>) => effect(...payload);
     });
 
-    Object.keys(this.triggers).forEach(actionType => {
-      const trigger = this.triggers[actionType];
+    triggerKeys.forEach(name => {
+      const trigger = this.triggers[name];
       const handler = trigger.handler.bind(sink.instance);
-      sink.triggers[actionType] = { ...trigger, handler };
+      sink.triggers[name] = { ...trigger, handler };
+      sink.instance[name] = handler;
     });
 
     return sink;

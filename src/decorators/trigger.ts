@@ -16,7 +16,7 @@ import { TriggerOptions } from '../typings';
 export function trigger(actionType: string, options?: TriggerOptions) {
   return function (target: any, name: string, descriptor: PropertyDescriptor) {
     const sinkBuilder = SinkBuilder.get(target);
-    sinkBuilder.triggers[actionType] = { handler: descriptor.value, actionType, options };
+    sinkBuilder.triggers[name] = { handler: descriptor.value, actionType, options };
     return descriptor;
   }
 }
