@@ -109,7 +109,10 @@ class CounterSink {
 ### Use sink without component
 redux-sink allowed you to use sinks without connect to component
 ```javascript
-const counterSink = new CounterSink();
+import { SinkFactory } from 'redux-sink';
+
+// use SinkFactory to get current sink by sink class
+const counterSink = SinkFactory.get(CounterSink);
 const counterState = counterSink.increment(10);
 ```
 
