@@ -29,7 +29,7 @@ export class Sink {
   
   setState(state: any) {
     this.state = state
-  };
+  }
   
   dispatch(name: string) {
     const store = this.getStore && this.getStore();
@@ -48,7 +48,7 @@ export class Sink {
       this._actions = [...reducers, ...effects]
         .reduce((accumulate, current) => (
           accumulate[current] = `${this.namespace}/${current}`, accumulate
-        ), {});
+        ), {} as { [key: string]: any });
     }
     return this._actions;
   }

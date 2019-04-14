@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { renderToString } from 'react-dom/server';
 import { sinking } from '../src/decorators';
-import { TestSink, Test2Sink, TestSink3 } from './sinks';
+import { TestSink, TestSink2, TestSink3 } from './sinks';
 import { SinkFactory } from '../src/SinkFactory';
 import { StoreConfiguration } from '../src/typings';
 
@@ -19,7 +19,7 @@ export function resetStore() {
   SinkFactory.container.sinks = {};
 }
 
-describe('redux sink', () => {
+describe('redux sink integration', () => {
   it('can inherit state from store', () => {
     const state = { name: 'initalized name' };
     const store = initalizeStore({ preloadedState: { testSink: state } });
@@ -43,8 +43,8 @@ describe('redux sink', () => {
 
   it('can share property between instance', () => {
     const store = initalizeStore();
-    const testSink1 = SinkFactory.get(Test2Sink);
-    const testSink2 = SinkFactory.get(Test2Sink);
+    const testSink1 = SinkFactory.get(TestSink2);
+    const testSink2 = SinkFactory.get(TestSink2);
     testSink2.setProp((prop) => { assert.equal(1, prop) });
     testSink1.setProp((prop) => { assert.equal(2, prop) });
   });
@@ -70,8 +70,8 @@ describe('redux sink', () => {
   it('can sink call reducers from other sink by effect', () => {
     const store = initalizeStore();
     const testSink = SinkFactory.get(TestSink);
-    const test2Sink = SinkFactory.get(Test2Sink);
-    test2Sink.setName('new name hahah');
+    const testSink2 = SinkFactory.get(TestSink2);
+    testSink2.setName('new name hahah');
     assert.equal('new name hahah', testSink.state.name);
   });
 
@@ -99,11 +99,11 @@ describe('redux sink', () => {
 
   it('can connect to component with non-state sink', () => {
     const store = initalizeStore();
-    const test2Sink = SinkFactory.get(Test2Sink);
+    const testSink2 = SinkFactory.get(TestSink2);
     const TestComponent = (props: { testSink: TestSink }) => {
       return <div>{props.testSink.state!.name}</div>
     }
-    test2Sink.setName('test name');
+    testSink2.setName('test name');
     const app = createApp(store, sinking(TestSink), TestComponent);
     assert.equal(renderToString(app), '<div>test name</div>');
   });

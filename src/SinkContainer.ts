@@ -80,7 +80,7 @@ export class SinkContainer {
     sink.getStore = () => this.store;
 
     const reducerKeys = Object.keys(sink.reducers);
-    if (sink.stateProperty && reducerKeys.length > 0) {
+    if (sink.stateProperty) {
       if (this.store) {
         const storeState = this.store.getState();
         const preloadedState = storeState && storeState[sink.namespace];
@@ -90,7 +90,7 @@ export class SinkContainer {
 
       const reducers = reducerKeys.reduce((accumulated, key) => (
         accumulated[sink.actions[key]] = sink.reducers[key], accumulated
-      ), {});
+      ), {} as { [key: string]: any });
 
       const reducer = combineReducer(sink.state, reducers);
       this.addReducer(sink.namespace, reducer);

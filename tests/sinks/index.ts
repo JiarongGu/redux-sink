@@ -1,3 +1,4 @@
 export * from './TestSink';
-export * from './Test2Sink';
+export * from './TestSink2';
 export * from './TestSink3';
+export * from './StateOnlySink';
