@@ -41,10 +41,11 @@ export class SinkContainer {
   }
 
   addReducer(namespace: string, reducer: Reducer<any, any>) {
-    if (!this.store) return;
-
     this.reducers[namespace] = reducer;
-    this.rebuildReducer();
+
+    // if store is already set, rebuild reducer
+    if (this.store)
+      this.rebuildReducer();
   }
 
   addEffect(action: string, handler: PayloadHandler) {
