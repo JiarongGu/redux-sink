@@ -15,5 +15,5 @@
     "experimentalDecorators": true,
     "strict": true
   },
-  "exclude": ["lib", "node_modules", "tests", "doc"]
+  "exclude": ["lib", "node_modules", "test", "doc"]
 }
