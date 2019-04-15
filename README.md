@@ -59,12 +59,6 @@ class CounterSink {
   decrement(value: number) {
     this.count = this.count - value;
   }
-
-  @effect
-  async updateAll(increase: number, decrease: number) {
-    this.increment(increase);
-    this.decrement(decrease);
-  }
 }
 ```
 
@@ -81,7 +75,6 @@ class Counter extends React.Component {
         <p>Current Count: <strong>{counter.count}</strong></p>
         <button onClick={() => counter.increment(1)}>Increment</button>
         <button onClick={() => counter.decrement(1)}>Decrement</button>
-        <button onClick={() => counter.updateAll(1, 2)}>All</button>
       </div>
     )
   }
