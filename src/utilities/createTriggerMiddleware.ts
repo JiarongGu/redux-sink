@@ -1,5 +1,5 @@
 import { MiddlewareAPI, Dispatch, AnyAction } from 'redux';
-import { SinkContainer } from './SinkContainer';
+import { SinkContainer } from '../SinkContainer';
 
 export function createTriggerMiddleware(container: SinkContainer) {
   return (store: MiddlewareAPI<any>) => (next: Dispatch<AnyAction>) => (action: any) => {

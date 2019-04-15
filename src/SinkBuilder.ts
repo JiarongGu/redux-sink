@@ -1,18 +1,18 @@
 
-import { Constructor, TriggerOptions } from './typings';
+import { Constructor, TriggerOptions, SinkConainerAPI } from './typings';
 import { Sink } from './Sink';
+import { Store } from 'redux';
+import { reduceKeys } from './utilities';
 
 const staticIgnoredProperties = ['constructor', '__sinkBuilder__'];
 
 export class SinkBuilder {
-  state?: any;
   sinkPrototype!: any;
   sinkConstructor!: Constructor;
 
   // configured by decorator
   namespace!: string;
-  stateProperty?: string;
-  reducers: { [key: string]: Function };
+  state: { [key: string]: any };
   effects: { [key: string]: Function };
 
   triggers: Array<{
@@ -26,8 +26,8 @@ export class SinkBuilder {
   _actions?: { [key: string]: string };
 
   constructor(sink: any) {
-    this.reducers = {};
     this.effects = {};
+    this.state = {};
 
     this.triggers = [];
     this.sinkPrototype = sink;
@@ -40,74 +40,98 @@ export class SinkBuilder {
     return prototype.__sinkBuilder__;
   }
 
-  createSink() {
-    const sink = new Sink();
-    const instance = new this.sinkConstructor();
+  buildSink(getStore: () => Store | undefined, sinkContainer: SinkConainerAPI) {
+    const sink = new Sink(getStore);
+    const instance = new this.sinkConstructor(sinkContainer);
 
     // initalize
     sink.namespace = this.namespace;
-    sink.stateProperty = this.stateProperty;
-    const reducerKeys = Object.keys(this.reducers);
+    sink.state = this.state;
+
     const effectKeys = Object.keys(this.effects);
+    const stateKeys = Object.keys(this.state);
 
     const instanceProperties = Object.keys(instance);
-    const ignoredProperties = [ 
-      ...staticIgnoredProperties, 
-      ...instanceProperties, 
-      ...reducerKeys, 
+    const ignoredProperties = [
+      ...staticIgnoredProperties,
+      ...instanceProperties,
       ...effectKeys,
     ];
 
     const prototypeProperties = Object
       .getOwnPropertyNames(this.sinkPrototype)
-      .filter(name => !ignoredProperties.some(x => x ===name));
-      
+      .filter(name => !ignoredProperties.some(x => x === name));
+
     instanceProperties.forEach((key) => {
       sink.instance[key] = instance[key];
     });
-    
+
     prototypeProperties.forEach((key) => {
       const property = Object.getOwnPropertyDescriptor(this.sinkPrototype, key);
       if (property !== undefined)
         Object.defineProperty(sink.instance, key, property);
-    })
+    });
 
-    if (sink.stateProperty) {
-      sink.state = instance[sink.stateProperty];
-      Object.defineProperty(sink.instance, sink.stateProperty, {
-        get: () => sink.state,
-        set: (value) => { sink.state = value }
-      });
+    let dispatcherProperties = {};
+
+    if (stateKeys.length > 0) {
+      // combine states
+      sink.state = reduceKeys(stateKeys, (key) => instance[key]);
+
+      // create reducers handlers
+      sink.reducers = reduceKeys(stateKeys, (key) => this.createStateReducer(key));
+
+      // set reducer dispatchers
+      Object.assign(dispatcherProperties, reduceKeys(stateKeys, (key) => this.createReducerDispatcher(sink, key)));
     }
 
-    // set dispatchers
-    reducerKeys.forEach(name => {
-      const reducer = this.reducers[name].bind(sink.instance);
-      sink.instance[name] = function () {
-        return sink.dispatch(name)(Array.from(arguments));
-      };
-      sink.reducers[name] = (args: Array<any>) => {
-        const newState = reducer(...args);
-        sink.instance[sink.stateProperty!] = newState;
-        return newState;
-      };
-    });
+    if (effectKeys.length > 0) {
+      // create effect handlers
+      sink.effects = reduceKeys(effectKeys, (key) => this.createEffect(key, sink.instance));
 
-    effectKeys.forEach(name => {
-      const effect = this.effects[name].bind(sink.instance);
-      sink.instance[name] = function () {
-        return sink.dispatch(name)(Array.from(arguments));
-      };  
-      sink.effects[name] = (payload: Array<any>) => effect(...payload);
-    });
+      // create effect dispatchers
+      Object.assign(dispatcherProperties, reduceKeys(effectKeys, (key) => this.createEffectDispatcher(sink, key)));
+    }
+
+    // assign dispatchers to instance
+    Object.defineProperties(sink.instance, dispatcherProperties);
 
     this.triggers.forEach(trigger => {
       const bindedHandler = trigger.handler.bind(sink.instance);
-      const handler = (action: any) => 
+      const handler = (action: any) =>
         action.fromSink ? bindedHandler(...action.payload) : bindedHandler(action.payload);
       sink.triggers.push({ ...trigger, handler });
     });
 
     return sink;
+  }
+
+  private createStateReducer(name: string) {
+    return (root: any, state: any) => { 
+      return ({ ...root, [name]: state });
+    };
+  }
+
+  private createReducerDispatcher(sink: Sink, name: string) {
+    return {
+      get: () => sink.state[name],
+      set: (value: any) => {
+        sink.dispatch(name)(value);
+        sink.state = { ...sink.state, [name]: value };
+      }
+    }
+  }
+
+  private createEffectDispatcher(sink: Sink, name: string) {
+    return {
+      value: function () {
+        return sink.dispatch(name)(Array.from(arguments));
+      }
+    }
+  }
+
+  private createEffect(name: string, instance: any) {
+    const effect = this.effects[name].bind(instance);
+    return (payload: Array<any>) => effect(...payload);
   }
 }

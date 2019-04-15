@@ -1,5 +1,5 @@
 import { MiddlewareAPI, Dispatch, Action } from 'redux';
-import { SinkContainer } from './SinkContainer';
+import { SinkContainer } from '../SinkContainer';
 
 export function createEffectMiddleware(container: SinkContainer) {
   return (store: MiddlewareAPI<any>) => (next: Dispatch<Action>) => (action: any) => {

@@ -2,7 +2,8 @@ import { Middleware, Action } from 'redux';
 
 export type Constructor<T = any, A = any> = { new(...args: Array<A>): T };
 
-export type PayloadHandler<TPayload = any> = (payload: TPayload) => any;
+export type EffectHandler<TPayload = any> = (payload: TPayload) => any;
+export type ReduceHandler<TPayload = any> = (state: any, payload: TPayload) => any;
 export type TriggerHandler = (action: Action) => any;
 
 export interface TriggerOptions {
@@ -21,6 +22,10 @@ export interface StoreConfiguration<TState = any> {
   middlewares?: Array<Middleware>;
   preloadedState?: TState;
   devtoolOptions?: DevtoolOptions;
+}
+
+export interface SinkConainerAPI {
+  sink: <TSink>(sink: Constructor<TSink>) => TSink;
 }
 
 export interface DevtoolOptions {

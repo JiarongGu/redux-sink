@@ -1,4 +1,4 @@
-import { sink, state, reducer, effect, trigger } from '../../src';
+import { sink, state, effect, trigger } from '../../src';
 
 export class TestState {
   name: string = '';
@@ -11,19 +11,19 @@ export class TestSink {
   @state
   state = new TestState();
 
-  @reducer
+  @effect
   setName(name: string) {
-    return ({ ...this.state, name })
+    this.state = ({ ...this.state, name });
   }
 
-  @reducer
+  @effect
   setValue(value: string) {
-    return ({ ...this.state, value })
+    this.state = ({ ...this.state, value })
   }
 
-  @reducer
+  @effect
   setCopy(copy: string) {
-    return ({ ...this.state, copy })
+    this.state = ({ ...this.state, copy })
   }
 
   @effect

@@ -1,14 +1,14 @@
-import { PayloadHandler, TriggerEvent } from './typings';
+import { EffectHandler, TriggerEvent, ReduceHandler } from './typings';
 import { Store } from 'redux';
 
 export class Sink {
   state?: any;
+  getStore: () => Store | undefined;
 
   // configured by decorator
   namespace!: string;
-  stateProperty?: string;
-  reducers: { [key: string]: PayloadHandler };
-  effects: { [key: string]: PayloadHandler };
+  reducers: { [key: string]: ReduceHandler };
+  effects: { [key: string]: EffectHandler };
   triggers: Array<TriggerEvent>;
 
   // auto generated
@@ -17,24 +17,21 @@ export class Sink {
 
   instance: any;
 
-  constructor() {
+  constructor(getStore: () => Store | undefined) {
     this.reducers = {};
     this.effects = {};
     this.instance = {};
     this.triggers = [];
+    this.getStore = getStore;
   }
-  
-  // configured by SinkContainer
-  getStore?: () => Store | undefined;
-  
+
   setState(state: any) {
     this.state = state
   }
-  
+
   dispatch(name: string) {
-    const store = this.getStore && this.getStore();
-    const dispatch = store && store.dispatch;
-    return (payload: Array<any>) => dispatch && dispatch({
+    const store = this.getStore();
+    return (payload: Array<any>) => store && store.dispatch({
       type: this.actions[name],
       payload: payload,
       fromSink: true,

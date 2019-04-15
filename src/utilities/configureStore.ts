@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose, Middleware } from 'redux';
-import { StoreConfiguration } from './typings';
+import { StoreConfiguration } from '../typings';
 import { buildReducers } from './buildReducers';
 
 export function configureStore<TState = any>(config?: StoreConfiguration<TState>) {

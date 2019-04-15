@@ -1,15 +1,14 @@
 import { ReducersMapObject, Store, Reducer, Action } from 'redux';
-import { PayloadHandler, TriggerOptions, TriggerHandler } from './typings';
+import { TriggerOptions, TriggerHandler, EffectHandler, Constructor } from './typings';
 import { SinkBuilder } from './SinkBuilder';
-import { buildReducers } from './buildReducers';
-import { combineReducer } from './combineReducer';
+import { buildReducers, combineReducer } from './utilities';
 import { Sink } from './Sink';
 
 export class SinkContainer {
   store?: Store;
   reducers: ReducersMapObject<any, any> = {};
 
-  effectHandlers = new Map<string, PayloadHandler>();
+  effectHandlers = new Map<string, EffectHandler>();
   effectTasks: Array<Promise<any>> = [];
 
   triggerHandlers = new Map<string, Array<{ priority: number, handler: TriggerHandler }>>();
@@ -24,6 +23,19 @@ export class SinkContainer {
       return Promise.all(tasks);
     }
     return Promise.resolve([]);
+  }
+
+  sink<TSink>(sink: Constructor<TSink>) {
+    return this.sinkPrototype(sink).instance as TSink;
+  }
+
+  sinkPrototype<TSink>(sink: Constructor<TSink>) {
+    const builder = SinkBuilder.get(sink.prototype);
+
+    if (!this.sinks[builder.namespace])
+      this.addSink(builder);
+
+    return this.sinks[builder.namespace];
   }
 
   setStore(store: Store) {
@@ -48,7 +60,7 @@ export class SinkContainer {
       this.rebuildReducer();
   }
 
-  addEffect(action: string, handler: PayloadHandler) {
+  addEffect(action: string, handler: EffectHandler) {
     this.effectHandlers.set(action, handler);
   }
 
@@ -61,7 +73,7 @@ export class SinkContainer {
     const fireOnInit = options && options.fireOnInit;
 
     handlers.push({ handler, priority });
-    
+
     if (priority > 0)
       handlers.sort((a, b) => b.priority - a.priority);
 
@@ -72,16 +84,15 @@ export class SinkContainer {
   }
 
   addSink(builder: SinkBuilder) {
-    if (this.sinks[builder.namespace])
-      return;
-
-    const sink = builder.createSink();
+    const sinkContainer = { 
+      sink: this.sink.bind(this) 
+    };
+    
+    const sink = builder.buildSink(() => this.store, sinkContainer);
     this.sinks[builder.namespace] = sink;
 
-    sink.getStore = () => this.store;
-
     const reducerKeys = Object.keys(sink.reducers);
-    if (sink.stateProperty) {
+    if (reducerKeys.length > 0) {
       if (this.store) {
         const storeState = this.store.getState();
         const preloadedState = storeState && storeState[sink.namespace];
@@ -89,12 +100,11 @@ export class SinkContainer {
           sink.setState(preloadedState);
       }
 
-      const reducers = reducerKeys.reduce((accumulated, key) => (
+      const reducer = reducerKeys.reduce((accumulated, key) => (
         accumulated[sink.actions[key]] = sink.reducers[key], accumulated
       ), {} as { [key: string]: any });
 
-      const reducer = combineReducer(sink.state, reducers);
-      this.addReducer(sink.namespace, reducer);
+      this.addReducer(sink.namespace, combineReducer(sink.state, reducer));
     }
 
     // create reducer if there is state and reducers

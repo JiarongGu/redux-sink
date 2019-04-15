@@ -1,21 +1,18 @@
 import { connect } from 'react-redux';
-import { SinkFactory } from '../SinkFactory';
+import { SinkFactory, SinkFactoryClass } from '../SinkFactory';
 import { Constructor } from '../typings';
 import { Sink } from '../Sink';
 
-/**
- * connect sinks with component, only connect state, reducers and effects
- * @param sinks array args of sinks
- */
-export function sinking(...sinks: Array<Constructor>) {
-  const factorySinks = sinks.map(sink => SinkFactory.getSink(sink));
-  return connect(
-    createMapStateToProps(factorySinks),
-    createMapDispatchToProps(factorySinks),
-    createMergeProps(factorySinks)
-  ) as any
+export function createSinking(factory: SinkFactoryClass) {
+  return function (...sinks: Array<Constructor>) {
+    const factorySinks = sinks.map(sink => factory.sinkPrototype(sink));
+    return connect(
+      createMapStateToProps(factorySinks),
+      createMapDispatchToProps(factorySinks),
+      createMergeProps(factorySinks)
+    ) as any
+  }
 }
-
 function createMapStateToProps(sinks: Array<Sink>) {
   return function (state: any) {
     return sinks.reduce((accumulate: any, sink) => {
@@ -36,12 +33,17 @@ function createMapDispatchToProps(sinks: Array<Sink>) {
 function createMergeProps(sinks: Array<Sink>) {
   return function (stateProps: any, dispatchProps: any, ownProps: any) {
     return sinks.reduce((accumulate, sink) => {
-      const state = sink.stateProperty ? { [sink.stateProperty]: stateProps[sink.namespace] } : undefined;
       accumulate[sink.namespace] = {
         ...dispatchProps[sink.namespace],
-        ...state
+        ...stateProps[sink.namespace]
       };
       return accumulate;
     }, { ...ownProps })
   }
 }
+
+/**
+ * connect sinks with component, only connect state, reducers and effects
+ * @param sinks array args of sinks
+ */
+export const sinking = createSinking(SinkFactory);

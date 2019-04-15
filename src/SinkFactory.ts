@@ -1,18 +1,12 @@
 import { StoreConfiguration, Constructor } from './typings';
-import { configureStore } from './configureStore';
-import { createEffectMiddleware } from './createEffectsMiddleware';
-import { createTriggerMiddleware } from './createTriggerMiddleware';
-import { SinkBuilder } from './SinkBuilder';
+import { configureStore, createEffectMiddleware, createTriggerMiddleware } from './utilities';
 import { SinkContainer } from './SinkContainer';
 import { Action } from 'redux';
 
-/**
- * default sink container for create store and bind sinks
- */
-export class SinkFactory {
-  static container = new SinkContainer();
+export class SinkFactoryClass {
+  container = new SinkContainer();
 
-  static createStore<TState = any>(config?: StoreConfiguration<TState>) {
+  createStore<TState = any>(config?: StoreConfiguration<TState>) {
     let middlewares = [
       createTriggerMiddleware(this.container),
       createEffectMiddleware(this.container)
@@ -30,21 +24,24 @@ export class SinkFactory {
     return store;
   }
 
-  static get<TSink>(sink: Constructor<TSink>) {
-    return this.getSink(sink).instance as TSink;
+  sink<TSink>(sink: Constructor<TSink>) {
+    return this.container.sink(sink);
   }
 
-  static getSink(sink: Constructor) {
-    const builder = SinkBuilder.get(sink.prototype);
-    this.container.addSink(builder);
-    return this.container.sinks[builder.namespace];
+  sinkPrototype<TSink>(sink: Constructor<TSink>) {
+    return this.container.sinkPrototype(sink);
   }
 
-  static get effectTasks() {
+  get effectTasks() {
     return this.container.effectTasks;
   }
 
-  static runTriggerEvents(action: Action) {
+  runTriggerEvents(action: Action) {
     return this.container.runTriggerEvents(action);
   }
 }
+
+/**
+ * default sink container for create store and bind sinks
+ */
+export const SinkFactory = new SinkFactoryClass();
