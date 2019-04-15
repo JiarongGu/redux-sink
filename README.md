@@ -82,7 +82,7 @@ class Counter extends React.Component {
 ```
 or   
 ```javascript
-sinking(CounterSink, OtherSink1)(Component)
+sinking(CounterSink)(Component)
 ```
 
 ## Advanced usages
