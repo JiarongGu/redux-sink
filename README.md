@@ -12,6 +12,7 @@ Redux-Sink is decorater based redux for less boilerplate, no action, no reducer,
   * [Step 3: sinking](#step-3-sinking)
 - [Advanced usages](#advanced-usages)
   * [Create trigger](#create-trigger)
+  * [Use sink inside sink](#use-sink-inside-sink)
   * [Use sink without component](#use-sink-without-component)
   * [Create store with configs](#create-store-with-configs)
   * [Use debounce/throttle](#use-debouncethrottle)
@@ -107,6 +108,28 @@ import { SinkFactory } from 'redux-sink';
 // use SinkFactory to get current sink by sink class
 const counterSink = SinkFactory.sink(CounterSink);
 const counterState = counterSink.increment(10);
+```
+
+### Use sink inside sink
+you can also use sink inside other sink by container api through constructor
+```javascript
+import { CounterSink } from './CounterSink';
+
+class OtherSink { 
+    constructor(container) {
+      this.counterSink = container.sink(CounterSink);
+    }
+    
+    @effect
+    loopCount(value: number) {
+        if (this.counterSink.count > 10) {
+            this.counterSink.count = 0;
+        } else {
+            this.counterSink.increment(value);
+        }
+    }
+}
+
 ```
 
 ### Create store with configs
