@@ -45,7 +45,7 @@ logic block of state called `sink`, includes state, reducer, effect, configured 
 ```javascript
 import { sink, state, effect } from 'redux-sink'
 
-@sink('counter')
+@sink('counterSink')
 class CounterSink {
   @state
   count = 0;
@@ -69,12 +69,12 @@ use `sinking` instead of `connect`, to connect sinks to component
 @sinking(CounterSink)
 class Counter extends React.Component {
   render() {
-    const counter = this.props.counter;
+    const counter = this.props.counterSink;
     return (
       <div>
-        <p>Current Count: <strong>{counter.count}</strong></p>
-        <button onClick={() => counter.increment(1)}>Increment</button>
-        <button onClick={() => counter.decrement(1)}>Decrement</button>
+        <p>Current Count: <strong>{counterSink.count}</strong></p>
+        <button onClick={() => counterSink.increment(1)}>Increment</button>
+        <button onClick={() => counterSink.decrement(1)}>Decrement</button>
       </div>
     )
   }
