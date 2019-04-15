@@ -1,5 +1,5 @@
 # Redux-Sink
-Redux-Sink is decorater based redux for less boilerplate, no action, no reducer, no seprated logic, also natively support redux to be loaded by code split. 
+Redux-Sink is decorater based redux for less boilerplate, no actions, no reducers, no seprated logic, also natively support redux to be loaded by code split. 
     
 [![travis](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)](https://travis-ci.org/JiarongGu/redux-sink)
 [![npm version](https://badge.fury.io/js/redux-sink.svg)](https://www.npmjs.com/package/redux-sink)
@@ -41,7 +41,7 @@ ReactDOM.render(
 ```
 
 ### Step 2: create sink
-logic block of state called `sink`, includes state, reducer, effect, configured by decorators.
+logic block of state called `sink`, includes state, effect, configured by decorators. to update the state, just simply assign the new state to it
 
 ```javascript
 import { sink, state, effect } from 'redux-sink'
@@ -64,7 +64,7 @@ class CounterSink {
 ```
 
 ### Step 3: sinking
-use `sinking` instead of `connect`, to connect sinks to component
+use `sinking` instead of `connect`, to connect sinks to component, only `state` and `effect` can be used in components
 
 ```javascript
 @sinking(CounterSink)
@@ -88,7 +88,7 @@ sinking(CounterSink)(Component)
 
 ## Advanced usages
 ### Create trigger
-`@trigger` is used to trigger when effect or reducer action fired, the action name will be `{sink}/{function}`. the parameters should be the same as the orginal action.
+`@trigger` is used to trigger when effect or state action fired, the action name will be `{sink}/{function}`. the parameters should be the same as the orginal action.
 ```javascript
 class CounterSink {
     ...
@@ -147,7 +147,7 @@ const store = SinkFactory.createStore({
 ```
 
 ### Use debounce/throttle
-you can use debounce or throttle from lodash or other library, to create decorator apply to sink functions. for `reducer` need to be used before `@reducer`
+you can use debounce or throttle from lodash or other library, to create decorator apply to sink functions.
 #### debounce.ts
 ```javascript
 import _debounce from 'lodash/debounce';
