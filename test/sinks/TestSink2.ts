@@ -18,6 +18,12 @@ export class TestSink2 {
   }
 
   @effect
+  directUpdateName(name: string) {
+    this.testSink.state = {... this.testSink.state, name };
+  }
+
+
+  @effect
   setProp(callback: (prop: number) => void) {
     callback(++this.value);
   }

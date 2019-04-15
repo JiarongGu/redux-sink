@@ -80,6 +80,16 @@ describe('redux sink integration', () => {
     assert.equal('new name hahah', testSink.state.name);
   });
 
+  it('can sink update other sinks state', () => {
+    const { factory, store } = createFactory();
+    const testSink = factory.sink(TestSink);
+    const testSink2 = factory.sink(TestSink2);
+    testSink2.directUpdateName('new name hahah');
+    const state = store.getState() as any;
+    assert.equal('new name hahah', testSink.state.name);
+    assert.equal(testSink.state.name, state.testSink.state.name);
+  });
+
   it('can trigger run when action detected', () => {
     const { factory, store } = createFactory();
     const testSink = factory.sink(TestSink);
