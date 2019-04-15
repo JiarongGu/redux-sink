@@ -177,10 +177,10 @@ import { throttle } from './throttle';
 
 class Counter extends React.Component {
  ...
- @debounce(300)
- @reducer
+  @debounce(300)
+  @effect
   update(state: any) {
-    return { ...this.state, ...state };
+    this.state = state;
   }
 }
 ```
@@ -188,7 +188,6 @@ class Counter extends React.Component {
 ## Api References
 - [@sink](#sink)
 - [@state](#state)
-- [@reducer](#reducer)
 - [@effect](#effect)
 - [@trigger](#trigger-1)
 - [@SinkFactory](#sinkFactory)
