@@ -1,12 +1,7 @@
 import { assert } from 'chai';
-import * as React from 'react';
-import { Provider } from 'react-redux';
-import { Store } from 'redux';
-import { renderToString } from 'react-dom/server';
-import { TestSink, TestSink2, TestSink3 } from './sinks';
+import { TestSink, TestSink2, TestSink3, StateOnlySink } from './sinks';
 import { StoreConfiguration } from '../src/typings';
 import { SinkContainer } from '../src';
-import { createSinking } from '../src/utilities';
 
 export function createFactory(config?: StoreConfiguration, sinkFactory?: SinkContainer) {
   const factory = sinkFactory || new SinkContainer();
@@ -14,7 +9,7 @@ export function createFactory(config?: StoreConfiguration, sinkFactory?: SinkCon
   return { factory, store };
 }
 
-describe('redux sink integration', () => {
+describe('sink test', () => {
   it('can inherit state from store', () => {
     const state = { name: 'initalized name' };
     const { factory, store } = createFactory({
@@ -24,6 +19,15 @@ describe('redux sink integration', () => {
     });
     const testSink = factory.sink(TestSink);
     assert.equal(state, testSink.state);
+  });
+
+  it('can inherit state from sink', () => {
+    const { factory, store } = createFactory();
+    const stateOnlySink = factory.sink(StateOnlySink);
+    const state = store.getState() as any;
+
+    assert.equal(state['stateOnly'].firststate, stateOnlySink.firststate);
+    assert.equal(state['stateOnly'].secondState, stateOnlySink.secondState);
   });
 
   it('can state match after instance applied', () => {
@@ -99,36 +103,4 @@ describe('redux sink integration', () => {
     testSink.setAll('test name', 'test value');
     assert.equal('test name', testSink.state.copy);
   });
-
-  it('can connect to component with state sink', () => {
-    const state = { name: 'initalized name' };
-    const { factory, store } = createFactory({ preloadedState: { testSink: { state } } });
-
-    const TestComponent = (props: { testSink: TestSink }) => {
-      return <div>{props.testSink.state!.name}</div>
-    }
-    const app = createApp(store, createSinking(factory)(TestSink), TestComponent);
-    assert.equal(renderToString(app), '<div>initalized name</div>');
-
-    const testSink = factory.sink(TestSink);
-    testSink.setAll('test name', 'test value');
-    assert.equal(renderToString(app), '<div>test name</div>');
-  });
-
-  it('can connect to component with non-state sink', () => {
-    const { factory, store } = createFactory();
-    const testSink2 = factory.sink(TestSink2);
-    const TestComponent = (props: { testSink: TestSink }) => {
-      return <div>{props.testSink.state!.name}</div>
-    }
-    testSink2.setName('test name');
-    const app = createApp(store, createSinking(factory)(TestSink), TestComponent);
-    const state = store.getState();
-    assert.equal(renderToString(app), '<div>test name</div>');
-  });
 })
-
-function createApp(store: Store, connecter: Function, component: any) {
-  const ConnectedComponent = connecter(component);
-  return <Provider store={store}><ConnectedComponent /></Provider>;
-}
