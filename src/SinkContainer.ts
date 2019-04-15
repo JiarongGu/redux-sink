@@ -50,7 +50,7 @@ export class SinkContainer {
     return this.sinks[builder.namespace];
   }
 
-  addSink(builder: SinkBuilder) {
+  private addSink(builder: SinkBuilder) {
     const sink = builder.buildSink(() => this.store, this.getContainer());
     this.sinks[builder.namespace] = sink;
 
