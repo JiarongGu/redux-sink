@@ -190,8 +190,10 @@ class Counter extends React.Component {
 - [@state](#state)
 - [@effect](#effect)
 - [@trigger](#trigger-1)
+- [@SinkContainer](#sinkContainer)
 - [@SinkFactory](#sinkFactory)
 - [@SinkBuilder](#sinkBuilder)
+- [@Sink](#sink)
 
 ### @sink
 mark the class as redux-sink class, the sink name use to locate the sink in store
@@ -205,8 +207,14 @@ use to process side-effects and aysnc calls, will run inside effect middleware
 ### @trigger
 use to bind extra event when action fires
 
+### SinkContainer
+main registry class for sinks, dynamic reducer controll
+
 ### SinkFactory
-main registry class for all sinks, manage the store and all loaded sinks
+default registry instance of SinkContainer for default globale use
 
 ### SinkBuilder
-build class embadded inside sink's protoype, which collect the sink configuration and build sink use `SinkFactory`
+build class embadded inside sink's protoype, collect the sink configuration
+
+### Sink
+main sink prototpye class build sink instance in `SinkContainer`
