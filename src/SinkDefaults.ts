@@ -1,5 +1,5 @@
 import { SinkContainer } from './SinkContainer';
-import { createSinking } from './utilities';
+import { createSinking } from './createSinking';
 
 /**
  * default sink container for create store and bind sinks

@@ -3,3 +3,4 @@ export * from './typings';
 export * from './SinkDefaults';
 export * from './SinkBuilder';
 export * from './SinkContainer';
+export * from './createSinking';

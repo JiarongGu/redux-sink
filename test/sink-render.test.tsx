@@ -5,8 +5,7 @@ import { Store } from 'redux';
 import { renderToString } from 'react-dom/server';
 import { TestSink, TestSink2 } from './sinks';
 import { StoreConfiguration } from '../src/typings';
-import { SinkContainer } from '../src';
-import { createSinking } from '../src/utilities';
+import { SinkContainer, createSinking } from '../src';
 
 export function createFactory(config?: StoreConfiguration, sinkFactory?: SinkContainer) {
   const factory = sinkFactory || new SinkContainer();

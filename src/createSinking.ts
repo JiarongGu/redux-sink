@@ -1,7 +1,7 @@
 import { connect, Options } from 'react-redux';
-import { Constructor } from '../typings';
-import { Sink } from '../Sink';
-import { SinkContainer } from '../SinkContainer';
+import { Constructor } from './typings';
+import { Sink } from './Sink';
+import { SinkContainer } from './SinkContainer';
 
 export function createSinking(container: SinkContainer, options?: Options) {
   return function (...sinks: Array<Constructor>) {

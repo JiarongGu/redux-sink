@@ -70,7 +70,7 @@ export class SinkContainer {
       this.reducers[sink.namespace] = combineReducer(sink.state, reducer);
 
       // if store is already set, rebuild reducer
-      if (this.store) 
+      if (this.store)
         this.rebuildReducer();
     }
 
@@ -91,8 +91,8 @@ export class SinkContainer {
   }
 
   private getContainer(): SinkContainerAPI {
-    return { 
-      sink: this.sink.bind(this) 
+    return {
+      sink: this.sink.bind(this)
     };
   }
 }
