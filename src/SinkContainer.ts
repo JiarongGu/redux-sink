@@ -1,28 +1,40 @@
-import { ReducersMapObject, Store, Reducer, Action } from 'redux';
-import { TriggerOptions, TriggerHandler, EffectHandler, Constructor } from './typings';
+import { ReducersMapObject, Store, Action } from 'redux';
+import { Constructor, StoreConfiguration, SinkContainerAPI } from './typings';
 import { SinkBuilder } from './SinkBuilder';
-import { buildReducers, combineReducer } from './utilities';
+import { buildReducers, combineReducer, createSinkStore } from './utilities';
 import { Sink } from './Sink';
+import { TriggerService, EffectService } from './services';
 
 export class SinkContainer {
   store?: Store;
   reducers: ReducersMapObject<any, any> = {};
 
-  effectHandlers = new Map<string, EffectHandler>();
-  effectTasks: Array<Promise<any>> = [];
-
-  triggerHandlers = new Map<string, Array<{ priority: number, handler: TriggerHandler }>>();
-  stagedActions: { [key: string]: any } = {};
+  effectService = new EffectService();
+  triggerService = new TriggerService();
 
   sinks: { [key: string]: Sink } = {};
 
-  runTriggerEvents(action: Action) {
-    const triggers = this.triggerHandlers.get(action.type);
-    if (triggers) {
-      const tasks = triggers.map(trigger => trigger.handler(action));
-      return Promise.all(tasks);
-    }
-    return Promise.resolve([]);
+  createStore<TState = any>(config?: StoreConfiguration<TState>) {
+    const store = createSinkStore(this, config);
+    this.store = store;
+
+    const state = this.store.getState() || {};
+    Object.keys(this.sinks).forEach(key => {
+      const sinkState = state[key];
+      if (sinkState !== undefined)
+        this.sinks[key].setState(sinkState)
+    });
+    this.rebuildReducer();
+
+    return store;
+  }
+
+  get effectTasks() {
+    return this.effectService.effectTasks;
+  }
+
+  activeTrigger(action: Action) {
+    return this.triggerService.activeTrigger(action);
   }
 
   sink<TSink>(sink: Constructor<TSink>) {
@@ -38,57 +50,8 @@ export class SinkContainer {
     return this.sinks[builder.namespace];
   }
 
-  setStore(store: Store) {
-    this.store = store;
-    if (!this.store) return;
-
-    // update sink state if there is preloaded state
-    const state = this.store.getState() || {};
-    Object.keys(this.sinks).forEach(key => {
-      const sinkState = state[key];
-      if (sinkState !== undefined)
-        this.sinks[key].setState(sinkState)
-    });
-    this.rebuildReducer();
-  }
-
-  addReducer(namespace: string, reducer: Reducer<any, any>) {
-    this.reducers[namespace] = reducer;
-
-    // if store is already set, rebuild reducer
-    if (this.store)
-      this.rebuildReducer();
-  }
-
-  addEffect(action: string, handler: EffectHandler) {
-    this.effectHandlers.set(action, handler);
-  }
-
-  addTrigger(actionType: string, handler: TriggerHandler, options?: TriggerOptions) {
-    let handlers = this.triggerHandlers.get(actionType);
-    if (!handlers) {
-      this.triggerHandlers.set(actionType, handlers = []);
-    }
-    const priority = options && options.priority || 0;
-    const fireOnInit = options && options.fireOnInit;
-
-    handlers.push({ handler, priority });
-
-    if (priority > 0)
-      handlers.sort((a, b) => b.priority - a.priority);
-
-    if (fireOnInit && this.stagedActions[actionType] !== undefined) {
-      const action = this.stagedActions[actionType];
-      handler(action);
-    }
-  }
-
   addSink(builder: SinkBuilder) {
-    const sinkContainer = { 
-      sink: this.sink.bind(this) 
-    };
-    
-    const sink = builder.buildSink(() => this.store, sinkContainer);
+    const sink = builder.buildSink(() => this.store, this.getContainer());
     this.sinks[builder.namespace] = sink;
 
     const reducerKeys = Object.keys(sink.reducers);
@@ -104,22 +67,32 @@ export class SinkContainer {
         accumulated[sink.actions[key]] = sink.reducers[key], accumulated
       ), {} as { [key: string]: any });
 
-      this.addReducer(sink.namespace, combineReducer(sink.state, reducer));
+      this.reducers[sink.namespace] = combineReducer(sink.state, reducer);
+
+      // if store is already set, rebuild reducer
+      if (this.store) 
+        this.rebuildReducer();
     }
 
     // create reducer if there is state and reducers
     Object.keys(sink.effects).forEach(key =>
-      this.addEffect(sink.actions[key], sink.effects[key])
+      this.effectService.addEffect(sink.actions[key], sink.effects[key])
     );
 
     // register subscribe
     sink.triggers.forEach(trigger => {
-      this.addTrigger(trigger.actionType, trigger.handler, trigger.options);
+      this.triggerService.addTrigger(trigger.actionType, trigger.handler, trigger.options);
     });
   }
 
-  rebuildReducer() {
+  private rebuildReducer() {
     const reducer = buildReducers(this.reducers);
     this.store!.replaceReducer(reducer);
+  }
+
+  private getContainer(): SinkContainerAPI {
+    return { 
+      sink: this.sink.bind(this) 
+    };
   }
 }

@@ -3,20 +3,15 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { renderToString } from 'react-dom/server';
-import { sinking, createSinking } from '../src/decorators';
 import { TestSink, TestSink2, TestSink3 } from './sinks';
-import { SinkFactory, SinkFactoryClass } from '../src/SinkFactory';
 import { StoreConfiguration } from '../src/typings';
+import { SinkContainer } from '../src';
+import { createSinking } from '../src/utilities';
 
-export function createFactory(config?: StoreConfiguration, sinkFactory?: SinkFactoryClass) {
-  const factory = sinkFactory || new SinkFactoryClass();
+export function createFactory(config?: StoreConfiguration, sinkFactory?: SinkContainer) {
+  const factory = sinkFactory || new SinkContainer();
   const store = factory.createStore(config);
   return { factory, store };
-}
-
-export function resetStore() {
-  SinkFactory.container.setStore(undefined as any);
-  SinkFactory.container.sinks = {};
 }
 
 describe('redux sink integration', () => {
@@ -54,10 +49,11 @@ describe('redux sink integration', () => {
   });
 
   it('can sink created before store initalized', () => {
-    resetStore();
+    const factory = new SinkContainer();
+    const testSink = factory.sink(TestSink);
+
     const state = { name: 'initalized name before store' };
-    const testSink = SinkFactory.sink(TestSink);
-    const store = SinkFactory.createStore({ preloadedState: { testSink: { state } } });
+    const store = factory.createStore({ preloadedState: { testSink: { state } } });
 
     assert.equal(state, testSink.state);
   });

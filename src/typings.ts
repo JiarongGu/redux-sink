@@ -24,7 +24,7 @@ export interface StoreConfiguration<TState = any> {
   devtoolOptions?: DevtoolOptions;
 }
 
-export interface SinkConainerAPI {
+export interface SinkContainerAPI {
   sink: <TSink>(sink: Constructor<TSink>) => TSink;
 }
 

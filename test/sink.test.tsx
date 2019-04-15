@@ -1,17 +1,12 @@
 import { assert } from 'chai';
 import { StateOnlySink } from './sinks';
-import { SinkFactory, SinkFactoryClass } from '../src/SinkFactory';
 import { StoreConfiguration } from '../src/typings';
+import { SinkContainer } from '../src';
 
-export function createFactory(config?: StoreConfiguration, sinkFactory?: SinkFactoryClass) {
-  const factory = sinkFactory || new SinkFactoryClass();
+export function createFactory(config?: StoreConfiguration, sinkContainer?: SinkContainer) {
+  const factory = sinkContainer || new SinkContainer();
   const store = factory.createStore(config);
   return { factory, store };
-}
-
-export function resetStore() {
-  SinkFactory.container.setStore(undefined as any);
-  SinkFactory.container.sinks = {};
 }
 
 describe('redux-sink unit test', () => {

@@ -1,6 +1,6 @@
 import { TestSink } from './TestSink';
 import { sink, effect } from '../../src/decorators';
-import { SinkConainerAPI } from '../../src';
+import { SinkContainerAPI } from '../../src/typings';
 
 @sink('testSink2')
 export class TestSink2 {
@@ -8,7 +8,7 @@ export class TestSink2 {
   testSink: TestSink;
   value = 0;
 
-  constructor(sinkContainer: SinkConainerAPI) {
+  constructor(sinkContainer: SinkContainerAPI) {
     this.testSink = sinkContainer.sink(TestSink);
   }
 

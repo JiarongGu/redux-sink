@@ -1,18 +1,19 @@
 import { connect } from 'react-redux';
-import { SinkFactory, SinkFactoryClass } from '../SinkFactory';
 import { Constructor } from '../typings';
 import { Sink } from '../Sink';
+import { SinkContainer } from '../SinkContainer';
 
-export function createSinking(factory: SinkFactoryClass) {
+export function createSinking(container: SinkContainer) {
   return function (...sinks: Array<Constructor>) {
-    const factorySinks = sinks.map(sink => factory.sinkPrototype(sink));
+    const containerSinks = sinks.map(sink => container.sinkPrototype(sink));
     return connect(
-      createMapStateToProps(factorySinks),
-      createMapDispatchToProps(factorySinks),
-      createMergeProps(factorySinks)
+      createMapStateToProps(containerSinks),
+      createMapDispatchToProps(containerSinks),
+      createMergeProps(containerSinks)
     ) as any
   }
 }
+
 function createMapStateToProps(sinks: Array<Sink>) {
   return function (state: any) {
     return sinks.reduce((accumulate: any, sink) => {
@@ -41,9 +42,3 @@ function createMergeProps(sinks: Array<Sink>) {
     }, { ...ownProps })
   }
 }
-
-/**
- * connect sinks with component, only connect state, reducers and effects
- * @param sinks array args of sinks
- */
-export const sinking = createSinking(SinkFactory);

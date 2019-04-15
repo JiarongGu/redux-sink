@@ -1,4 +1,3 @@
-export * from './skining';
 export * from './state';
 export * from './effect';
 export * from './sink';

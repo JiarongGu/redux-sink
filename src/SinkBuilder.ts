@@ -1,5 +1,5 @@
 
-import { Constructor, TriggerOptions, SinkConainerAPI } from './typings';
+import { Constructor, TriggerOptions, SinkContainerAPI } from './typings';
 import { Sink } from './Sink';
 import { Store } from 'redux';
 import { reduceKeys } from './utilities';
@@ -40,7 +40,7 @@ export class SinkBuilder {
     return prototype.__sinkBuilder__;
   }
 
-  buildSink(getStore: () => Store | undefined, sinkContainer: SinkConainerAPI) {
+  buildSink(getStore: () => Store | undefined, sinkContainer: SinkContainerAPI) {
     const sink = new Sink(getStore);
     const instance = new this.sinkConstructor(sinkContainer);
 
