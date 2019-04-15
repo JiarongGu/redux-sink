@@ -1,5 +1,5 @@
 # Redux-Sink
-Redux-Sink is decorater based redux for less boilerplate, no action, no seprated logic, also natively support redux to be loaded by code split. 
+Redux-Sink is decorater based redux for less boilerplate, no action, no reducer, no seprated logic, also natively support redux to be loaded by code split. 
     
 [![travis](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)](https://travis-ci.org/JiarongGu/redux-sink)
 [![npm version](https://badge.fury.io/js/redux-sink.svg)](https://www.npmjs.com/package/redux-sink)
@@ -43,21 +43,21 @@ ReactDOM.render(
 logic block of state called `sink`, includes state, reducer, effect, configured by decorators.
 
 ```javascript
-import { sink, state, reducer, effect, connect } from 'redux-sink'
+import { sink, state, effect } from 'redux-sink'
 
 @sink('counter')
 class CounterSink {
   @state
-  state = 0;
+  count = 0;
 
-  @reducer
+  @effect
   increment(value: number) {
-    return this.state + value;
+    this.count = this.count + value;
   }
 
-  @reducer
+  @effect
   decrement(value: number) {
-    return this.state - value;
+    this.count = this.count - value;
   }
 
   @effect
@@ -78,7 +78,7 @@ class Counter extends React.Component {
     const counter = this.props.counter;
     return (
       <div>
-        <p>Current Count: <strong>{counter.state}</strong></p>
+        <p>Current Count: <strong>{counter.count}</strong></p>
         <button onClick={() => counter.increment(1)}>Increment</button>
         <button onClick={() => counter.decrement(1)}>Decrement</button>
         <button onClick={() => counter.updateAll(1, 2)}>All</button>
@@ -112,7 +112,7 @@ redux-sink allowed you to use sinks without connect to component
 import { SinkFactory } from 'redux-sink';
 
 // use SinkFactory to get current sink by sink class
-const counterSink = SinkFactory.get(CounterSink);
+const counterSink = SinkFactory.sink(CounterSink);
 const counterState = counterSink.increment(10);
 ```
 
@@ -182,12 +182,7 @@ class Counter extends React.Component {
 mark the class as redux-sink class, the sink name use to locate the sink in store
 
 ### @state
-configure state property, state will be sync when reducer updates the store state, inital state created based on this property or preloadedState from store.   
-warning: only one state in each sink
-
-### @reducer
-use to update state, will trigger component update.   
-warning: do not call reducer or effect function inside reducer, use effect to do it
+configure state property, state will be sync when reducer updates the store state, inital state created based on this property or preloadedState from store. you can have multiple states
 
 ### @effect
 use to process side-effects and aysnc calls, will run inside effect middleware
