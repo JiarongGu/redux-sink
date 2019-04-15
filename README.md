@@ -205,9 +205,6 @@ use to process side-effects and aysnc calls, will run inside effect middleware
 ### @trigger
 use to bind extra event when action fires
 
-### @reloader
-use to fire trigger event when trigger dynamic loaded
-
 ### SinkFactory
 main registry class for all sinks, manage the store and all loaded sinks
 
