@@ -5,4 +5,4 @@ export * from './createEffectsMiddleware';
 export * from './createTriggerMiddleware';
 export * from './reduceKeys';
 export * from './createSinkStore';
-export * from './creatSinking';
+export * from './createSinking';
