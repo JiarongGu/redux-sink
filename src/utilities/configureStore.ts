@@ -22,7 +22,7 @@ export function configureStore<TState = any>(config?: StoreConfiguration<TState>
   const composedMiddlewares = finalCompose(combinedMiddleware);
   const combinedReducer = buildReducers(reducers);
 
-  if (preloadedState == undefined)
+  if (preloadedState === undefined)
     return createStore(combinedReducer as any, composedMiddlewares);
   return createStore(combinedReducer as any, preloadedState, composedMiddlewares);
 }
