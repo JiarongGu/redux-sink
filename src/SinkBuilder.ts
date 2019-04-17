@@ -83,7 +83,7 @@ export class SinkBuilder {
       sink.state = reduceKeys(stateKeys, (key) => instance[key]);
 
       // create reducers handlers
-      sink.reducers = reduceKeys(stateKeys, (key) => this.createStateReducer(key));
+      sink.reducers = reduceKeys(stateKeys, (key) => this.createStateReducer(sink, key));
 
       // set reducer dispatchers
       Object.assign(dispatcherProperties, reduceKeys(stateKeys, (key) => this.createReducerDispatcher(sink, key)));
@@ -110,19 +110,21 @@ export class SinkBuilder {
     return sink;
   }
 
-  private createStateReducer(name: string) {
-    return (root: any, state: any) => {
-      return ({ ...root, [name]: state });
+  private createStateReducer(sink: Sink, name: string) {
+    return (state: any, value: any) => {
+      if (state[name] === value) {  
+        return state; 
+      } else {
+        sink.state = { ...state, [name]: value }
+        return sink.state;
+      }
     };
   }
 
   private createReducerDispatcher(sink: Sink, name: string) {
     return {
       get: () => sink.state[name],
-      set: (value: any) => {
-        sink.dispatch(name)(value);
-        sink.state = { ...sink.state, [name]: value };
-      }
+      set: (value: any) => sink.dispatch(name)(value)
     }
   }
 
