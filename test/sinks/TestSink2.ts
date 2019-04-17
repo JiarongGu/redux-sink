@@ -1,15 +1,14 @@
 import { TestSink } from './TestSink';
 import { sink, effect } from '../../src/decorators';
-import { SinkContainerAPI } from '../../src/typings';
 
-@sink('testSink2')
+@sink('testSink2', TestSink)
 export class TestSink2 {
   name: string = 'test';
   testSink: TestSink;
   value = 0;
 
-  constructor(sinkContainer: SinkContainerAPI) {
-    this.testSink = sinkContainer.sink(TestSink);
+  constructor(testSink: TestSink) {
+    this.testSink = testSink;
   }
 
   @effect

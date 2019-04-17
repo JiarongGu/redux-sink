@@ -1,4 +1,5 @@
-import { Middleware, Action } from 'redux';
+import { Middleware, Action, Store } from 'redux';
+import { Sink } from './Sink';
 
 export type Constructor<T = any, A = any> = { new(...args: Array<A>): T };
 
@@ -24,8 +25,9 @@ export interface StoreConfiguration<TState = any> {
   devtoolOptions?: DevtoolOptions;
 }
 
-export interface SinkContainerAPI {
-  sink: <TSink>(sink: Constructor<TSink>) => TSink;
+export interface BuildSinkParams {
+  getStore: () => Store | undefined;
+  getSink: (constructor: Constructor) => Sink;
 }
 
 export interface DevtoolOptions {

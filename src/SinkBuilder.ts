@@ -1,5 +1,5 @@
 
-import { Constructor, TriggerOptions, SinkContainerAPI } from './typings';
+import { Constructor, TriggerOptions, BuildSinkParams } from './typings';
 import { Sink } from './Sink';
 import { Store } from 'redux';
 import { reduceKeys } from './utilities';
@@ -14,6 +14,9 @@ export class SinkBuilder {
   namespace!: string;
   state: { [key: string]: any };
   effects: { [key: string]: Function };
+
+  // for injecting internal sinks
+  injectSinkConstructors!: Array<Constructor>;
 
   triggers: Array<{
     actionType: string;
@@ -40,9 +43,10 @@ export class SinkBuilder {
     return prototype.__sinkBuilder__;
   }
 
-  buildSink(getStore: () => Store | undefined, sinkContainer: SinkContainerAPI) {
-    const sink = new Sink(getStore);
-    const instance = new this.sinkConstructor(sinkContainer);
+  buildSink(params: BuildSinkParams) {
+    const sink = new Sink(params.getStore);
+    const injectSinks = this.injectSinkConstructors.map(s => params.getSink(s));
+    const instance = new this.sinkConstructor(...injectSinks);
 
     // initalize
     sink.namespace = this.namespace;
@@ -107,7 +111,7 @@ export class SinkBuilder {
   }
 
   private createStateReducer(name: string) {
-    return (root: any, state: any) => { 
+    return (root: any, state: any) => {
       return ({ ...root, [name]: state });
     };
   }

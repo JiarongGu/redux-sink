@@ -5,12 +5,14 @@ import { Constructor } from '../typings';
  * create sink based on class, sink instance will be shared in prototype scope
  * @param namespace name of the sink, will be state name in store
  */
-export function sink(namespace: string) {
+export function sink(namespace: string, ...sinks: Array<Constructor>) {
   return function <T extends Constructor>(constructor: T) {
     const prototype = constructor.prototype;
     const sinkBuilder = SinkBuilder.get(prototype);
     sinkBuilder.namespace = namespace;
     sinkBuilder.sinkConstructor = constructor;
+    sinkBuilder.injectSinkConstructors = sinks;
+
     return constructor;
   }
 }

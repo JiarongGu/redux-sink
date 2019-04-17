@@ -111,13 +111,14 @@ const counterState = counterSink.increment(10);
 ```
 
 ### Use sink inside sink
-you can also use sink inside other sink by container api through constructor
+you can also use sink inside other sink by inject sinks inside `@sink`, the sink will be injected in constructor
 ```javascript
 import { CounterSink } from './CounterSink';
 
+@sink('otherSink', CounterSink)
 class OtherSink { 
-    constructor(container) {
-      this.counterSink = container.sink(CounterSink);
+    constructor(counterSink) {
+      this.counterSink = counterSink;
     }
     
     @effect

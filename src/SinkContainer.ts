@@ -1,5 +1,5 @@
 import { ReducersMapObject, Store, Action } from 'redux';
-import { Constructor, StoreConfiguration, SinkContainerAPI } from './typings';
+import { Constructor, StoreConfiguration, BuildSinkParams } from './typings';
 import { SinkBuilder } from './SinkBuilder';
 import { buildReducers, combineReducer, createSinkStore } from './utilities';
 import { Sink } from './Sink';
@@ -51,9 +51,17 @@ export class SinkContainer {
   }
 
   private addSink(builder: SinkBuilder) {
-    const sink = builder.buildSink(() => this.store, this.getContainer());
+    // build sink with build params
+    const buildParams: BuildSinkParams = {
+      getStore: () => this.store,
+      getSink: (sink) => this.sink(sink),
+    };
+    const sink = builder.buildSink(buildParams);
+
+    // add sink to container
     this.sinks[builder.namespace] = sink;
 
+    // create reducer if we got reducers
     const reducerKeys = Object.keys(sink.reducers);
     if (reducerKeys.length > 0) {
       if (this.store) {
@@ -74,7 +82,7 @@ export class SinkContainer {
         this.rebuildReducer();
     }
 
-    // create reducer if there is state and reducers
+    // register effects
     Object.keys(sink.effects).forEach(key =>
       this.effectService.addEffect(sink.actions[key], sink.effects[key])
     );
@@ -88,11 +96,5 @@ export class SinkContainer {
   private rebuildReducer() {
     const reducer = buildReducers(this.reducers);
     this.store!.replaceReducer(reducer);
-  }
-
-  private getContainer(): SinkContainerAPI {
-    return {
-      sink: this.sink.bind(this)
-    };
   }
 }
