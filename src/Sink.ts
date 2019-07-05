@@ -31,10 +31,10 @@ export class Sink {
 
   dispatch(name: string) {
     const store = this.getStore();
-    return (payload: Array<any>) => store && store.dispatch({
+    return (payload: any, packed: boolean) => store && store.dispatch({
       type: this.actions[name],
       payload: payload,
-      fromSink: true,
+      packed: packed,
     });
   }
 
@@ -55,7 +55,7 @@ export class Sink {
       this._dispatches = Object.keys(this.actions).reduce((accumulate: any, key) => {
         const dispatch = this.dispatch(key);
         accumulate[key] = function () {
-          dispatch(Array.from(arguments));
+          dispatch(Array.from(arguments), true);
         };
         return accumulate;
       }, {});

@@ -1,7 +1,6 @@
 
 import { Constructor, TriggerOptions, BuildSinkParams } from './typings';
 import { Sink } from './Sink';
-import { Store } from 'redux';
 import { reduceKeys } from './utilities';
 
 const staticIgnoredProperties = ['constructor', '__sinkBuilder__'];
@@ -48,7 +47,7 @@ export class SinkBuilder {
     const injectSinks = this.injectSinkConstructors.map(s => params.getSink(s));
     const instance = new this.sinkConstructor(...injectSinks);
 
-    // initalize
+    // initialize
     sink.namespace = this.namespace;
     sink.state = this.state;
 
@@ -101,9 +100,9 @@ export class SinkBuilder {
     Object.defineProperties(sink.instance, dispatcherProperties);
 
     this.triggers.forEach(trigger => {
-      const bindedHandler = trigger.handler.bind(sink.instance);
+      const bindHandler = trigger.handler.bind(sink.instance);
       const handler = (action: any) =>
-        action.fromSink ? bindedHandler(...action.payload) : bindedHandler(action.payload);
+        action.packed ? bindHandler(...action.payload) : bindHandler(action.payload);
       sink.triggers.push({ ...trigger, handler });
     });
 
@@ -124,14 +123,14 @@ export class SinkBuilder {
   private createReducerDispatcher(sink: Sink, name: string) {
     return {
       get: () => sink.state[name],
-      set: (value: any) => sink.dispatch(name)(value)
+      set: (value: any) => sink.dispatch(name)(value, false)
     }
   }
 
   private createEffectDispatcher(sink: Sink, name: string) {
     return {
       value: function () {
-        return sink.dispatch(name)(Array.from(arguments));
+        return sink.dispatch(name)(Array.from(arguments), true);
       }
     }
   }

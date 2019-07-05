@@ -92,7 +92,7 @@ sinking(CounterSink)(Component)
 ```javascript
 class CounterSink {
     ...
-    @trigger('counter/updateAll')
+    @trigger('counterSink/updateAll')
     updateAllTrigger(increase: number, decrease: number) {
       this.decrement(decrease);
       this.increment(increase);
