@@ -114,14 +114,37 @@ const Component = () => {
 
 ## Advanced usages
 ### Create trigger
-`@trigger` is used to trigger when effect or state action fired, the action name will be `{sink}/{function}`. the parameters should be the same as the orginal action.
+`@trigger` is used to trigger when effect or state action fired, the action name will be `{sink}/{effect|state}`. the parameters should be the same as the orginal action.
 ```javascript
+import { sink, state, effect, trigger } from 'redux-sink'; 
+
+@sink('counter')
 class CounterSink {
-    ...
-    @trigger('counterSink/updateAll')
-    updateAllTrigger(increase: number, decrease: number) {
-      this.decrement(decrease);
-      this.increment(increase);
+    @state total;
+    @state changeActionCount; // number of change action fired
+    
+    @effect
+    increase(value: number){
+      // change total value
+      this.total = this.total + number;
+    }
+    
+    @effect
+    decrease(value: number){
+      // change total value
+      this.total = this.total - number;
+    }
+    
+    @trigger('counter/total')
+    totalTrigger(value: number) {
+      // trigger when total change event fired
+    }
+    
+    @trigger('counter/increase')
+    @trigger('counter/decrease')
+    actionTrigger(value: number) {
+      // trigger when increase or decrease action fired
+      this.changeActionCount = this.changeActionCount + 1;
     }
 }
 ```
