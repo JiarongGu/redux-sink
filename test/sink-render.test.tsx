@@ -46,7 +46,7 @@ describe('sink render test', () => {
     const testSink2 = factory.sink(TestSink2);
     const TestComponent = () => {
       const testSink = useSink(TestSink);
-      return <div>{testSink.state.name}</div>
+      return <div>{testSink!.state.name}</div>
     }
     testSink2.setName('test name');
     const app = <Provider store={store}><TestComponent /></Provider>;

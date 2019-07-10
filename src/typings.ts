@@ -1,7 +1,7 @@
 import { Middleware, Action, Store } from 'redux';
 import { Sink } from './Sink';
 
-export type Constructor<T = any, A = any> = { new(...args: Array<A>): T };
+export type Constructor<T = any> = { new(...args: Array<any>): T };
 
 export type EffectHandler<TPayload = any> = (payload: TPayload) => any;
 export type ReduceHandler<TPayload = any> = (state: any, payload: TPayload) => any;
