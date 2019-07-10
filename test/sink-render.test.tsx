@@ -5,7 +5,7 @@ import { Store } from 'redux';
 import { renderToString } from 'react-dom/server';
 import { TestSink, TestSink2 } from './sinks';
 import { StoreConfiguration } from '../src/typings';
-import { SinkContainer, createSinking } from '../src';
+import { SinkContainer, createSinking, useSink } from '../src';
 
 export function createFactory(config?: StoreConfiguration, sinkFactory?: SinkContainer) {
   const factory = sinkFactory || new SinkContainer();
@@ -37,6 +37,19 @@ describe('sink render test', () => {
     }
     testSink2.setName('test name');
     const app = createApp(store, createSinking(factory)(TestSink), TestComponent);
+    const state = store.getState();
+    assert.equal(renderToString(app), '<div>test name</div>');
+  });
+
+  it('can connect to component hooks', () => {
+    const { factory, store } = createFactory();
+    const testSink2 = factory.sink(TestSink2);
+    const TestComponent = () => {
+      const testSink = useSink(TestSink);
+      return <div>{testSink.state.name}</div>
+    }
+    testSink2.setName('test name');
+    const app = <Provider store={store}><TestComponent /></Provider>;
     const state = store.getState();
     assert.equal(renderToString(app), '<div>test name</div>');
   });

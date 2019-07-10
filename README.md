@@ -67,24 +67,50 @@ class CounterSink {
 use `sinking` instead of `connect`, to connect sinks to component, only `state` and `effect` can be used in components
 
 ```javascript
+import { sinking } from 'redux-sink';
+import { CounterSink } from './CounterSink';
+
 @sinking(CounterSink)
 class Counter extends React.Component {
   render() {
     const counter = this.props.counterSink;
     return (
       <div>
-        <p>Current Count: <strong>{counterSink.count}</strong></p>
-        <button onClick={() => counterSink.increment(1)}>Increment</button>
-        <button onClick={() => counterSink.decrement(1)}>Decrement</button>
+        <p>Current Count: <strong>{counter.count}</strong></p>
+        <button onClick={() => counter.increment(1)}>Increment</button>
+        <button onClick={() => counter.decrement(1)}>Decrement</button>
       </div>
     )
   }
 }
 ```
-or   
+
+using sinking with out decorator
+
 ```javascript
-sinking(CounterSink)(Component)
+import { sinking } from 'redux-sink';
+
+export const Component = sinking(CounterSink)(ComponentClass);
 ```
+
+using sink by hooks
+
+```javascript
+import { useSink } from 'redux-sink';
+import { CounterSink } from './CounterSink';
+
+const Component = () => {
+  const counter = useSink(CounterSink);
+  return (
+    <div>
+      <p>Current Count: <strong>{counter.count}</strong></p>
+      <button onClick={() => counter.increment(1)}>Increment</button>
+      <button onClick={() => counter.decrement(1)}>Decrement</button>
+    </div>
+  )
+}
+```
+
 
 ## Advanced usages
 ### Create trigger
