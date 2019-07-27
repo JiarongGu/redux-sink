@@ -12,8 +12,7 @@
   },
   "scripts": {
     "build": "rimraf lib/ && node ./node_modules/typescript/bin/tsc",
-    "test": "mocha -r ts-node/register test/**/*.test.ts*",
-    "publish": "npm run build & npm publish"
+    "test": "mocha -r ts-node/register test/**/*.test.ts*"
   },
   "repository": {
     "type": "git",
