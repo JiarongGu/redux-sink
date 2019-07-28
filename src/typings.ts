@@ -46,7 +46,7 @@ export interface DevToolOptions {
 export interface SinkAction {
   type: string;
   payload: any;
-  packed?: boolean;
+  effect?: boolean;
 }
 
 export type SinkDispatch = (...args: Array<any>) => SinkAction | undefined;
