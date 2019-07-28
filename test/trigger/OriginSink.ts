@@ -20,5 +20,7 @@ export class OriginSink {
   }
 
   @effect
-  public update4(value1: string, value2: string) {}
+  public update4(value1: string, value2: string) {
+    // do nothing
+  }
 }

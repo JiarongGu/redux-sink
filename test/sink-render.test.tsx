@@ -8,7 +8,6 @@ import { AnyFunction } from '../src/typings';
 import { TestSink, TestSink2 } from './sinks';
 import { createFactory } from './utils';
 
-
 describe('sink render test', () => {
   it('can connect to component with state sink', () => {
     const state = { name: 'initialized name' };

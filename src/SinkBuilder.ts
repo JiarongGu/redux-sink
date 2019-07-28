@@ -140,7 +140,7 @@ export class SinkBuilder {
       if (rawAction) {
         payload = [action];
       } else {
-        payload = action.effect ? action.payload : [action.payload];
+        payload = action.packed ? action.payload : [action.payload];
       }
 
       if (formatter) {
