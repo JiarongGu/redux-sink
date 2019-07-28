@@ -3,15 +3,11 @@ import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
-import { createSinking, SinkContainer, useSink } from '../src';
-import { StoreConfiguration } from '../src/typings';
+import { createSinking, useSink } from '../src';
+import { AnyFunction } from '../src/typings';
 import { TestSink, TestSink2 } from './sinks';
+import { createFactory } from './utils';
 
-export function createFactory(config?: StoreConfiguration, sinkFactory?: SinkContainer) {
-  const factory = sinkFactory || new SinkContainer();
-  const store = factory.createStore(config);
-  return { factory, store };
-}
 
 describe('sink render test', () => {
   it('can connect to component with state sink', () => {
@@ -55,7 +51,7 @@ describe('sink render test', () => {
   });
 });
 
-function createApp(store: Store, connecter: (...args: Array<any>) => any, component: any) {
+function createApp(store: Store, connecter: AnyFunction, component: any) {
   const ConnectedComponent = connecter(component);
   return <Provider store={store}><ConnectedComponent /></Provider>;
 }

@@ -1,21 +1,15 @@
-import { SinkAction, TriggerHandler, TriggerOptions } from '../typings';
+import { AnyFunction, SinkAction, TriggerEventHandler, TriggerOptions } from '../typings';
 
 export class TriggerService {
   public stagedActions: { [key: string]: any } = {};
+  public triggerHandlers = new Map<string, Array<TriggerEventHandler>>();
 
-  private triggerHandlers = new Map<string, Array<{ priority: number, handler: TriggerHandler }>>();
+  public addTrigger(actionType: string, handler: AnyFunction, options: TriggerOptions) {
+    const { priority = 0, lazyLoad } = options;
 
-  public addTrigger(actionType: string, handler: TriggerHandler, options?: TriggerOptions) {
     let handlers = this.triggerHandlers.get(actionType);
     if (!handlers) {
       this.triggerHandlers.set(actionType, handlers = []);
-    }
-    const priority = options && options.priority || 0;
-    let fireOnInit = options && options.fireOnInit;
-
-    // default fireOnInit to true
-    if (fireOnInit === undefined) {
-      fireOnInit = true;
     }
 
     handlers.push({ handler, priority });
@@ -24,7 +18,7 @@ export class TriggerService {
       handlers.sort((a, b) => b.priority - a.priority);
     }
 
-    if (fireOnInit && this.stagedActions[actionType] !== undefined) {
+    if (lazyLoad && this.stagedActions[actionType] !== undefined) {
       const action = this.stagedActions[actionType];
       handler(action);
     }

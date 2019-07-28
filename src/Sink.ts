@@ -47,7 +47,7 @@ export class Sink {
           accumulate[current] = `${this.namespace}/${current}`, accumulate
         ), {} as { [key: string]: any });
     }
-    return this._actions;
+    return this._actions!;
   }
 
   public get dispatches() {
@@ -55,8 +55,8 @@ export class Sink {
       this._dispatches = Object.keys(this.actions).reduce((accumulate, key) => {
         accumulate[key] = (...args: Array<any>) => this.dispatch(key, args, true);
         return accumulate;
-      }, {});
+      }, {} as any);
     }
-    return this._dispatches;
+    return this._dispatches!;
   }
 }

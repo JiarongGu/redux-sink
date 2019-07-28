@@ -5,17 +5,24 @@ export type Constructor<T = any> = new (...args: Array<any>) => T;
 
 export type EffectHandler<TPayload = any> = (payload: TPayload) => any;
 export type ReduceHandler<TPayload = any> = (state: any, payload: TPayload) => any;
-export type TriggerHandler = (action: SinkAction) => any;
+export type AnyFunction = (...args: Array<any>) => any;
 
 export interface TriggerOptions {
-  priority?: number;
-  fireOnInit?: boolean; /** default true */
+  priority?: number;      // default: 0
+  lazyLoad?: boolean;  // default: true
+  rawAction?: boolean;    // default: false
+  formatter?: AnyFunction;
 }
 
 export interface TriggerEvent {
   actionType: string;
-  handler: TriggerHandler;
-  options?: TriggerOptions;
+  handler: AnyFunction;
+  options: TriggerOptions;
+}
+
+export interface TriggerEventHandler {
+  priority: number;
+  handler: AnyFunction;
 }
 
 export interface StoreConfiguration<TState = any> {
@@ -31,7 +38,7 @@ export interface BuildSinkParams {
 }
 
 export interface DevToolOptions {
-  devToolCompose: (...args: Array<any>) => any;
+  devToolCompose: AnyFunction;
   disabled?: boolean;
   [key: string]: any;
 }

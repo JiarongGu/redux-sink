@@ -1,6 +1,6 @@
 
 import { Sink } from './Sink';
-import { BuildSinkParams, Constructor, TriggerOptions, SinkAction } from './typings';
+import { AnyFunction, BuildSinkParams, Constructor, SinkAction, TriggerEvent } from './typings';
 import { reduceKeys } from './utilities';
 
 const staticIgnoredProperties = ['constructor', '__sinkBuilder__'];
@@ -19,19 +19,15 @@ export class SinkBuilder {
   // configured by decorator
   public namespace!: string;
   public state: { [key: string]: any };
-  public effects: { [key: string]: (...args: Array<any>) => any };
+  public effects: { [key: string]: AnyFunction };
 
   // for injecting internal sinks
   public injectSinkConstructors!: Array<Constructor>;
 
-  public triggers: Array<{
-    actionType: string;
-    handler: (...args: Array<any>) => any;
-    options?: TriggerOptions;
-  }>;
+  public triggers: Array<TriggerEvent>;
 
   // auto generated
-  public _dispatches?: { [key: string]: (...args: Array<any>) => any };
+  public _dispatches?: { [key: string]: AnyFunction };
   public _actions?: { [key: string]: string };
 
   constructor(sink: any) {
@@ -100,13 +96,8 @@ export class SinkBuilder {
     // assign dispatchers to instance
     Object.defineProperties(sink.instance, dispatcherProperties);
 
-    this.triggers.forEach(trigger => {
-      const handler = (action: SinkAction) => {
-        const payload = action.effect ? action.payload : [action.payload];
-        return trigger.handler.apply(sink.instance, payload);
-      };
-      sink.triggers.push({ ...trigger, handler });
-    });
+    // create trigger handlers
+    sink.triggers = this.triggers.map(trigger => this.createTrigger(trigger, sink.instance));
 
     return sink;
   }
@@ -114,18 +105,18 @@ export class SinkBuilder {
   private createReducerDispatcher(sink: Sink, name: string) {
     return {
       get: () => sink.state[name],
-      set: (value) => sink.dispatch(name, value, false)
+      set: (value: any) => sink.dispatch(name, value, false)
     };
   }
 
   private createEffectDispatcher(sink: Sink, name: string) {
     return {
-      value: (...args) => sink.dispatch(name, args, true)
+      value: (...args: Array<any>) => sink.dispatch(name, args, true)
     };
   }
 
   private createStateReducer(sink: Sink, name: string) {
-    return (state: any, value) => {
+    return (state: any, value: any) => {
       if (state[name] === value) {
         return state;
       } else {
@@ -135,9 +126,29 @@ export class SinkBuilder {
     };
   }
 
-  private createEffect(name: string, instance: any) {
+  private createEffect(name: string, instance: any): (payload: Array<any>) => any {
     return (payload) => {
       return this.effects[name].apply(instance, payload);
     };
+  }
+
+  private createTrigger(trigger: TriggerEvent, instance: any): TriggerEvent {
+    const handler = (action: SinkAction) => {
+      const { rawAction, formatter } = trigger.options;
+      let payload: Array<any> = [];
+
+      if (rawAction) {
+        payload = [action];
+      } else {
+        payload = action.effect ? action.payload : [action.payload];
+      }
+
+      if (formatter) {
+        payload = [formatter.apply(null, payload)];
+      }
+
+      return trigger.handler.apply(instance, payload);
+    };
+    return { ...trigger, handler };
   }
 }

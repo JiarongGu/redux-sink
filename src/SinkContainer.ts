@@ -23,7 +23,7 @@ export class SinkContainer {
     Object.keys(this.sinks).forEach(key => {
       const sinkState = state[key];
       if (sinkState !== undefined) {
-        this.sinks[key].setState(sinkState)
+        this.sinks[key].setState(sinkState);
       }
     });
     this.rebuildReducer();
