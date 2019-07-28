@@ -1,28 +1,30 @@
-import { ReducersMapObject, Store, Action } from 'redux';
-import { Constructor, StoreConfiguration, BuildSinkParams } from './typings';
-import { SinkBuilder } from './SinkBuilder';
-import { buildReducers, combineReducer, createSinkStore } from './utilities';
+import { ReducersMapObject, Store } from 'redux';
+
+import { EffectService, TriggerService } from './services';
 import { Sink } from './Sink';
-import { TriggerService, EffectService } from './services';
+import { SinkBuilder } from './SinkBuilder';
+import { BuildSinkParams, Constructor, SinkAction, StoreConfiguration } from './typings';
+import { buildReducers, combineReducer, createSinkStore } from './utilities';
 
 export class SinkContainer {
-  store?: Store;
-  reducers: ReducersMapObject<any, any> = {};
+  public store?: Store;
+  public reducers: ReducersMapObject<any, any> = {};
 
-  effectService = new EffectService();
-  triggerService = new TriggerService();
+  public effectService = new EffectService();
+  public triggerService = new TriggerService();
 
-  sinks: { [key: string]: Sink } = {};
+  public sinks: { [key: string]: Sink } = {};
 
-  createStore<TState = any>(config?: StoreConfiguration<TState>) {
+  public createStore<TState = any>(config?: StoreConfiguration<TState>) {
     const store = createSinkStore(this, config);
     this.store = store;
 
     const state = this.store.getState() || {};
     Object.keys(this.sinks).forEach(key => {
       const sinkState = state[key];
-      if (sinkState !== undefined)
+      if (sinkState !== undefined) {
         this.sinks[key].setState(sinkState)
+      }
     });
     this.rebuildReducer();
 
@@ -33,19 +35,20 @@ export class SinkContainer {
     return this.effectService.effectTasks;
   }
 
-  activeTrigger(action: Action) {
+  public activeTrigger(action: SinkAction) {
     return this.triggerService.activeTrigger(action);
   }
 
-  sink<TSink>(sink: Constructor<TSink>) {
+  public sink<TSink>(sink: Constructor<TSink>) {
     return this.sinkPrototype(sink).instance as TSink;
   }
 
-  sinkPrototype<TSink>(sink: Constructor<TSink>) {
+  public sinkPrototype<TSink>(sink: Constructor<TSink>) {
     const builder = SinkBuilder.get(sink.prototype);
 
-    if (!this.sinks[builder.namespace])
+    if (!this.sinks[builder.namespace]) {
       this.addSink(builder);
+    }
 
     return this.sinks[builder.namespace];
   }
@@ -53,8 +56,8 @@ export class SinkContainer {
   private addSink(builder: SinkBuilder) {
     // build sink with build params
     const buildParams: BuildSinkParams = {
-      getStore: () => this.store,
-      getSink: (sink) => this.sink(sink),
+      getSink: (sinkConstructor: Constructor<any>) => this.sink(sinkConstructor),
+      getStore: () => this.store
     };
     const sink = builder.buildSink(buildParams);
 
@@ -67,8 +70,9 @@ export class SinkContainer {
       if (this.store) {
         const storeState = this.store.getState();
         const preloadedState = storeState && storeState[sink.namespace];
-        if (preloadedState !== undefined)
+        if (preloadedState !== undefined) {
           sink.setState(preloadedState);
+        }
       }
 
       const reducer = reducerKeys.reduce((accumulated, key) => (
@@ -78,8 +82,9 @@ export class SinkContainer {
       this.reducers[sink.namespace] = combineReducer(sink.state, reducer);
 
       // if store is already set, rebuild reducer
-      if (this.store)
+      if (this.store) {
         this.rebuildReducer();
+      }
     }
 
     // register effects

@@ -1,43 +1,7 @@
-import { EffectHandler, TriggerEvent, ReduceHandler } from './typings';
 import { Store } from 'redux';
+import { EffectHandler, ReduceHandler, SinkAction, TriggerEvent } from './typings';
 
 export class Sink {
-  state?: any;
-  getStore: () => Store | undefined;
-
-  // configured by decorator
-  namespace!: string;
-  reducers: { [key: string]: ReduceHandler };
-  effects: { [key: string]: EffectHandler };
-  triggers: Array<TriggerEvent>;
-
-  // auto generated
-  _dispatches?: { [key: string]: Function };
-  _actions?: { [key: string]: string };
-
-  instance: any;
-
-  constructor(getStore: () => Store | undefined) {
-    this.reducers = {};
-    this.effects = {};
-    this.instance = {};
-    this.triggers = [];
-    this.getStore = getStore;
-  }
-
-  setState(state: any) {
-    this.state = state
-  }
-
-  dispatch(name: string) {
-    const store = this.getStore();
-    return (payload: any, packed: boolean) => store && store.dispatch({
-      type: this.actions[name],
-      payload: payload,
-      packed: packed,
-    });
-  }
-
   get actions() {
     if (!this._actions) {
       const reducers = Object.keys(this.reducers);
@@ -53,13 +17,46 @@ export class Sink {
   get dispatches() {
     if (!this._dispatches) {
       this._dispatches = Object.keys(this.actions).reduce((accumulate: any, key) => {
-        const dispatch = this.dispatch(key);
-        accumulate[key] = function () {
-          dispatch(Array.from(arguments), true);
-        };
+        accumulate[key] = (...args: Array<any>) => this.dispatch(key)(args);
         return accumulate;
       }, {});
     }
     return this._dispatches;
+  }
+
+  public state?: any;
+  public getStore: () => Store | undefined;
+
+  // configured by decorator
+  public namespace!: string;
+  public reducers: { [key: string]: ReduceHandler };
+  public effects: { [key: string]: EffectHandler };
+  public triggers: Array<TriggerEvent>;
+
+  public instance: any;
+
+  // auto generated
+  private _dispatches?: { [key: string]: () => void };
+  private _actions?: { [key: string]: string };
+
+  constructor(getStore: () => Store | undefined) {
+    this.reducers = {};
+    this.effects = {};
+    this.instance = {};
+    this.triggers = [];
+    this.getStore = getStore;
+  }
+
+  public setState(state: any) {
+    this.state = state;
+  }
+
+  public dispatch(name: string) {
+    const store = this.getStore();
+    return (payload) => store && store.dispatch({
+      payload,
+      sink: true,
+      type: this.actions[name]
+    } as SinkAction);
   }
 }

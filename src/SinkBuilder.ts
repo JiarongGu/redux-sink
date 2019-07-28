@@ -1,31 +1,38 @@
 
-import { Constructor, TriggerOptions, BuildSinkParams } from './typings';
 import { Sink } from './Sink';
+import { BuildSinkParams, Constructor, TriggerOptions, SinkAction } from './typings';
 import { reduceKeys } from './utilities';
 
 const staticIgnoredProperties = ['constructor', '__sinkBuilder__'];
 
 export class SinkBuilder {
-  sinkPrototype!: any;
-  sinkConstructor!: Constructor;
+
+  public static get(prototype: any): SinkBuilder {
+    if (!prototype.__sinkBuilder__) {
+      prototype.__sinkBuilder__ = new SinkBuilder(prototype);
+    }
+    return prototype.__sinkBuilder__;
+  }
+  public sinkPrototype!: any;
+  public sinkConstructor!: Constructor;
 
   // configured by decorator
-  namespace!: string;
-  state: { [key: string]: any };
-  effects: { [key: string]: Function };
+  public namespace!: string;
+  public state: { [key: string]: any };
+  public effects: { [key: string]: (...args: Array<any>) => any };
 
   // for injecting internal sinks
-  injectSinkConstructors!: Array<Constructor>;
+  public injectSinkConstructors!: Array<Constructor>;
 
-  triggers: Array<{
+  public triggers: Array<{
     actionType: string;
-    handler: Function;
+    handler: (...args: Array<any>) => any;
     options?: TriggerOptions;
   }>;
 
   // auto generated
-  _dispatches?: { [key: string]: Function };
-  _actions?: { [key: string]: string };
+  public _dispatches?: { [key: string]: (...args: Array<any>) => any };
+  public _actions?: { [key: string]: string };
 
   constructor(sink: any) {
     this.effects = {};
@@ -35,14 +42,7 @@ export class SinkBuilder {
     this.sinkPrototype = sink;
   }
 
-  static get(prototype: any): SinkBuilder {
-    if (!prototype.__sinkBuilder__) {
-      prototype.__sinkBuilder__ = new SinkBuilder(prototype);
-    }
-    return prototype.__sinkBuilder__;
-  }
-
-  buildSink(params: BuildSinkParams) {
+  public buildSink(params: BuildSinkParams) {
     const sink = new Sink(params.getStore);
     const injectSinks = this.injectSinkConstructors.map(s => params.getSink(s));
     const instance = new this.sinkConstructor(...injectSinks);
@@ -71,11 +71,12 @@ export class SinkBuilder {
 
     prototypeProperties.forEach((key) => {
       const property = Object.getOwnPropertyDescriptor(this.sinkPrototype, key);
-      if (property !== undefined)
+      if (property !== undefined) {
         Object.defineProperty(sink.instance, key, property);
+      }
     });
 
-    let dispatcherProperties = {};
+    const dispatcherProperties = {};
 
     if (stateKeys.length > 0) {
       // combine states
@@ -100,43 +101,43 @@ export class SinkBuilder {
     Object.defineProperties(sink.instance, dispatcherProperties);
 
     this.triggers.forEach(trigger => {
-      const bindHandler = trigger.handler.bind(sink.instance);
-      const handler = (action: any) =>
-        action.packed ? bindHandler(...action.payload) : bindHandler(action.payload);
+      const handler = (action: SinkAction) => {
+        const payload = action.sink ? action.payload : [action.payload];
+        return trigger.handler.apply(sink.instance, payload);
+      };
       sink.triggers.push({ ...trigger, handler });
     });
 
     return sink;
   }
 
+  private createReducerDispatcher(sink: Sink, name: string) {
+    return {
+      get: () => sink.state[name],
+      set: (value) => sink.dispatch(name)([value])
+    };
+  }
+
+  private createEffectDispatcher(sink: Sink, name: string) {
+    return {
+      value: (...args) => sink.dispatch(name)(args)
+    };
+  }
+
   private createStateReducer(sink: Sink, name: string) {
-    return (state: any, value: any) => {
-      if (state[name] === value) {  
-        return state; 
+    return (state: any, [value]) => {
+      if (state[name] === value) {
+        return state;
       } else {
-        sink.state = { ...state, [name]: value }
+        sink.state = { ...state, [name]: value };
         return sink.state;
       }
     };
   }
 
-  private createReducerDispatcher(sink: Sink, name: string) {
-    return {
-      get: () => sink.state[name],
-      set: (value: any) => sink.dispatch(name)(value, false)
-    }
-  }
-
-  private createEffectDispatcher(sink: Sink, name: string) {
-    return {
-      value: function () {
-        return sink.dispatch(name)(Array.from(arguments), true);
-      }
-    }
-  }
-
   private createEffect(name: string, instance: any) {
-    const effect = this.effects[name].bind(instance);
-    return (payload: Array<any>) => effect(...payload);
+    return (payload) => {
+      return this.effects[name].apply(instance, payload);
+    };
   }
 }

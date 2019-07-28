@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { EffectService } from '../src/services';
 
-describe('effect service test', () => { 
+describe('effect service test', () => {
   it('can add promise task', () => {
     const service = new EffectService();
     const testMessage = 'test message';
@@ -17,4 +17,4 @@ describe('effect service test', () => {
 
     assert.equal(service.effectTasks.length, 1);
   });
-})
+});

@@ -1,7 +1,6 @@
-import { SinkContainer } from './SinkContainer';
 import { createSinking } from './createSinking';
 import { createSinkSelector } from './createSinkSelector';
-
+import { SinkContainer } from './SinkContainer';
 
 const __sinkFactory__ = new SinkContainer();
 

@@ -1,5 +1,5 @@
-import { SinkContainer } from './SinkContainer';
 import { useSelector } from 'react-redux';
+import { SinkContainer } from './SinkContainer';
 import { Constructor } from './typings';
 
 export function createSinkSelector(container: SinkContainer) {

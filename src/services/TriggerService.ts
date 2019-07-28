@@ -1,22 +1,28 @@
-import { TriggerHandler, TriggerOptions } from '../typings';
-import { Action } from 'redux';
+import { SinkAction, TriggerHandler, TriggerOptions } from '../typings';
 
 export class TriggerService {
-  triggerHandlers = new Map<string, Array<{ priority: number, handler: TriggerHandler }>>();
-  stagedActions: { [key: string]: any } = {};
+  public stagedActions: { [key: string]: any } = {};
 
-  addTrigger(actionType: string, handler: TriggerHandler, options?: TriggerOptions) {
+  private triggerHandlers = new Map<string, Array<{ priority: number, handler: TriggerHandler }>>();
+
+  public addTrigger(actionType: string, handler: TriggerHandler, options?: TriggerOptions) {
     let handlers = this.triggerHandlers.get(actionType);
     if (!handlers) {
       this.triggerHandlers.set(actionType, handlers = []);
     }
     const priority = options && options.priority || 0;
-    const fireOnInit = options && options.fireOnInit;
+    let fireOnInit = options && options.fireOnInit;
+
+    // default fireOnInit to true
+    if (fireOnInit === undefined) {
+      fireOnInit = true;
+    }
 
     handlers.push({ handler, priority });
 
-    if (priority > 0)
+    if (priority > 0) {
       handlers.sort((a, b) => b.priority - a.priority);
+    }
 
     if (fireOnInit && this.stagedActions[actionType] !== undefined) {
       const action = this.stagedActions[actionType];
@@ -24,7 +30,7 @@ export class TriggerService {
     }
   }
 
-  activeTrigger(action: Action) {
+  public activeTrigger(action: SinkAction) {
     const triggers = this.triggerHandlers.get(action.type);
     if (triggers) {
       const tasks = triggers.map(trigger => trigger.handler(action));

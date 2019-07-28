@@ -14,5 +14,5 @@ export function sink(namespace: string, ...sinks: Array<Constructor>) {
     sinkBuilder.injectSinkConstructors = sinks;
 
     return constructor;
-  }
+  };
 }

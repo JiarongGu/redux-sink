@@ -1,12 +1,12 @@
-import { sink, state, effect } from '../../src';
+import { effect, sink, state } from '../../src';
 
 @sink('testSink3')
 export class TestSink3 {
   @state
-  name = "new test sink 3 name";
+  public name = 'new test sink 3 name';
 
   @effect
-  setName(name: string) {
+  public setName(name: string) {
     this.name = name;
   }
 }

@@ -1,10 +1,15 @@
 {
-    "defaultSeverity": "error",
-    "extends": ["tslint:common"],
-    "jsRules": {},
-    "rules": {
-        "quotemark": [true, "single", "jsx-double"],
-        "arrow-parens": false
-    },
-    "rulesDirectory": []
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "jsRules": {},
+  "rules": {
+    "quotemark": [true, "single", "jsx-double"],
+    "arrow-parens": false,
+    "interface-name": false,
+    "variable-name": false,
+    "array-type": [true, "generic"],
+    "trailing-comma": false,
+    "only-arrow-functions": false
+  },
+  "rulesDirectory": []
 }
