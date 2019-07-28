@@ -102,7 +102,7 @@ export class SinkBuilder {
 
     this.triggers.forEach(trigger => {
       const handler = (action: SinkAction) => {
-        const payload = action.sink ? action.payload : [action.payload];
+        const payload = action.effect ? action.payload : [action.payload];
         return trigger.handler.apply(sink.instance, payload);
       };
       sink.triggers.push({ ...trigger, handler });
@@ -114,18 +114,18 @@ export class SinkBuilder {
   private createReducerDispatcher(sink: Sink, name: string) {
     return {
       get: () => sink.state[name],
-      set: (value) => sink.dispatch(name)([value])
+      set: (value) => sink.dispatch(name, value, false)
     };
   }
 
   private createEffectDispatcher(sink: Sink, name: string) {
     return {
-      value: (...args) => sink.dispatch(name)(args)
+      value: (...args) => sink.dispatch(name, args, true)
     };
   }
 
   private createStateReducer(sink: Sink, name: string) {
-    return (state: any, [value]) => {
+    return (state: any, value) => {
       if (state[name] === value) {
         return state;
       } else {

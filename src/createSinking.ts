@@ -2,6 +2,7 @@ import { connect, Options } from 'react-redux';
 import { Sink } from './Sink';
 import { SinkContainer } from './SinkContainer';
 import { Constructor } from './typings';
+import { mergeDispatchState } from './utilities';
 
 export function createSinking(container: SinkContainer, options?: Options) {
   return function(...sinks: Array<Constructor>) {
@@ -35,10 +36,7 @@ function createMapDispatchToProps(sinks: Array<Sink>) {
 function createMergeProps(sinks: Array<Sink>) {
   return function(stateProps: any, dispatchProps: any, ownProps: any) {
     return sinks.reduce((accumulate, sink) => {
-      accumulate[sink.namespace] = {
-        ...dispatchProps[sink.namespace],
-        ...stateProps[sink.namespace]
-      };
+      accumulate[sink.namespace] = mergeDispatchState(dispatchProps[sink.namespace], stateProps[sink.namespace]);
       return accumulate;
     }, { ...ownProps });
   };
