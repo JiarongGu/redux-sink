@@ -87,7 +87,7 @@ class Counter extends React.Component {
 
 using sinking with out decorator
 
-```javascript
+```jsx
 import { sinking } from 'redux-sink';
 
 export const Component = sinking(CounterSink)(ComponentClass);
