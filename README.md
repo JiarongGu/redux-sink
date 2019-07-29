@@ -95,7 +95,7 @@ export const Component = sinking(CounterSink)(ComponentClass);
 
 using sink by hooks, require `react-redux: ^7.1.0`
 
-```javascript
+```jsx
 import { useSink } from 'redux-sink';
 import { CounterSink } from './CounterSink';
 
