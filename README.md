@@ -25,7 +25,7 @@ Decorater based redux for less boilerplate, no actions, no reducers, no seprated
 create store use `SinkFactory.createStore`, then use `react-redux` or other library to connect the store with `Provider`.
 
 #### index.js
-```javascript
+```jsx
 import { SinkFactory } from 'redux-sink';
 const store = SinkFactory.createStore();
 
@@ -66,7 +66,7 @@ class CounterSink {
 ### Step 3: sinking
 use `sinking` instead of `connect`, to connect sinks to component, only `state` and `effect` can be used in components
 
-```javascript
+```jsx
 import { sinking } from 'redux-sink';
 import { CounterSink } from './CounterSink';
 
