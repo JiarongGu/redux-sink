@@ -1,5 +1,5 @@
 # redux-sink
-Redux-Sink is decorater based redux for less boilerplate, no actions, no reducers, no seprated logic, also natively support redux to be loaded by code split. 
+decorater based redux for less boilerplate, no actions, no reducers, no seprated logic, also natively support redux to be loaded by code split. 
     
 [![travis](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)](https://travis-ci.org/JiarongGu/redux-sink)
 [![npm version](https://badge.fury.io/js/redux-sink.svg)](https://www.npmjs.com/package/redux-sink)
