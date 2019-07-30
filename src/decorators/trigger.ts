@@ -11,7 +11,8 @@ const defaultOptions: TriggerOptions = {
 /**
  * create trigger based on `action.type`, trigger function will take value on `action.payload`
  * @param {string} [action]
- * type of the action for sink will be `{sink namespace}/{function name}`
+ * type of the action for sink will be `{sink namespace}/{function name}`,
+ * or simple use `selectAction` to get action string from sink
  * @param {boolean} [options.lazyLoad]
  * default `true`, trigger will be fired on lazy load
  * @param {number} [options.priority]
