@@ -5,6 +5,8 @@
 
 Decorater based redux for less boilerplate, no actions, no reducers, no seprated logic, also natively support redux to be loaded by code split. 
 
+---
+
 ## Index
 - [Getting started](#getting-started)
   * [Step 1: create store](#step-1-create-store)
@@ -155,7 +157,7 @@ redux-sink allowed you to use sinks without connect to component
 import { SinkFactory } from 'redux-sink';
 
 // use SinkFactory to get current sink by sink class
-const counterSink = SinkFactory.sink(CounterSink);
+const counterSink = SinkFactory.getSink(CounterSink);
 const counterState = counterSink.increment(10);
 ```
 
@@ -188,11 +190,15 @@ class OtherSink {
 import { SinkFactory } from 'redux-sink';
 
 // its also possible to add reducers and middlewares through this api
-const store = SinkFactory.createStore({ 
-  reducers, // static reducers, built without creator
-  preloadedState, // inital state
-  middlewares, // addtional middlewares
-  devtoolOptions: { devToolCompose: composeWithDevTools } // required compose function from redux-dev-tool
+const store = SinkFactory.createStore({
+  // static reducers, built without creator
+  reducers,
+  // initial state
+  preloadedState,
+  // additional middlewares
+  middlewares,
+  // required compose function from redux-dev-tool
+  devToolOptions: { devToolCompose: composeWithDevTools } 
 });
 ```
 
@@ -235,15 +241,25 @@ class Counter extends React.Component {
 }
 ```
 
+## Changelog
+
+See the [CHANGELOG](./CHANGELOG.md) to see what's new.
+
+---
+
 ## Api References
-- [@sink](#sink)
-- [@state](#state)
-- [@effect](#effect)
-- [@trigger](#trigger-1)
-- [@SinkContainer](#sinkContainer)
-- [@SinkFactory](#sinkFactory)
-- [@SinkBuilder](#sinkBuilder)
-- [@Sink](#sink)
+- [Index](#index)
+- [Getting started](#getting-started)
+- [Changelog](#changelog)
+- [Api References](#api-references)
+  - [@sink](#sink)
+  - [@state](#state)
+  - [@effect](#effect)
+  - [@trigger](#trigger)
+  - [SinkContainer](#sinkcontainer)
+  - [SinkFactory](#sinkfactory)
+  - [SinkBuilder](#sinkbuilder)
+  - [Sink](#sink)
 
 ### @sink
 mark the class as redux-sink class, the sink name use to locate the sink in store
