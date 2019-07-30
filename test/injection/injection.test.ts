@@ -4,13 +4,19 @@ import { createFactory } from '../utils';
 import { InjectableSink } from './InjectableSink';
 import { TestSink } from './TestSink';
 
-describe('inject test', () => {
+describe('sink injection test', () => {
   it('should not be null', () => {
     const { factory } = createFactory();
     const testSink = factory.getSink(TestSink);
     assert.isNotNull(testSink.injectableSink);
     assert.isNotNull(testSink.container);
     assert.isNotNull(testSink.factory);
+  });
+
+  it('should be able to handel inject undefined', () => {
+    const { factory } = createFactory();
+    const testSink = factory.getSink(TestSink);
+    assert.isUndefined(testSink.notDefined);
   });
 
   it('should have correct values', () => {

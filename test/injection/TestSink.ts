@@ -7,11 +7,12 @@ import { InjectableSink } from './InjectableSink';
 // the sink should be resolved to sink object and reflect to the container of test sink
 // the injected container should remain in a clean separated container
 // SinkFactory is a default sink container equivalent to a regular sink container
-@sink('test', InjectableSink, new SinkContainer(), SinkFactory)
+@sink('test', InjectableSink, new SinkContainer(), SinkFactory, undefined as any)
 export class TestSink {
   constructor(
     public injectableSink: InjectableSink,
     public container: SinkContainer,
-    public factory: SinkContainer
+    public factory: SinkContainer,
+    public notDefined: undefined,
   ) {}
 }
