@@ -1,17 +1,22 @@
 import { SinkBuilder } from '../SinkBuilder';
 import { Constructor } from '../typings';
+import { SinkContainer } from './../SinkContainer';
 
 /**
- * create sink based on class, sink instance will be shared in prototype scope
- * @param namespace name of the sink, will be state name in store
+ * class decorator for create sink
+ * @param {string} [namespace]
+ * name of the sink, also the state name in store, cannot be duplicated across sinks
+ * @param {...*} [injects]
+ * inject sink or objects like sink factory to sink constructor,
+ * if inject with sink class, it will be auto resolved to sink object
  */
-export function sink(namespace: string, ...sinks: Array<Constructor>) {
+export function sink(namespace: string, ...injects: Array<Constructor | SinkContainer>) {
   return function <T extends Constructor>(constructor: T) {
     const prototype = constructor.prototype;
     const sinkBuilder = SinkBuilder.get(prototype);
     sinkBuilder.namespace = namespace;
     sinkBuilder.sinkConstructor = constructor;
-    sinkBuilder.injectSinkConstructors = sinks;
+    sinkBuilder.sinkInjects = injects;
 
     return constructor;
   };

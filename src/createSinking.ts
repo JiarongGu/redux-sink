@@ -6,11 +6,13 @@ import { mergeDispatchState } from './utilities';
 
 export function createSinking(container: SinkContainer, options?: Options) {
   return function(...sinks: Array<Constructor>) {
-    const containerSinks = sinks.map(sink => container.sinkPrototype(sink));
+    const sinkPrototypes = sinks
+      .map(sink => container.getSinkPrototype(sink));
+
     return connect(
-      createMapStateToProps(containerSinks),
-      createMapDispatchToProps(containerSinks),
-      createMergeProps(containerSinks),
+      createMapStateToProps(sinkPrototypes),
+      createMapDispatchToProps(sinkPrototypes),
+      createMergeProps(sinkPrototypes),
       options
     ) as any;
   };

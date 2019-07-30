@@ -1,5 +1,5 @@
-
 import { Sink } from './Sink';
+import { SinkContainer } from './SinkContainer';
 import { AnyFunction, BuildSinkParams, Constructor, SinkAction, TriggerEvent } from './typings';
 import { reduceKeys } from './utilities';
 
@@ -22,7 +22,7 @@ export class SinkBuilder {
   public effects: { [key: string]: AnyFunction };
 
   // for injecting internal sinks
-  public injectSinkConstructors!: Array<Constructor>;
+  public sinkInjects!: Array<Constructor | SinkContainer>;
 
   public triggers: Array<TriggerEvent>;
 
@@ -38,10 +38,22 @@ export class SinkBuilder {
     this.sinkPrototype = sink;
   }
 
-  public buildSink(params: BuildSinkParams) {
+  public buildSink(params: BuildSinkParams): Sink {
     const sink = new Sink(params.getStore);
-    const injectSinks = this.injectSinkConstructors.map(s => params.getSink(s));
-    const instance = new this.sinkConstructor(...injectSinks);
+    const constructorInjects: Array<any> = [];
+
+    // sink decorator can also inject sink, sink container or other stuff
+    for (const inject of this.sinkInjects) {
+      try {
+        // try to inject with sink
+        const injectableSink = params.getSink(inject);
+        constructorInjects.push(injectableSink);
+      } catch {
+        // if we fill to inject sink, inject the input from sinkInject
+        constructorInjects.push(inject);
+      }
+    }
+    const instance = new this.sinkConstructor(...constructorInjects);
 
     // initialize
     sink.namespace = this.namespace;

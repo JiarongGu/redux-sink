@@ -1,5 +1,7 @@
 import { Middleware, Store } from 'redux';
+
 import { Sink } from './Sink';
+import { SinkContainer } from './SinkContainer';
 
 export type Constructor<T = any> = new (...args: Array<any>) => T;
 
@@ -34,7 +36,7 @@ export interface StoreConfiguration<TState = any> {
 
 export interface BuildSinkParams {
   getStore: () => Store | undefined;
-  getSink: (constructor: Constructor) => Sink;
+  getSink: (constructor: Constructor | SinkContainer) => Sink;
 }
 
 export interface DevToolOptions {

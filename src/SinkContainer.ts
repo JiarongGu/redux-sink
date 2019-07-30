@@ -15,6 +15,11 @@ export class SinkContainer {
 
   public sinks: { [key: string]: Sink } = {};
 
+  constructor() {
+    this.getSink = this.getSink.bind(this);
+    this.getStore = this.getStore.bind(this);
+  }
+
   public createStore<TState = any>(config?: StoreConfiguration<TState>) {
     const store = createSinkStore(this, config);
     this.store = store;
@@ -39,12 +44,24 @@ export class SinkContainer {
     return this.triggerService.activeTrigger(action);
   }
 
-  public sink<TSink>(sink: Constructor<TSink>) {
-    return this.sinkPrototype(sink).instance as TSink;
+  public getStore() {
+    return this.store;
   }
 
-  public sinkPrototype<TSink>(sink: Constructor<TSink>) {
+  public getSink<T>(sink: Constructor<T>): T {
+    return this.getSinkPrototype(sink).instance as T;
+  }
+
+  public getSinkPrototype<TSink>(sink: Constructor<TSink>): Sink {
+    if (!sink || !sink.prototype) {
+      throw new Error(`sink not found: ${sink.toString()}`);
+    }
+
     const builder = SinkBuilder.get(sink.prototype);
+
+    if (!builder.namespace) {
+      throw new Error(`please use @sink decorator: ${sink.toString()}`);
+    }
 
     if (!this.sinks[builder.namespace]) {
       this.addSink(builder);
@@ -55,11 +72,10 @@ export class SinkContainer {
 
   private addSink(builder: SinkBuilder) {
     // build sink with build params
-    const buildParams: BuildSinkParams = {
-      getSink: (sinkConstructor: Constructor<any>) => this.sink(sinkConstructor),
-      getStore: () => this.store
-    };
-    const sink = builder.buildSink(buildParams);
+    const sink = builder.buildSink({
+      getSink: this.getSink as any,
+      getStore: this.getStore
+    });
 
     // add sink to container
     this.sinks[builder.namespace] = sink;

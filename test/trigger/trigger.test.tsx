@@ -8,28 +8,28 @@ describe('trigger test', () => {
   describe('lazy load', () => {
     it('should enable', () => {
       const { factory } = createFactory();
-      const originSink = factory.sink(OriginSink);
+      const originSink = factory.getSink(OriginSink);
       originSink.update1('origin update1');
 
-      const triggerSink = factory.sink(TriggerSink);
+      const triggerSink = factory.getSink(TriggerSink);
       assert.equal(triggerSink.value, originSink.value);
     });
 
     it('should disable', () => {
       const { factory } = createFactory();
-      const originSink = factory.sink(OriginSink);
+      const originSink = factory.getSink(OriginSink);
       originSink.update1('origin update1');
 
-      const triggerSink = factory.sink(NonLazyTriggerSink);
+      const triggerSink = factory.getSink(NonLazyTriggerSink);
       assert.equal(triggerSink.value, 'trigger');
     });
 
     it('should update on second trigger for disabled', () => {
       const { factory } = createFactory();
-      const originSink = factory.sink(OriginSink);
+      const originSink = factory.getSink(OriginSink);
       originSink.update1('origin update1');
 
-      const triggerSink = factory.sink(NonLazyTriggerSink);
+      const triggerSink = factory.getSink(NonLazyTriggerSink);
       originSink.update1('origin update2');
       assert.equal(triggerSink.value, 'origin update2');
     });
@@ -38,8 +38,8 @@ describe('trigger test', () => {
   describe('formatter', () => {
     it('should format', () => {
       const { factory } = createFactory();
-      const originSink = factory.sink(OriginSink);
-      const triggerSink = factory.sink(TriggerSink);
+      const originSink = factory.getSink(OriginSink);
+      const triggerSink = factory.getSink(TriggerSink);
 
       originSink.update2('origin update1');
       assert.equal(triggerSink.value, 'origin update1 trigger');
@@ -49,8 +49,8 @@ describe('trigger test', () => {
   describe('raw action', () => {
     it('should use raw action', () => {
       const { factory } = createFactory();
-      const originSink = factory.sink(OriginSink);
-      const triggerSink = factory.sink(TriggerSink);
+      const originSink = factory.getSink(OriginSink);
+      const triggerSink = factory.getSink(TriggerSink);
 
       originSink.update3('origin update1');
       assert.equal(triggerSink.value, 'origin/update3');
@@ -60,8 +60,8 @@ describe('trigger test', () => {
   describe('effect', () => {
     it('should work with multiple params', () => {
       const { factory } = createFactory();
-      const originSink = factory.sink(OriginSink);
-      const triggerSink = factory.sink(TriggerSink);
+      const originSink = factory.getSink(OriginSink);
+      const triggerSink = factory.getSink(TriggerSink);
 
       originSink.update4('origin', ' update4');
       assert.equal(triggerSink.value, 'origin update4');
@@ -71,8 +71,8 @@ describe('trigger test', () => {
   describe('state', () => {
     it('should work with state', () => {
       const { factory } = createFactory();
-      const originSink = factory.sink(OriginSink);
-      const triggerSink = factory.sink(TriggerSink);
+      const originSink = factory.getSink(OriginSink);
+      const triggerSink = factory.getSink(TriggerSink);
 
       originSink.value = 'new value';
       assert.equal(triggerSink.originValue, 'new value');

@@ -19,14 +19,14 @@ describe('sink render test', () => {
     const app = createApp(store, createSinking(factory)(TestSink), TestComponent);
     assert.equal(renderToString(app), '<div>initialized name</div>');
 
-    const testSink = factory.sink(TestSink);
+    const testSink = factory.getSink(TestSink);
     testSink.setAll('test name', 'test value');
     assert.equal(renderToString(app), '<div>test name</div>');
   });
 
   it('can connect to component with non-state sink', () => {
     const { factory, store } = createFactory();
-    const testSink2 = factory.sink(TestSink2);
+    const testSink2 = factory.getSink(TestSink2);
     const TestComponent = (props: { testSink: TestSink }) => {
       return <div>{props.testSink.state!.name}</div>;
     };
@@ -38,7 +38,7 @@ describe('sink render test', () => {
 
   it('can connect to component hooks', () => {
     const { factory, store } = createFactory();
-    const testSink2 = factory.sink(TestSink2);
+    const testSink2 = factory.getSink(TestSink2);
     const TestComponent = () => {
       const testSink = useSink(TestSink);
       return <div>{testSink!.state.name}</div>;
