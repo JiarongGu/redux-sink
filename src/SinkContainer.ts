@@ -54,7 +54,7 @@ export class SinkContainer {
 
   public getSinkPrototype<TSink>(sink: Constructor<TSink>): Sink {
     if (!sink || !sink.prototype) {
-      throw new Error(`sink not found: ${sink.toString()}`);
+      throw new Error(`sink not found`);
     }
 
     const builder = SinkBuilder.get(sink.prototype);

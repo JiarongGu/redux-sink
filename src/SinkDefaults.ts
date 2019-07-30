@@ -1,4 +1,3 @@
-import { createActionSelector } from './createActionSelector';
 import { createSinking } from './createSinking';
 import { createSinkSelector } from './createSinkSelector';
 import { SinkContainer } from './SinkContainer';
@@ -21,10 +20,3 @@ export const sinking = createSinking(__sinkFactory__);
  * @param sink sink class
  */
 export const useSink = createSinkSelector(__sinkFactory__);
-
-/**
- * select action with sink and selector function
- * @param sink sink class
- * @param selector to select state of effect from sink
- */
-export const selectAction = createActionSelector(__sinkFactory__);
