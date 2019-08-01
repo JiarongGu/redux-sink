@@ -1,15 +1,13 @@
 ---
-description: simple counter use of redux-sink state
+description: use state to create a simple counter component
 ---
 
 # Simple Counter
 
 Sink states maps dispatch automatically to component. so you don't have to create action or reducer.
 
-## Counter example
-
 {% code-tabs %}
-{% code-tabs-item title="counter-sink.js" %}
+{% code-tabs-item title="CounterSink.js" %}
 ```javascript
 import { state, sink } from 'redux-sink';
 
@@ -18,9 +16,11 @@ export class CounterSink {
   @state value = 0;
 }
 ```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 {% code-tabs %}
-{% code-tabs-item title="counter.jsx" %}
+{% code-tabs-item title="Counter.jsx" %}
 ```jsx
 import { useSink } from 'redux-sink';
 import { CounterSink } from './counter-sink';
@@ -37,3 +37,6 @@ export const Counter = () => {
   );
 }
 ```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+

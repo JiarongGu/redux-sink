@@ -29,8 +29,8 @@ const store = SinkFactory.createStore({
 });
 ```
 
-
 ## Custom Middlewares
+
 ```javascript
 const crashReporter = store => next => action => {
   try {

@@ -1,10 +1,10 @@
 ---
-description: 'Effect is used to handle external effects, mostly handel async calls.'
+description: 'use effect to handle external effects, mostly handel async calls.'
 ---
 
-# Simple Effect
+# External Request
 
-### Handel external request
+## Handel fetch request
 
 This is an example for using effect to handle http requests, using async function
 
@@ -20,7 +20,7 @@ export class WeatherSink {
     temperature: 0,
     humidity: 0
   };
-  
+
   @effect
   async function loadWeather() {
     this.loading = true;
@@ -29,10 +29,12 @@ export class WeatherSink {
   }
 }
 ```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 {% code-tabs %}
 {% code-tabs-item title="Weather.jsx" %}
-```javascript
+```jsx
 import * as React from 'react';
 import { sinking } from 'redux-sink';
 import { WeatherSink } from './WeatherSink';
@@ -59,6 +61,8 @@ export class Weather extends React.Component {
   }
 }
 
-export default sinking(
+export default sinking(WeatherSink)(Weather);
 ```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
