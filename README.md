@@ -245,7 +245,6 @@ class Counter extends React.Component {
 
 See the [CHANGELOG](./CHANGELOG.md) to see what's new.
 
----
 
 ## Api References
 - [Index](#index)
@@ -284,3 +283,7 @@ build class embadded inside sink's protoype, collect the sink configuration
 
 ### Sink
 main sink prototpye class build sink instance in `SinkContainer`
+
+## LICENSE
+
+[MIT](./LICENSE.md)
