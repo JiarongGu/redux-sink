@@ -4,7 +4,7 @@ description: use state to create a simple counter component
 
 # Simple Counter
 
-## Create CounterSink
+### Create CounterSink
 
 Sink states maps dispatch automatically to component. so you don't have to create action or reducer.
 

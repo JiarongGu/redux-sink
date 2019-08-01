@@ -4,6 +4,8 @@ description: SinkContainer use to keep store and all the sinks within the same s
 
 # SinkContainer
 
+Since `SinkFactory` is a instance of `SinkContainer` the api is the same, all the code example will be using `SinkFactory` for easier understanding the usage.
+
 ### createStore
 
 use to create store with sink, it can take reducers, middlewares and devtoolOptions with configuration
@@ -22,5 +24,16 @@ const store = SinkFactory.createStore({
   // required compose function from redux-dev-tool
   devToolOptions: { devToolCompose: composeWithDevTools } 
 });
+```
+
+### getSink
+
+use to get sink from current container, can use in any place
+
+```javascript
+import { SinkFactory } from 'redux-sink';
+import { CounterSink } from './CounterSink';
+
+const counter = SinkFactory.getSink(CounterSink);
 ```
 

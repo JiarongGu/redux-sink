@@ -6,7 +6,7 @@ description: Create store with integrated redux reducers/middlewares.
 
 You can also use `Factory.createStore` with regular redux reducer and middleware by supply the reducer and middlewares to it.
 
-## Custom Reducers
+### Custom Reducers
 
 ```javascript
 function counter(state, action) {
@@ -29,7 +29,7 @@ const store = SinkFactory.createStore({
 });
 ```
 
-## Custom Middlewares
+### Custom Middlewares
 
 ```javascript
 const crashReporter = store => next => action => {

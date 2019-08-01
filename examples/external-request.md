@@ -4,7 +4,7 @@ description: 'use effect to handle external effects, mostly handel async calls.'
 
 # External Request
 
-## Create sink with effect to handle external request
+### Create sink with effect to handle external request
 
 This is an example for using effect to handle http requests, using async function
 
