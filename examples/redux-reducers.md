@@ -1,11 +1,10 @@
 ---
-description: Create store with redux reducers.
+description: Create store with integrated redux reducers/middlewares.
 ---
 
 # Redux Reducers
-redux-sink can also integrate with regular redux reducers.
 
-## custom reducers
+## Custom Reducers
 ```javascript
 function counter(state, action) {
   switch (action.type) {
@@ -26,3 +25,26 @@ const store = SinkFactory.createStore({
   }
 });
 ```
+
+## Custom Middlewares
+```javascript
+const crashReporter = store => next => action => {
+  try {
+    return next(action)
+  } catch (err) {
+    console.error('Caught an exception!', err)
+    Raven.captureException(err, {
+      extra: {
+        action,
+        state: store.getState()
+      }
+    })
+    throw err
+  }
+}
+
+import { SinkFactory } from 'redux-sink';
+
+const store = SinkFactory.createStore({
+  middlewares: [crashReporter]
+});
