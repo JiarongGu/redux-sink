@@ -1,4 +1,4 @@
-# API Refernce
+# API Refernces
 
 * [@redux-sink Api References](apireference.md#redux-sink-api-references)
   * [@sink](apireference.md#sink)

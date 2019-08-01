@@ -1,14 +1,17 @@
 # Basic
-`redux-sink` maps state and dispatch automatically to component. so you don't have to create action or reducer.
 
-## counter sink
-this is a simple counter component that uses sink.
+basic use of `state`, `effect`, redux-sink maps dispatch automatically to component. so you don't have to create action or reducer.
+
+## State
+
+this is a simple counter component that uses sink state.
 
 ### counter-sink.js
 
 ```javascript
 import { state, sink } from 'redux-sink';
 
+@sink('counter')
 export class CounterSink {
   @state value = 0;
 }
@@ -22,7 +25,7 @@ import { CounterSink } from './counter-sink';
 
 export const Counter = () => {
   const counter = useSink(CounterSink);
-  
+
   return (
     <div>
       <p>count: {counter.value}</p>
@@ -32,3 +35,4 @@ export const Counter = () => {
   );
 }
 ```
+
