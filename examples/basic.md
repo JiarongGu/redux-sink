@@ -1,10 +1,14 @@
-# Basic
+---
+description: >-
+  Basic use of state and effect, redux-sink maps dispatch automatically to
+  component. so you don't have to create action or reducer.
+---
 
-basic use of `state`, `effect`, redux-sink maps dispatch automatically to component. so you don't have to create action or reducer.
+# Basic
 
 ## State
 
-this is a simple counter component that uses sink state.
+This is a simple counter component that uses sink state.
 
 ### counter-sink.js
 
