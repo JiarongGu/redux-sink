@@ -14,8 +14,8 @@ import { createBrowserHistory } from 'history';
 
 @sink('navigation')
 export class NavigationSink {
-  @state history: History;
-  @state location: Location;
+  @state history;
+  @state location;
 }
 
 // create browser history and listen location change to update sink
