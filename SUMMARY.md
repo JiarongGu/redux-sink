@@ -2,7 +2,8 @@
 
 * [Redux Sink](README.md)
 * [Documents](docs/README.md)
-  * [Api References](docs/apireference.md)
-  * [Changelog](docs/changelog.md)
-* [Examples](examples.md)
+  * [API Refernce](docs/api-references.md)
+  * [Change Log](docs/changelog.md)
+* [Examples](examples/README.md)
+  * [Custom Decorators](examples/custom-decorators.md)
 
