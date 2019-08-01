@@ -247,8 +247,8 @@ class Counter extends React.Component {
 See the [CHANGELOG](./CHANGELOG.md) to see what's new.
 
 
-## API Reference
-[API Reference](./docs/api.md)
+## Api References
+[Api References](./docs/api.md)
 
 
 ## LICENSE
