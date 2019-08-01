@@ -1,5 +1,5 @@
 ---
-description: 'use effect to handle external effects, mostly handel async calls.'
+description: 'Use effect to handle external effects, mostly handel async calls.'
 ---
 
 # External Request

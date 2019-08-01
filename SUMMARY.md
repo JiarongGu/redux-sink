@@ -4,6 +4,7 @@
 * [Examples](examples/README.md)
   * [Simple Counter](examples/simple-counter.md)
   * [External Request](examples/external-request.md)
+  * [Simple Trigger](examples/simple-trigger.md)
   * [Navigation Sink](examples/navigation-sink.md)
   * [Location Trigger](examples/location-trigger.md)
   * [Reducers / Middlewares](examples/reducers-middlewares.md)

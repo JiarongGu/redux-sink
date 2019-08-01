@@ -1,5 +1,5 @@
 ---
-description: create sink on history event to watch location change
+description: Create sink on history event to watch location change
 ---
 
 # Navigation Sink

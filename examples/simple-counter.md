@@ -1,5 +1,5 @@
 ---
-description: use state to create a simple counter component
+description: Use state to create a simple counter component
 ---
 
 # Simple Counter
