@@ -6,7 +6,6 @@ import { reduceKeys } from './utilities';
 const staticIgnoredProperties = ['constructor', '__sinkBuilder__'];
 
 export class SinkBuilder {
-
   public static get(prototype: any): SinkBuilder {
     if (!prototype.__sinkBuilder__) {
       prototype.__sinkBuilder__ = new SinkBuilder(prototype);

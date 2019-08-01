@@ -1,4 +1,4 @@
-import { sink, state, trigger } from '../../src';
+import { sink, state, trigger } from '../../../src';
 import { OriginSink } from './OriginSink';
 
 @sink('trigger', OriginSink)

@@ -1,4 +1,5 @@
 import { AnyAction, Dispatch, MiddlewareAPI } from 'redux';
+
 import { TriggerService } from '../services';
 
 export function createTriggerMiddleware(service: TriggerService) {

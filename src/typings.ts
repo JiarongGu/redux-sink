@@ -1,4 +1,4 @@
-import { Middleware, Store } from 'redux';
+import { Action, Middleware, Store } from 'redux';
 
 import { Sink } from './Sink';
 import { SinkContainer } from './SinkContainer';
@@ -6,8 +6,12 @@ import { SinkContainer } from './SinkContainer';
 export type Constructor<T = any> = new (...args: Array<any>) => T;
 
 export type EffectHandler<TPayload = any> = (payload: TPayload) => any;
-export type ReduceHandler<TPayload = any> = (state: any, payload: TPayload) => any;
+export type ReducerHandler<TPayload = any> = (state: any, payload: TPayload) => any;
 export type AnyFunction = (...args: Array<any>) => any;
+
+export interface ReducerHandlerMap {
+  [key: string]: ReducerHandler;
+}
 
 export interface TriggerOptions {
   priority?: number;      // default: 0
@@ -45,7 +49,7 @@ export interface DevToolOptions {
   [key: string]: any;
 }
 
-export interface SinkAction {
+export interface SinkAction extends Action {
   type: string;
   payload: any;
   effect?: boolean;

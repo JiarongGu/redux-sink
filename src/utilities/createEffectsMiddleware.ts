@@ -1,5 +1,6 @@
 import { Dispatch, MiddlewareAPI } from 'redux';
-import { EffectService } from 'services/EffectService';
+
+import { EffectService } from '../services/EffectService';
 import { SinkAction } from '../typings';
 
 export function createEffectMiddleware(service: EffectService) {

@@ -1,6 +1,6 @@
-import { sink } from '../../src';
-import { SinkContainer } from './../../src/SinkContainer';
-import { SinkFactory } from './../../src/SinkDefaults';
+import { sink } from '../../../src';
+import { SinkContainer } from '../../../src/SinkContainer';
+import { SinkFactory } from '../../../src/SinkDefaults';
 import { InjectableSink } from './InjectableSink';
 
 // this test sink injected with sink and container object

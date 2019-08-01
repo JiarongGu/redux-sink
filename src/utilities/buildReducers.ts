@@ -1,6 +1,7 @@
-import { combineReducers, ReducersMapObject } from 'redux';
+import { Action, AnyAction, combineReducers, Reducer, ReducersMapObject } from 'redux';
 
-export function buildReducers(reducers: ReducersMapObject<any, any>) {
+export function buildReducers<S = any>(reducers: ReducersMapObject<S>): Reducer<S>;
+export function buildReducers<S = any, A extends Action = AnyAction>(reducers: ReducersMapObject<S, A>): Reducer<S, A> {
   if (Object.keys(reducers).length === 0) {
     return (state: any) => state;
   }

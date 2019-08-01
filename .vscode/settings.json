@@ -1,5 +1,8 @@
 {
   "mochaExplorer.files": "test/**/*.test.ts*",
   "mochaExplorer.nodePath": null,
-  "mochaExplorer.require": ["ts-node/register"] 
+  "mochaExplorer.require": [
+    "ts-node/register"
+  ],
+  "workbench.colorCustomizations": {}
 }

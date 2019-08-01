@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 import { createFactory } from '../utils';
-import { NonLazyTriggerSink } from './NonLazyTriggerSInk';
-import { OriginSink } from './OriginSink';
-import { TriggerSink } from './TriggerSink';
+import { NonLazyTriggerSink } from './models/NonLazyTriggerSInk';
+import { OriginSink } from './models/OriginSink';
+import { TriggerSink } from './models/TriggerSink';
 
 describe('trigger test', () => {
   describe('lazy load', () => {

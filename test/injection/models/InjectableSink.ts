@@ -1,4 +1,4 @@
-import { effect, sink, state } from '../../src';
+import { effect, sink, state } from '../../../src';
 
 @sink('injectable')
 export class InjectableSink {

@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 
 import { createFactory } from '../utils';
-import { InjectableSink } from './InjectableSink';
-import { TestSink } from './TestSink';
+import { InjectableSink } from './models/InjectableSink';
+import { TestSink } from './models/TestSink';
 
 describe('sink injection test', () => {
   it('should not be null', () => {
