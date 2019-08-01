@@ -49,3 +49,4 @@ import { SinkFactory } from 'redux-sink';
 const store = SinkFactory.createStore({
   middlewares: [crashReporter]
 });
+```
