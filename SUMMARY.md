@@ -2,7 +2,9 @@
 
 * [Redux Sink](README.md)
 * [Documents](docs/README.md)
-  * [API Refernces](docs/api-refernces.md)
+  * [API Refernces](docs/api-refernces/README.md)
+    * [SinkFactory](docs/api-refernces/sinkfactory.md)
+    * [SinkContainer](docs/api-refernces/sinkcontainer.md)
   * [Change Log](docs/change-log.md)
 * [Examples](examples/README.md)
   * [Simple Counter](examples/simple-counter.md)
