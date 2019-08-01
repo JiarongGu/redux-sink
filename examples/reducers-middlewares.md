@@ -8,8 +8,6 @@ You can also use `Factory.createStore` with regular redux reducer and middleware
 
 ## Custom Reducers
 
-{% code-tabs %}
-{% code-tabs-item title="index.js" %}
 ```javascript
 function counter(state, action) {
   switch (action.type) {
@@ -30,13 +28,9 @@ const store = SinkFactory.createStore({
   }
 });
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
 
 ## Custom Middlewares
-
-{% code-tabs %}
-{% code-tabs-item title="index.js" %}
 ```javascript
 const crashReporter = store => next => action => {
   try {
@@ -59,6 +53,4 @@ const store = SinkFactory.createStore({
   middlewares: [crashReporter]
 });
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 

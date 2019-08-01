@@ -29,8 +29,6 @@ export class WeatherSink {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
 {% code-tabs %}
 {% code-tabs-item title="Weather.jsx" %}
@@ -63,6 +61,4 @@ export class Weather extends React.Component {
 
 export default sinking(
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 

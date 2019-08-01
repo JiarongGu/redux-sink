@@ -18,8 +18,6 @@ export class CounterSink {
   @state value = 0;
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
 {% code-tabs %}
 {% code-tabs-item title="counter.jsx" %}
@@ -39,6 +37,3 @@ export const Counter = () => {
   );
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
-

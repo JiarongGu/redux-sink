@@ -19,8 +19,6 @@ export function debounce(wait: number, option?: any) {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
 {% code-tabs %}
 {% code-tabs-item title="counter.js" %}
@@ -36,8 +34,7 @@ class CounterSink extends React.Component {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
 
 ## @throttle
 
@@ -54,8 +51,7 @@ export function throttle(wait: number, option?: any) {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
 
 {% code-tabs %}
 {% code-tabs-item title="counter.js" %}
@@ -71,6 +67,3 @@ class CounterSink extends React.Component {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
-
