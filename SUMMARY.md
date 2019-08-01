@@ -4,4 +4,5 @@
 * [Documents](docs/README.md)
   * [Api References](docs/apireference.md)
   * [Changelog](docs/changelog.md)
+* [Examples](examples.md)
 

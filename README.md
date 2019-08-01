@@ -213,9 +213,8 @@ const store = SinkFactory.createStore({
 ```
 
 ## Documents
-[Change Log](./docs/CHANGELOG.md)
-[Api References](./docs/API.md)
-[Examples](.docs/examples)
+
+[Change Log](https://github.com/JiarongGu/redux-sink/tree/d5489b75455aaac34ebaec67926551d3fc1f2805/docs/CHANGELOG.md) [Api References](https://github.com/JiarongGu/redux-sink/tree/d5489b75455aaac34ebaec67926551d3fc1f2805/docs/API.md) [Examples](https://github.com/JiarongGu/redux-sink/tree/d5489b75455aaac34ebaec67926551d3fc1f2805/.docs/examples/README.md)
 
 ## LICENSE
 
