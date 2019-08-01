@@ -3,6 +3,7 @@ description: Create store with integrated redux reducers/middlewares.
 ---
 
 # Redux Reducers/Middlewares
+You can also use `Factory.createStore` with regular redux reducer and middleware by supply the reducer and middlewares to it.
 
 ## Custom Reducers
 ```javascript
