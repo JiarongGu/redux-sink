@@ -212,60 +212,10 @@ const store = SinkFactory.createStore({
 });
 ```
 
-<<<<<<< HEAD
 ## Documents
 [Change Log](./docs/CHANGELOG.md)
 [Api References](./docs/API.md)
 [Examples](.docs/examples)
-=======
-### Use debounce/throttle
-
-you can use debounce or throttle from lodash or other library, to create decorator apply to sink functions.
-
-#### debounce.ts
-
-```javascript
-import _debounce from 'lodash/debounce';
-
-export function debounce(wait: number, option?: any) {
-  return function (target: any, name: string, descriptor: PropertyDescriptor) {
-    descriptor.value = _debounce(descriptor.value, wait, option);
-  }
-}
-```
-
-#### throttle.ts
-
-```javascript
-import _throttle from 'lodash/throttle';
-
-export function throttle(wait: number, option?: any) {
-  return function (target: any, name: string, descriptor: PropertyDescriptor) {
-    descriptor.value = _throttle(descriptor.value, wait, option);
-  }
-}
-```
-
-#### use debounce/throttle
-
-```javascript
-import { debounce } from './debounce';
-import { throttle } from './throttle';
-
-class Counter extends React.Component {
- ...
-  @debounce(300)
-  @effect
-  update(state: any) {
-    this.state = state;
-  }
-}
-```
-
-## Documents
-
-[Change Log](docs/changelog.md) [Api References](docs/apireference.md)
->>>>>>> c9974d35f8fdc58351c3f36ba470da40562646e9
 
 ## LICENSE
 
