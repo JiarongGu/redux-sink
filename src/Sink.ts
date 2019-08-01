@@ -1,5 +1,5 @@
 import { Store } from 'redux';
-import { EffectHandler, ReduceHandler, SinkAction, SinkDispatch, TriggerEvent } from './typings';
+import { EffectHandler, ReducerHandler, SinkAction, SinkDispatch, TriggerEvent } from './typings';
 
 export class Sink {
   public state?: any;
@@ -7,7 +7,7 @@ export class Sink {
 
   // configured by decorator
   public namespace!: string;
-  public reducers: { [key: string]: ReduceHandler };
+  public reducers: { [key: string]: ReducerHandler };
   public effects: { [key: string]: EffectHandler };
   public triggers: Array<TriggerEvent>;
 
