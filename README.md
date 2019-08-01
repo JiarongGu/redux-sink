@@ -8,17 +8,19 @@ Decorator based redux for less boilerplate, no actions, no reducers, no separate
   * [Step 1: create store](./#step-1-create-store)
   * [Step 2: create sink](./#step-2-create-sink)
   * [Step 3: sinking](./#step-3-sinking)
+* [Examples](examples/)
 * [API References](docs/api-refernces/)
+* [ChangeLog](docs/change-log.md)
 
 ## Getting started
 
-`npm i redux-sink`
+```bash
+npm i redux-sink
+```
 
 ### Step 1: create store
 
 create store use `SinkFactory.createStore`, then use `react-redux` or other library to connect the store with `Provider`.
-
-#### index.js
 
 ```jsx
 import { SinkFactory } from 'redux-sink';
@@ -37,24 +39,20 @@ ReactDOM.render(
 
 ### Step 2: create sink
 
-logic block of state called `sink`, includes state, effect, configured by decorators. to update the state, just simply assign the new state to it
+redux state and effects managed by `sink` class, configured by decorators. to update the state, just simply assign the new state to it
 
 ```javascript
 import { sink, state, effect } from 'redux-sink'
 
-@sink('counterSink')
+@sink('counter')
 class CounterSink {
-  @state
-  count = 0;
-
+  @state count = 0;
+  @state total = 0;
+  
   @effect
-  increment(value: number) {
-    this.count = this.count + value;
-  }
-
-  @effect
-  decrement(value: number) {
-    this.count = this.count - value;
+  update(value) {
+    this.total += value;
+    this.count++;
   }
 }
 ```
@@ -70,19 +68,25 @@ import { CounterSink } from './CounterSink';
 @sinking(CounterSink)
 class Counter extends React.Component {
   render() {
-    const counter = this.props.counterSink;
+    const counter = this.props.counter;
     return (
       <div>
+        <p>Current Total: <strong>{counter.total}</strong></p>
         <p>Current Count: <strong>{counter.count}</strong></p>
-        <button onClick={() => counter.increment(1)}>Increment</button>
-        <button onClick={() => counter.decrement(1)}>Decrement</button>
+        <button onClick={() => counter.update(1)}>Increment</button>
+        <button onClick={() => counter.update(-1)}>Decrement</button>
+        <button onClick={() => counter.count++}>Count</button>
       </div>
     )
   }
 }
 ```
 
-using sinking with out decorator
+{% hint style="info" %}
+Use state or effect to update sink value in component like example above. both behave the same as redux dispatch when use in component
+{% endhint %}
+
+use sinking with out decorator
 
 ```jsx
 import { sinking } from 'redux-sink';
@@ -90,7 +94,7 @@ import { sinking } from 'redux-sink';
 export const Component = sinking(CounterSink)(ComponentClass);
 ```
 
-using sink by hooks, require `react-redux: ^7.1.0`
+use sink by hooks, require `react-redux: ^7.1.0`
 
 ```jsx
 import { useSink } from 'redux-sink';
@@ -101,18 +105,12 @@ const Component = () => {
   return (
     <div>
       <p>Current Count: <strong>{counter.count}</strong></p>
-      <button onClick={() => counter.increment(1)}>Increment</button>
-      <button onClick={() => counter.decrement(1)}>Decrement</button>
+      <button onClick={() => counter.count++}>Increment</button>
+      <button onClick={() => counter.count--}>Decrement</button>
     </div>
   )
 }
 ```
-
-## Documents
-
-* [ChangeLog](docs/change-log.md)
-* [API References](docs/api-refernces/)
-* [Examples](examples/)
 
 ## LICENSE
 

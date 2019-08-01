@@ -18,5 +18,7 @@
     * [@trigger](docs/api-refernces/trigger.md)
     * [SinkFactory](docs/api-refernces/sinkfactory.md)
     * [SinkContainer](docs/api-refernces/sinkcontainer.md)
+    * [SinkBuilder](docs/api-refernces/sinkbuilder.md)
+    * [Sink](docs/api-refernces/sink-1.md)
   * [Change Log](docs/change-log.md)
 
