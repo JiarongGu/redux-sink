@@ -10,13 +10,7 @@ Decorator based redux for less boilerplate, no actions, no reducers, no separate
   * [Step 1: create store](./#step-1-create-store)
   * [Step 2: create sink](./#step-2-create-sink)
   * [Step 3: sinking](./#step-3-sinking)
-* [Advanced usages](./#advanced-usages)
-  * [Create trigger](./#create-trigger)
-  * [Use sink inside sink](./#use-sink-inside-sink)
-  * [Use sink without component](./#use-sink-without-component)
-  * [Create store with configs](./#create-store-with-configs)
-  * [Use debounce/throttle](./#use-debouncethrottle)
-* [Api References](./#api-references)
+* [API References](docs/api-refernces/)
 
 ## Getting started
 
@@ -116,107 +110,11 @@ const Component = () => {
 }
 ```
 
-## Advanced usages
-
-### Create trigger
-
-`@trigger` is used to trigger when effect or state action fired, the action name will be `{sink}/{effect|state}`. the parameters should be the same as the orginal action.
-
-```javascript
-import { sink, state, effect, trigger } from 'redux-sink'; 
-
-@sink('counter')
-class CounterSink {
-    @state total;
-    @state changeActionCount; // number of change action fired
-
-    @effect
-    increase(value: number){
-      // change total value
-      this.total = this.total + number;
-    }
-
-    @effect
-    decrease(value: number){
-      // change total value
-      this.total = this.total - number;
-    }
-
-    @trigger('counter/total')
-    totalTrigger(value: number) {
-      // trigger when total change event fired
-    }
-
-    @trigger('counter/increase')
-    @trigger('counter/decrease')
-    actionTrigger(value: number) {
-      // trigger when increase or decrease action fired
-      this.changeActionCount = this.changeActionCount + 1;
-    }
-}
-```
-
-### Use sink without component
-
-redux-sink allowed you to use sinks without connect to component
-
-```javascript
-import { SinkFactory } from 'redux-sink';
-
-// use SinkFactory to get current sink by sink class
-const counterSink = SinkFactory.getSink(CounterSink);
-const counterState = counterSink.increment(10);
-```
-
-### Use sink inside sink
-
-you can also use sink inside other sink by inject sinks inside `@sink`, the sink will be injected in constructor
-
-```javascript
-import { CounterSink } from './CounterSink';
-
-@sink('otherSink', CounterSink)
-class OtherSink { 
-    constructor(counterSink) {
-      this.counterSink = counterSink;
-    }
-
-    @effect
-    loopCount(value: number) {
-        if (this.counterSink.count > 10) {
-            this.counterSink.count = 0;
-        } else {
-            this.counterSink.increment(value);
-        }
-    }
-}
-```
-
-### Create store with configs
-
-`SinkFactory.createStore` is able to take reducers, middlewares and devtoolOptions along with store creation
-
-```javascript
-import { SinkFactory } from 'redux-sink';
-
-// its also possible to add reducers and middlewares through this api
-const store = SinkFactory.createStore({
-  // static reducers, built without creator
-  reducers,
-  // initial state
-  preloadedState,
-  // additional middlewares
-  middlewares,
-  // required compose function from redux-dev-tool
-  devToolOptions: { devToolCompose: composeWithDevTools } 
-});
-```
-
 ## Documents
 
-* [Change Log](https://github.com/JiarongGu/redux-sink/blob/master/docs/change-log.md)
-* [Api References](https://github.com/JiarongGu/redux-sink/blob/master/docs/api-refernces.md)
-* [Examples](https://github.com/JiarongGu/redux-sink/blob/master/docs/examples/README.md)
+* [ChangeLog](docs/change-log.md)
+* [API References](docs/api-refernces/)
+* [Examples](examples/)
 
 ## LICENSE
 
