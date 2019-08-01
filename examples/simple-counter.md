@@ -4,6 +4,8 @@ description: use state to create a simple counter component
 
 # Simple Counter
 
+## Create CounterSink
+
 Sink states maps dispatch automatically to component. so you don't have to create action or reducer.
 
 {% code-tabs %}
@@ -18,6 +20,8 @@ export class CounterSink {
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
+
+### Use external state without dispatches
 
 {% code-tabs %}
 {% code-tabs-item title="Counter.jsx" %}

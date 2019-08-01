@@ -4,7 +4,7 @@ description: 'use effect to handle external effects, mostly handel async calls.'
 
 # External Request
 
-## Handel fetch request
+## Create sink with effect to handle external request
 
 This is an example for using effect to handle http requests, using async function
 
@@ -31,6 +31,8 @@ export class WeatherSink {
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
+
+### Call effect load data in component
 
 {% code-tabs %}
 {% code-tabs-item title="Weather.jsx" %}
