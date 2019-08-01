@@ -1,13 +1,11 @@
 ---
-description: Create store with different configurations.
+description: Create store with redux reducers.
 ---
 
 # Redux Reducers
-
-## custom reducers
-
 redux-sink can also integrate with regular redux reducers.
 
+## custom reducers
 ```javascript
 function counter(state, action) {
   switch (action.type) {
@@ -28,4 +26,3 @@ const store = SinkFactory.createStore({
   }
 });
 ```
-
