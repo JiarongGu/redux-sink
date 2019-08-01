@@ -5,7 +5,7 @@ export function createTriggerMiddleware(service: TriggerService) {
   return (store: MiddlewareAPI<any>) => (next: Dispatch<AnyAction>) => (action: any) => {
     if (action.type) {
       service.stagedActions[action.type] = action;
-      service.activeTrigger(action);
+      service.activateTrigger(action);
     }
     return next(action);
   };

@@ -36,12 +36,12 @@ export class SinkContainer {
     return store;
   }
 
-  get effectTasks() {
+  public getEffectTasks() {
     return this.effectService.effectTasks;
   }
 
-  public activeTrigger(action: SinkAction) {
-    return this.triggerService.activeTrigger(action);
+  public activateTrigger(action: SinkAction) {
+    return this.triggerService.activateTrigger(action);
   }
 
   public getStore() {

@@ -1,4 +1,9 @@
 # Change Log
+## \[0.11.0\] - 2019-08-01
+
+### Update
+* update `SinkFactory.effectTasks` to `SinkFactory.getEffectTasks`
+* update `SinkFactory.activeTrigger` to `SinkFactory.activateTrigger`
 
 ## \[0.10.1\] - 2019-07-30
 

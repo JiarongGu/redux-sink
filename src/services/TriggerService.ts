@@ -24,7 +24,7 @@ export class TriggerService {
     }
   }
 
-  public activeTrigger(action: SinkAction) {
+  public activateTrigger(action: SinkAction) {
     const triggers = this.triggerHandlers.get(action.type);
     if (triggers) {
       const tasks = triggers.map(trigger => trigger.handler(action));
