@@ -4,8 +4,6 @@
 
 Decorator based redux for less boilerplate, no actions, no reducers, no separated logic, also natively support redux to be loaded by code split.
 
-## Index
-
 * [Getting started](./#getting-started)
   * [Step 1: create store](./#step-1-create-store)
   * [Step 2: create sink](./#step-2-create-sink)
