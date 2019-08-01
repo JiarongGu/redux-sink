@@ -2,7 +2,7 @@
 description: Create store with integrated redux reducers/middlewares.
 ---
 
-# Redux Reducers
+# Redux Reducers/Middlewares
 
 ## Custom Reducers
 ```javascript
