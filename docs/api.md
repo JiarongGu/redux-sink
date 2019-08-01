@@ -1,5 +1,5 @@
 
-# @redux-sink Api References
+# Api References
 - [@redux-sink Api References](#redux-sink-api-references)
   - [@sink](#sink)
   - [@state](#state)
