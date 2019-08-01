@@ -237,3 +237,4 @@ last version of `0.2.*`
 
 * initial release
 * use sink by configure store
+

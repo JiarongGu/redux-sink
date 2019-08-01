@@ -1,9 +1,9 @@
 ---
-description: >-
-  simple counter use of redux-sink state
+description: simple counter use of redux-sink state
 ---
 
 # Simple Counter
+
 Sink states maps dispatch automatically to component. so you don't have to create action or reducer.
 
 ## counter-sink.js
@@ -35,3 +35,4 @@ export const Counter = () => {
   );
 }
 ```
+

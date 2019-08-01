@@ -1,13 +1,13 @@
-# API References
+# API Refernces
 
- * [@sink](apireference.md#sink)
- * [@state](apireference.md#state)
- * [@effect](apireference.md#effect)
- * [@trigger](apireference.md#trigger)
- * [SinkContainer](apireference.md#sinkcontainer)
- * [SinkFactory](apireference.md#sinkfactory)
- * [SinkBuilder](apireference.md#sinkbuilder)
- * [Sink](apireference.md#sink)
+* [@sink](https://github.com/JiarongGu/redux-sink/tree/331cba56b9ec95460241a12d0c3435b8d846da2c/docs/apireference.md#sink)
+* [@state](https://github.com/JiarongGu/redux-sink/tree/331cba56b9ec95460241a12d0c3435b8d846da2c/docs/apireference.md#state)
+* [@effect](https://github.com/JiarongGu/redux-sink/tree/331cba56b9ec95460241a12d0c3435b8d846da2c/docs/apireference.md#effect)
+* [@trigger](https://github.com/JiarongGu/redux-sink/tree/331cba56b9ec95460241a12d0c3435b8d846da2c/docs/apireference.md#trigger)
+* [SinkContainer](https://github.com/JiarongGu/redux-sink/tree/331cba56b9ec95460241a12d0c3435b8d846da2c/docs/apireference.md#sinkcontainer)
+* [SinkFactory](https://github.com/JiarongGu/redux-sink/tree/331cba56b9ec95460241a12d0c3435b8d846da2c/docs/apireference.md#sinkfactory)
+* [SinkBuilder](https://github.com/JiarongGu/redux-sink/tree/331cba56b9ec95460241a12d0c3435b8d846da2c/docs/apireference.md#sinkbuilder)
+* [Sink](https://github.com/JiarongGu/redux-sink/tree/331cba56b9ec95460241a12d0c3435b8d846da2c/docs/apireference.md#sink)
 
 ## @sink
 
@@ -40,3 +40,4 @@ build class embedded inside sink's prototype, collect the sink configuration
 ## Sink
 
 main sink prototype class build sink instance in `SinkContainer`
+

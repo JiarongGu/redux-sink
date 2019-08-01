@@ -3,9 +3,11 @@ description: Create custom decorators to control the behavior of sink functions.
 ---
 
 # Custom Decorators
+
 Examples of using debounce//throttle function from lodash.
 
 ## @debounce
+
 ### debounce.ts
 
 ```javascript
@@ -19,6 +21,7 @@ export function debounce(wait: number, option?: any) {
 ```
 
 ### counter.js
+
 ```jsx
 import { debounce } from './debounce';
 
@@ -33,7 +36,9 @@ class CounterSink extends React.Component {
 ```
 
 ## @throttle
+
 ### throttle.ts
+
 ```javascript
 import _throttle from 'lodash/throttle';
 
@@ -45,6 +50,7 @@ export function throttle(wait: number, option?: any) {
 ```
 
 ### counter.js
+
 ```jsx
 import { throttle } from './throttle';
 
@@ -57,3 +63,4 @@ class CounterSink extends React.Component {
   }
 }
 ```
+
