@@ -6,7 +6,6 @@
 
 Decorater based redux for less boilerplate, no actions, no reducers, no seprated logic, also natively support redux to be loaded by code split. 
 
----
 
 ## Index
 - [Getting started](#getting-started)
