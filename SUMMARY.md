@@ -5,7 +5,7 @@
   * [API Refernces](docs/api-refernces.md)
   * [Change Log](docs/change-log.md)
 * [Examples](examples/README.md)
-  * [Basic](examples/basic.md)
+  * [Simple Counter](examples/simple-counter.md)
   * [Redux Reducers](examples/redux-reducers.md)
   * [Custom Decorators](examples/custom-decorators.md)
 
