@@ -1,13 +1,8 @@
----
-description: >-
-  Decorater based redux for less boilerplate, no actions, no reducers, no
-  seprated logic, also natively supp​​​​ ​​​ ​​​ort redux to be loaded by code
-  split.
----
-
 # Redux Sink
 
-[![travis](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)](https://travis-ci.org/JiarongGu/redux-sink) [![npm version](https://badge.fury.io/js/redux-sink.svg)](https://www.npmjs.com/package/redux-sink) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ee58187b2e794033aeb4296f128fd3ee)](https://app.codacy.com/app/JiarongGu/redux-sink?utm_source=github.com&utm_medium=referral&utm_content=JiarongGu/redux-sink&utm_campaign=Badge_Grade_Dashboard)​
+[![travis](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)](https://travis-ci.org/JiarongGu/redux-sink) [![npm version](https://badge.fury.io/js/redux-sink.svg)](https://www.npmjs.com/package/redux-sink) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ee58187b2e794033aeb4296f128fd3ee)](https://app.codacy.com/app/JiarongGu/redux-sink?utm_source=github.com&utm_medium=referral&utm_content=JiarongGu/redux-sink&utm_campaign=Badge_Grade_Dashboard)
+
+Decorator based redux for less boilerplate, no actions, no reducers, no separated logic, also natively support redux to be loaded by code split.
 
 ## Index
 
@@ -218,10 +213,9 @@ const store = SinkFactory.createStore({
 ```
 
 ## Documents
-
-* [Change Log](https://github.com/JiarongGu/redux-sink/tree/d5489b75455aaac34ebaec67926551d3fc1f2805/docs/CHANGELOG.md)
-* [Api References](https://github.com/JiarongGu/redux-sink/tree/d5489b75455aaac34ebaec67926551d3fc1f2805/docs/API.md)
-* [Examples](https://github.com/JiarongGu/redux-sink/tree/d5489b75455aaac34ebaec67926551d3fc1f2805/.docs/examples/README.md)
+[Change Log](./docs/CHANGELOG.md)
+[Api References](./docs/API.md)
+[Examples](.docs/examples)
 
 ## LICENSE
 
