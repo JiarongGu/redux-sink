@@ -9,8 +9,8 @@ Decorator based redux for less boilerplate, no actions, no reducers, no separate
   * [Step 2: create sink](./#step-2-create-sink)
   * [Step 3: sinking](./#step-3-sinking)
 * [Examples](examples/)
-* [API References](docs/api-refernces/)
-* [ChangeLog](docs/change-log.md)
+* [API References](api-refernces/)
+* [ChangeLog](changelog.md)
 
 ## Getting started
 
