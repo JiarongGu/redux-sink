@@ -1,14 +1,13 @@
 # API References
 
-* [@redux-sink Api References](apireference.md#redux-sink-api-references)
-  * [@sink](apireference.md#sink)
-  * [@state](apireference.md#state)
-  * [@effect](apireference.md#effect)
-  * [@trigger](apireference.md#trigger)
-  * [SinkContainer](apireference.md#sinkcontainer)
-  * [SinkFactory](apireference.md#sinkfactory)
-  * [SinkBuilder](apireference.md#sinkbuilder)
-  * [Sink](apireference.md#sink)
+ * [@sink](apireference.md#sink)
+ * [@state](apireference.md#state)
+ * [@effect](apireference.md#effect)
+ * [@trigger](apireference.md#trigger)
+ * [SinkContainer](apireference.md#sinkcontainer)
+ * [SinkFactory](apireference.md#sinkfactory)
+ * [SinkBuilder](apireference.md#sinkbuilder)
+ * [Sink](apireference.md#sink)
 
 ## @sink
 
