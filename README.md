@@ -242,13 +242,9 @@ class Counter extends React.Component {
 ```
 
 
-## Changelog
-
-See the [CHANGELOG](./CHANGELOG.md) to see what's new.
-
-
-## Api References
-[Api References](./docs/api.md)
+## Documents
+[Change Log](./docs/CHANGELOG.md)
+[Api References](./docs/APIREFERENCE.md)
 
 
 ## LICENSE
