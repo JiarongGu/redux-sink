@@ -6,7 +6,7 @@ description: SinkContainer use to keep store and all the sinks within the same s
 
 Since `SinkFactory` is a instance of `SinkContainer` the api is the same, all the code example will be using `SinkFactory` for easier understanding the usage.
 
-## createStore\(StoreConfiguration\) =&gt; Store
+### createStore\(StoreConfiguration\) =&gt; Store
 
 Create sink store, it can take reducers, middlewares and devToolOptions with configuration
 
@@ -48,7 +48,7 @@ const store = SinkFactory.createStore({
 {% endtab %}
 {% endtabs %}
 
-## getSink\(SinkClass\) =&gt; SinkInstance
+### getSink\(SinkClass\) =&gt; SinkInstance
 
 Get sink from current container using sink class
 
@@ -69,7 +69,7 @@ const counter = SinkFactory.getSink(CounterSink);
 {% endtab %}
 {% endtabs %}
 
-## getEffectTasks\(\) =&gt; Array&lt;Promise&gt;
+### getEffectTasks\(\) =&gt; Array&lt;Promise&gt;
 
 Get currently running async effects
 
@@ -81,6 +81,27 @@ import { SinkFactory } from 'redux-sink';
 Promise.all(SinkFactory.getEffectTasks()).then(() => {
   // do something when all effects completed
 });
+```
+{% endtab %}
+{% endtabs %}
+
+### getStore\(\) =&gt; Store
+
+Get underlining redux store from the container
+
+{% tabs %}
+{% tab title="Example" %}
+```javascript
+import { SinkFactory } from 'redux-sink';
+
+// use store to dispatch a location event, just like regular redux
+SinkFactory.getStore().dispatch({ 
+  type: 'navigation/loaction',
+  payload: { pathname: '/' }
+});
+
+// get global state of the store
+const state = SinkFactory.getStore().getState();
 ```
 {% endtab %}
 {% endtabs %}

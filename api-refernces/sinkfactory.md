@@ -36,3 +36,7 @@ see [SinkContainer.getSink](sinkcontainer.md#getsink-sinkclass-greater-than-sink
 
 see [SinkContainer.getEffectTasks](sinkcontainer.md#geteffecttasks-greater-than-array-less-than-promise-greater-than)
 
+### getStore\(\) =&gt; Store
+
+see [SinkContainer.getStore](sinkcontainer.md#getstore-greater-than-store)
+

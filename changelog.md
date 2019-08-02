@@ -1,11 +1,14 @@
 # Change Log
 
 ## \[0.11.1\] - 2019-08-02
+
 ### Added
+
 * effectTrace for store configuration to enable `SinkFactory.getEffectTasks` - default: false
 * useTrigger for store configuration to enable trigger - default: true
 
 ### Update
+
 * internal function names
 * updated types for injections
 
