@@ -3,8 +3,8 @@ import { ReducersMapObject, Store } from 'redux';
 import { EffectService, TriggerService } from './services';
 import { Sink } from './Sink';
 import { SinkBuilder } from './SinkBuilder';
-import { BuildSinkParams, Constructor, SinkAction, StoreConfiguration } from './typings';
-import { buildReducers, combineReducer, createSinkStore } from './utilities';
+import { Constructor, SinkAction, StoreConfiguration } from './typings';
+import { buildReducer, combineReducers, configureStoreWithSink } from './utilities';
 
 export class SinkContainer {
   public store?: Store;
@@ -21,7 +21,7 @@ export class SinkContainer {
   }
 
   public createStore<TState = any>(config?: StoreConfiguration<TState>) {
-    const store = createSinkStore(this, config);
+    const store = configureStoreWithSink(this, config);
     this.store = store;
 
     const state = this.store.getState() || {};
@@ -31,8 +31,7 @@ export class SinkContainer {
         this.sinks[key].setState(sinkState);
       }
     });
-    this.rebuildReducer();
-
+    this.rebuildReducer(this.store);
     return store;
   }
 
@@ -95,11 +94,11 @@ export class SinkContainer {
         accumulated[sink.actions[key]] = sink.reducers[key], accumulated
       ), {} as { [key: string]: any });
 
-      this.reducers[sink.namespace] = combineReducer(sink.state, reducer);
+      this.reducers[sink.namespace] = buildReducer(sink.state, reducer);
 
       // if store is already set, rebuild reducer
       if (this.store) {
-        this.rebuildReducer();
+        this.rebuildReducer(this.store);
       }
     }
 
@@ -114,8 +113,7 @@ export class SinkContainer {
     });
   }
 
-  private rebuildReducer() {
-    const reducer = buildReducers(this.reducers);
-    this.store!.replaceReducer(reducer);
+  private rebuildReducer(store: Store) {
+    store.replaceReducer(combineReducers(this.reducers));
   }
 }

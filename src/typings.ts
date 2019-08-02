@@ -34,6 +34,7 @@ export interface TriggerEventHandler {
 export interface StoreConfiguration<TState = any> {
   reducers?: { [key: string]: any };
   middlewares?: Array<Middleware>;
+  effectTrace?: boolean;
   preloadedState?: TState;
   devToolOptions?: DevToolOptions;
 }
