@@ -34,7 +34,7 @@ export function configureStoreWithSink<TState = any>(container: SinkContainer, c
   useConfig.middlewares = middlewares;
   useConfig.reducers = reducers;
 
-  const store = configureStore(useConfig);
+  const store = configureStore<TState>(useConfig);
 
   return store;
 }

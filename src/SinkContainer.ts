@@ -20,8 +20,8 @@ export class SinkContainer {
     this.getStore = this.getStore.bind(this);
   }
 
-  public createStore<TState = any>(config?: StoreConfiguration<TState>) {
-    const store = configureStoreWithSink(this, config);
+  public createStore<TState = any>(config?: StoreConfiguration<TState>): Store<TState> {
+    const store = configureStoreWithSink<TState>(this, config);
     this.store = store;
 
     const state = this.store.getState() || {};
@@ -35,15 +35,15 @@ export class SinkContainer {
     return store;
   }
 
-  public getEffectTasks() {
+  public getEffectTasks(): Array<Promise<any>> {
     return this.effectService.effectTasks;
   }
 
-  public activateTrigger(action: SinkAction) {
+  public activateTrigger(action: SinkAction): Promise<any> {
     return this.triggerService.activateTrigger(action);
   }
 
-  public getStore() {
+  public getStore(): Store | undefined {
     return this.store;
   }
 

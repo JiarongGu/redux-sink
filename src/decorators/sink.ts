@@ -1,6 +1,5 @@
 import { SinkBuilder } from '../SinkBuilder';
 import { Constructor } from '../typings';
-import { SinkContainer } from './../SinkContainer';
 
 /**
  * class decorator for create sink
@@ -10,7 +9,7 @@ import { SinkContainer } from './../SinkContainer';
  * inject sink or objects like sink factory to sink constructor,
  * if inject with sink class, it will be auto resolved to sink object
  */
-export function sink(namespace: string, ...injects: Array<Constructor | SinkContainer>) {
+export function sink(namespace: string, ...injects: Array<any>) {
   return function <T extends Constructor>(constructor: T) {
     const prototype = constructor.prototype;
     const sinkBuilder = SinkBuilder.get(prototype);
