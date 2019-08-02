@@ -35,6 +35,7 @@ export interface StoreConfiguration<TState = any> {
   reducers?: { [key: string]: any };
   middlewares?: Array<Middleware>;
   effectTrace?: boolean;
+  useTrigger?: boolean;
   preloadedState?: TState;
   devToolOptions?: DevToolOptions;
 }
