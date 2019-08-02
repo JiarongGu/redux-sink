@@ -8,7 +8,7 @@ Since `SinkFactory` is a instance of `SinkContainer` the api is the same, all th
 
 ### createStore\(StoreConfiguration\) =&gt; Store
 
-Create sink store, it can take reducers, middlewares and devtoolOptions with configuration
+Create sink store, it can take reducers, middlewares and devToolOptions with configuration
 
 {% tabs %}
 {% tab title="Arguments" %}
@@ -22,11 +22,11 @@ interface StoreConfiguration {
   middlewares: Array<ReduxMiddleware>,
   // required compose function from redux-dev-tool
   devToolOptions: {
-    // devtool compose function
+    // devTool compose function
     devToolCompose: Function,
-    // should devtool disabled
+    // should devTool disabled
     disabled?: boolean,
-    // other devtool properties
+    // other devTool properties
     [key: string]: any
   }
 }
