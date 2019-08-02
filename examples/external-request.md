@@ -24,7 +24,8 @@ export class WeatherSink {
   @effect
   async function loadWeather() {
     this.loading = true;
-    this.weather = async fetch('http://api/weather');
+    // using async/await here, same for promise
+    this.weather = await fetch('http://api/weather');
     this.loading = false; 
   }
 }
