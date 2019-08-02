@@ -1,5 +1,5 @@
 import { createSinking } from './createSinking';
-import { createSinkSelector } from './createSinkSelector';
+import { createUseSink } from './createUseSink';
 import { SinkContainer } from './SinkContainer';
 
 const __sinkFactory__ = new SinkContainer();
@@ -19,4 +19,4 @@ export const sinking = createSinking(__sinkFactory__);
  * connect sink with using hook
  * @param sink sink class
  */
-export const useSink = createSinkSelector(__sinkFactory__);
+export const useSink = createUseSink(__sinkFactory__);

@@ -6,9 +6,7 @@ import { mergeDispatchState } from './utilities';
 
 export function createSinking(container: SinkContainer, options?: Options) {
   return function(...sinks: Array<Constructor>) {
-    const sinkPrototypes = sinks
-      .map(sink => container.getSinkPrototype(sink));
-
+    const sinkPrototypes = sinks.map(sink => container.getSinkPrototype(sink));
     return connect(
       createMapStateToProps(sinkPrototypes),
       createMapDispatchToProps(sinkPrototypes),
