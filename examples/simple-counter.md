@@ -44,3 +44,7 @@ export const Counter = () => {
 {% endcode-tabs-item %}
 {% endcode-tabs %}
 
+{% hint style="warning" %}
+The two way update for state is baed on ****[defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty), so when updating object or arrray you still need to update the whole object reference. For example: [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) or [Array.concat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat)
+{% endhint %}
+
