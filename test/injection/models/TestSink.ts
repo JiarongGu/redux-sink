@@ -13,6 +13,6 @@ export class TestSink {
     public injectableSink: InjectableSink,
     public container: SinkContainer,
     public factory: SinkContainer,
-    public notDefined: undefined,
+    public notDefined: any,
   ) {}
 }

@@ -8,5 +8,5 @@ import { SinkBuilder } from '../SinkBuilder';
  */
 export function state(target: any, name: string) {
   const sinkBuilder = SinkBuilder.get(target);
-  sinkBuilder.state[name] = null;
+  sinkBuilder.state[name] = undefined;
 }

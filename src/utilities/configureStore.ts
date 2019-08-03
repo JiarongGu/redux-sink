@@ -18,9 +18,10 @@ export function configureStore<TState = any>(config: StoreConfiguration<TState>)
   const composedMiddlewares = finalCompose(combinedMiddleware);
   const combinedReducer = combineReducers(reducers);
 
-  const store: any = preloadedState === undefined ?
-    createStore(combinedReducer as any, composedMiddlewares) :
-    createStore(combinedReducer as any, preloadedState, composedMiddlewares);
+  // preloaded state must be an object
+  const store: any = preloadedState ?
+    createStore(combinedReducer as any, preloadedState, composedMiddlewares) :
+    createStore(combinedReducer as any, composedMiddlewares);
 
   return store as Store<TState>;
 }

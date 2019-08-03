@@ -25,12 +25,16 @@ export class SinkContainer {
     this.store = store;
 
     const state = this.store.getState() || {};
+
+    // update sink state from preloaded state
     Object.keys(this.sinks).forEach(key => {
       const sinkState = state[key];
       if (sinkState !== undefined) {
         this.sinks[key].setState(sinkState);
       }
     });
+
+    // rebuild reducer combine with sink reducers
     this.rebuildReducer(this.store);
     return store;
   }

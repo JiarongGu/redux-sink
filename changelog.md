@@ -23,7 +23,7 @@
 
 ### Fixed
 
-* fix merge state with undefined state cause error
+* fix merge state with not defined state cause error
 
 ## \[0.9.0\] - 2019-07-30
 
@@ -94,7 +94,7 @@
 
 ### Fixed
 
-* preloaded state check using `===` to avoid undefined checking
+* preloaded state check using `===` to avoid not defined checking
 
 ## \[0.3.0\] - 2019-04-15
 
@@ -141,7 +141,7 @@ last version of `0.2.*`
 
 ### Fixed
 
-* fix merge state with undefined state cause error
+* fix merge state with not defined state cause error
 
 ## \[0.9.0\] - 2019-07-30
 
@@ -212,7 +212,7 @@ last version of `0.2.*`
 
 ### Fixed
 
-* preloaded state check using `===` to avoid undefined checking
+* preloaded state check using `===` to avoid not defined checking
 
 ## \[0.3.0\] - 2019-04-15
 

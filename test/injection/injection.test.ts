@@ -13,7 +13,7 @@ describe('sink injection test', () => {
     assert.isNotNull(testSink.factory);
   });
 
-  it('should be able to handel inject undefined', () => {
+  it('should be able to handel inject not defined', () => {
     const { factory } = createFactory();
     const testSink = factory.getSink(TestSink);
     assert.isUndefined(testSink.notDefined);
