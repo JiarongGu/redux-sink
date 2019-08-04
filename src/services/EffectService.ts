@@ -6,17 +6,12 @@ export class EffectService implements IMiddlewareService {
   public tasks: Array<Promise<any>> = [];
   public enableTrace: boolean = false;
 
-  constructor() {
-    this.removeTask = this.removeTask.bind(this);
-  }
-
   public invoke(action: SinkAction): Promise<any> {
     if (action.type) {
       const handler = this.effectHandlers.get(action.type);
       if (handler) {
         const task = handler(action.payload);
         if (this.enableTrace && task && task.then) {
-          // if task is promise
           return this.addTask(task);
         }
         return Promise.resolve(task);
@@ -36,8 +31,6 @@ export class EffectService implements IMiddlewareService {
         return response;
       })
       .catch((reason) => {
-        // should be handled by effect function
-        // this catch should not be used
         this.removeTask(task);
         throw reason;
       });
