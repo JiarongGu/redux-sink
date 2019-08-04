@@ -1,9 +1,9 @@
-import { AnyFunction, SinkAction, TriggerEventHandler, TriggerOptions } from '../typings';
+import { AnyFunction, IMiddlewareService, SinkAction, TriggerEventHandler, TriggerOptions } from '../typings';
 
 /**
  * Singleton service class used on trigger middleware, manages action and trigger events
  */
-export class TriggerService {
+export class TriggerService implements IMiddlewareService {
   // stage actions logs each action comes to the redux
   // used for trigger that might be lazy loaded
   public stagedActions: { [key: string]: any } = {};
@@ -42,11 +42,11 @@ export class TriggerService {
   }
 
   /**
-   * activate trigger directly, can be useful for server-side-rendering
+   * invoke trigger directly, can be useful for server-side-rendering
    * @param action sink action
    * @returns {Promise} promise of result that triggers returns, in order of trigger priority
    */
-  public activateTrigger(action: SinkAction): Promise<any> {
+  public invoke(action: SinkAction): Promise<any> {
     if (!action.type) {
       return Promise.resolve([]);
     }
@@ -62,5 +62,6 @@ export class TriggerService {
       return Promise.all(tasks);
     }
     return Promise.resolve([]);
+
   }
 }

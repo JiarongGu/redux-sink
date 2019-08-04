@@ -10,20 +10,21 @@ export class SinkContainer {
   public store?: Store;
   public reducers: ReducersMapObject<any, any> = {};
 
-  public effectService = new EffectService();
-  public triggerService = new TriggerService();
+  public effectService: EffectService;
+  public triggerService: TriggerService;
 
   public sinks: { [key: string]: Sink } = {};
 
   constructor() {
     this.getSink = this.getSink.bind(this);
     this.getStore = this.getStore.bind(this);
+    this.effectService = new EffectService();
+    this.triggerService = new TriggerService();
   }
 
   public createStore<TState = any>(config?: StoreConfiguration<TState>): Store<TState> {
-    const store = configureStoreWithSink<TState>(this, config);
-    this.store = store;
-
+    // create store with sink
+    this.store = configureStoreWithSink<TState>(this, config);
     const state = this.store.getState() || {};
 
     // update sink state from preloaded state
@@ -36,15 +37,19 @@ export class SinkContainer {
 
     // rebuild reducer combine with sink reducers
     this.rebuildReducer(this.store);
-    return store;
+    return this.store;
+  }
+
+  public invokeTrigger(action: SinkAction): Promise<any> {
+    return this.triggerService.invoke(action);
+  }
+
+  public invokeEffect(action: SinkAction): Promise<any> {
+    return this.effectService.invoke(action);
   }
 
   public getEffectTasks(): Array<Promise<any>> {
     return this.effectService.effectTasks;
-  }
-
-  public activateTrigger(action: SinkAction): Promise<any> {
-    return this.triggerService.activateTrigger(action);
   }
 
   public getStore(): Store | undefined {

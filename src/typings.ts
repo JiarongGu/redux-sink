@@ -31,6 +31,10 @@ export interface TriggerEventHandler {
   handler: AnyFunction;
 }
 
+export interface IMiddlewareService {
+  invoke: (action: SinkAction) => Promise<any>;
+}
+
 export interface StoreConfiguration<TState = any> {
   reducers?: { [key: string]: any };
   middlewares?: Array<Middleware>;

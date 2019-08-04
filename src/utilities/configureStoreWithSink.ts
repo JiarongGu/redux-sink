@@ -2,8 +2,7 @@ import { Middleware } from 'redux';
 import { SinkContainer } from '../SinkContainer';
 import { StoreConfiguration } from '../typings';
 import { configureStore } from './configureStore';
-import { createEffectMiddleware } from './createEffectsMiddleware';
-import { createTriggerMiddleware } from './createTriggerMiddleware';
+import { createServiceMiddleware } from './createServiceMiddleware';
 
 const defaultConfig = {
   effectTrace: false,
@@ -20,10 +19,14 @@ export function configureStoreWithSink<TState = any>(container: SinkContainer, c
   const middlewares: Array<Middleware> = [];
   if (useConfig.useTrigger) {
     // use trigger middleware only when useTrigger set to true in config
-    middlewares.push(createTriggerMiddleware(container.triggerService));
+    middlewares.push(createServiceMiddleware(container.triggerService));
   }
+
+  // config effect service;
+  container.effectService.effectTrace = useConfig.effectTrace;
+
   middlewares.push(
-    createEffectMiddleware(container.effectService, useConfig.effectTrace),
+    createServiceMiddleware(container.effectService),
     ...useConfig.middlewares
   );
 
