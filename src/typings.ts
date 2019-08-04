@@ -35,7 +35,7 @@ export interface IMiddlewareService {
   invoke: (action: SinkAction) => Promise<any>;
 }
 
-export interface StoreConfiguration<TState = any> {
+export interface SinkConfiguration<TState = any> {
   reducers?: { [key: string]: any };
   middlewares?: Array<Middleware>;
   effectTrace?: boolean;

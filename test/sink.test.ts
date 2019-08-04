@@ -1,9 +1,9 @@
 import { assert } from 'chai';
 import { SinkContainer } from '../src';
-import { StoreConfiguration } from '../src/typings';
+import { SinkConfiguration } from '../src/typings';
 import { StateOnlySink, TestSink, TestSink2, TestSink3 } from './sinks';
 
-export function createFactory(config?: StoreConfiguration, sinkFactory?: SinkContainer) {
+export function createFactory(config?: SinkConfiguration, sinkFactory?: SinkContainer) {
   const factory = sinkFactory || new SinkContainer();
   const store = factory.createStore(config);
   return { factory, store };

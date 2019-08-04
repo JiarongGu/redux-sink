@@ -1,8 +1,8 @@
 import { applyMiddleware, compose, createStore, Middleware, Store } from 'redux';
-import { StoreConfiguration } from '../typings';
+import { SinkConfiguration } from '../typings';
 import { combineReducers } from './combineReducers';
 
-export function configureStore<TState = any>(config: StoreConfiguration<TState>): Store<TState> {
+export function configureStore<TState = any>(config: SinkConfiguration<TState>): Store<TState> {
   const preloadedState = config.preloadedState;
   const reducers: { [key: string]: any } = config.reducers!;
   const middlewares: Array<Middleware> = config.middlewares!;

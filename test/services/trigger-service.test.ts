@@ -27,6 +27,10 @@ describe('trigger service test', () => {
         assert.fail('events not found');
       }
     });
+
+    it('should invoke when lazy loaded trigger', () => {
+
+    });
   });
 
   describe('invoke', () => {

@@ -31,6 +31,8 @@ export class EffectService implements IMiddlewareService {
         return response;
       })
       .catch((reason) => {
+        // should be handled by effect function
+        // this catch should not be used
         this.removeTask(task);
         throw reason;
       });

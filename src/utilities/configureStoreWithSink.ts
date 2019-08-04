@@ -1,6 +1,6 @@
 import { Middleware } from 'redux';
 import { SinkContainer } from '../SinkContainer';
-import { StoreConfiguration } from '../typings';
+import { SinkConfiguration } from '../typings';
 import { configureStore } from './configureStore';
 import { createServiceMiddleware } from './createServiceMiddleware';
 
@@ -11,7 +11,7 @@ const defaultConfig = {
   useTrigger: true
 };
 
-export function configureStoreWithSink<TState = any>(container: SinkContainer, config?: StoreConfiguration<TState>) {
+export function configureStoreWithSink<TState = any>(container: SinkContainer, config?: SinkConfiguration<TState>) {
   // get config in used by combine default and user config
   const useConfig = Object.assign({}, defaultConfig, config);
 

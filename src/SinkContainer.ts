@@ -3,7 +3,7 @@ import { ReducersMapObject, Store } from 'redux';
 import { EffectService, TriggerService } from './services';
 import { Sink } from './Sink';
 import { SinkBuilder } from './SinkBuilder';
-import { Constructor, SinkAction, StoreConfiguration } from './typings';
+import { Constructor, SinkAction, SinkConfiguration } from './typings';
 import { buildReducer, combineReducers, configureStoreWithSink } from './utilities';
 
 export class SinkContainer {
@@ -22,7 +22,11 @@ export class SinkContainer {
     this.triggerService = new TriggerService();
   }
 
-  public createStore<TState = any>(config?: StoreConfiguration<TState>): Store<TState> {
+  /**
+   * Create store by sink configuration
+   * @param {SinkConfiguration} config
+   */
+  public createStore<TState = any>(config?: SinkConfiguration<TState>): Store<TState> {
     if (this.store) {
       throw new Error('store already created');
     }
@@ -44,26 +48,51 @@ export class SinkContainer {
     return this.store;
   }
 
+  /**
+   * invoke triggers by action
+   * @param action sink action
+   */
   public invokeTrigger(action: SinkAction): Promise<any> {
     return this.triggerService.invoke(action);
   }
 
+  /**
+   * invoke effect by action
+   * @param action sink action
+   */
   public invokeEffect(action: SinkAction): Promise<any> {
     return this.effectService.invoke(action);
   }
 
-  public getEffectTasks(): Array<Promise<any>> {
+  /**
+   * Get traced effect tasks
+   * @returns {[Promise]} promise array
+   */
+  public getTasks(): Array<Promise<any>> {
     return this.effectService.tasks;
   }
 
+  /**
+   * Get underlying redux store
+   */
   public getStore(): Store | undefined {
     return this.store;
   }
 
+  /**
+   * Get sink instance by sink class
+   * @param sink Sink class
+   * @returns Sink instance
+   */
   public getSink<T>(sink: Constructor<T>): T {
     return this.getSinkPrototype(sink).instance as T;
   }
 
+  /**
+   * Get sink prototype by sink class, will build sink if its not built yet in this container
+   * @param sink Sink class
+   * @returns Sink prototype, contains sink builder and sink configurations
+   */
   public getSinkPrototype<TSink>(sink: Constructor<TSink>): Sink {
     if (!sink || !sink.prototype) {
       throw new Error(`sink not found`);
