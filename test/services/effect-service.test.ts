@@ -88,8 +88,7 @@ describe('effect service test', () => {
 
       it('should throw exception when async handler error', () => {
         const handler: EffectHandler = (payload: string) => {
-          return new Promise((resolve, reject) => reject(payload))
-            .catch((error) => error);
+          return new Promise((resolve, reject) => reject(payload));
         };
         const actionType = 'test';
         const actionPayload = 'test error';
@@ -108,9 +107,8 @@ describe('effect service test', () => {
         }
 
         Promise.all([promise1, promise2])
-          .then(([error1, error2]) => {
-            assert.equal(actionPayload, error1);
-            assert.equal(actionPayload, error2);
+          .catch((error) => {
+            assert.equal(actionPayload, error);
             assert.equal(0, service.tasks.length);
           });
       });

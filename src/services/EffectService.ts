@@ -18,7 +18,7 @@ export class EffectService implements IMiddlewareService {
         if (task && task.then) {
           // if task is promise
           if (this.enableTrace) {
-            this.addTask(task);
+            return this.addTask(task);
           }
           return task as Promise<any>;
         }
@@ -32,8 +32,8 @@ export class EffectService implements IMiddlewareService {
     this.effectHandlers.set(action, handler);
   }
 
-  private addTask(task: Promise<any>) {
-    this.tasks.push(task
+  private addTask(task: Promise<any>): Promise<any> {
+    const traceTask = task
       .then((response) => {
         this.removeTask(task);
         return response;
@@ -43,8 +43,9 @@ export class EffectService implements IMiddlewareService {
         // this catch should not be used
         this.removeTask(task);
         throw reason;
-      })
-    );
+      });
+    this.tasks.push(traceTask);
+    return traceTask;
   }
 
   private removeTask(task: Promise<any>) {

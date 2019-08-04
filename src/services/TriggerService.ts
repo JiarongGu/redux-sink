@@ -9,7 +9,7 @@ export class TriggerService implements IMiddlewareService {
   public stagedActions: { [key: string]: any } = {};
 
   // collection of trigger that grouped by action keys
-  public triggerMap = new Map<string, Array<TriggerEventHandler>>();
+  public eventsMap = new Map<string, Array<TriggerEventHandler>>();
 
   /**
    * Add trigger to trigger
@@ -24,9 +24,9 @@ export class TriggerService implements IMiddlewareService {
   public addTrigger(actionType: string, handler: AnyFunction, options: TriggerOptions) {
     const { priority = 0, lazyLoad } = options;
 
-    let handlers = this.triggerMap.get(actionType);
+    let handlers = this.eventsMap.get(actionType);
     if (!handlers) {
-      this.triggerMap.set(actionType, handlers = []);
+      this.eventsMap.set(actionType, handlers = []);
     }
 
     handlers.push({ handler, priority });
@@ -48,20 +48,18 @@ export class TriggerService implements IMiddlewareService {
    */
   public invoke(action: SinkAction): Promise<any> {
     if (!action.type) {
-      return Promise.resolve([]);
+      return Promise.resolve();
     }
 
     // stage each action for lazy loaded triggers
     this.stagedActions[action.type] = action;
 
-    // try get trigger
-    const triggers = this.triggerMap.get(action.type);
-
-    if (triggers) {
-      const tasks = triggers.map(trigger => trigger.handler(action));
+    // try get trigger events
+    const events = this.eventsMap.get(action.type);
+    if (events) {
+      const tasks = events.map(event => event.handler(action));
       return Promise.all(tasks);
     }
-    return Promise.resolve([]);
-
+    return Promise.resolve();
   }
 }
