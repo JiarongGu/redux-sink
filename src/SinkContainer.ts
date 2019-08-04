@@ -23,6 +23,10 @@ export class SinkContainer {
   }
 
   public createStore<TState = any>(config?: StoreConfiguration<TState>): Store<TState> {
+    if (this.store) {
+      throw new Error('store already created');
+    }
+
     // create store with sink
     this.store = configureStoreWithSink<TState>(this, config);
     const state = this.store.getState() || {};
@@ -49,7 +53,7 @@ export class SinkContainer {
   }
 
   public getEffectTasks(): Array<Promise<any>> {
-    return this.effectService.effectTasks;
+    return this.effectService.tasks;
   }
 
   public getStore(): Store | undefined {

@@ -1,51 +1,51 @@
 import { Sink } from './Sink';
 import { SinkContainer } from './SinkContainer';
-import { AnyFunction, BuildSinkParams, Constructor, SinkAction, TriggerEvent } from './typings';
+import { AnyFunction, Constructor, SinkAction, SinkContainerAPI, TriggerEvent } from './typings';
 import { reduceKeys } from './utilities';
 
-const staticIgnoredProperties = ['constructor', '__sinkBuilder__'];
-
 export class SinkBuilder {
+  public static staticIgnoredProperties = ['constructor', '__sinkBuilder__'];
   public static get(prototype: any): SinkBuilder {
     if (!prototype.__sinkBuilder__) {
       prototype.__sinkBuilder__ = new SinkBuilder(prototype);
     }
     return prototype.__sinkBuilder__;
   }
+
   public sinkPrototype!: any;
   public sinkConstructor!: Constructor;
 
   // configured by decorator
   public namespace!: string;
-  public state: { [key: string]: any };
-  public effects: { [key: string]: AnyFunction };
+  public state: { [key: string]: any } = {};
+  public effects: { [key: string]: AnyFunction } = {};
 
   // for injecting internal sinks
   public sinkInjects!: Array<Constructor | SinkContainer>;
 
-  public triggers: Array<TriggerEvent>;
+  public triggers: Array<TriggerEvent> = [];
 
   // auto generated
   public _dispatches?: { [key: string]: AnyFunction };
   public _actions?: { [key: string]: string };
 
-  constructor(sink: any) {
-    this.effects = {};
-    this.state = {};
-
-    this.triggers = [];
+  private constructor(sink: any) {
     this.sinkPrototype = sink;
   }
 
-  public buildSink(params: BuildSinkParams): Sink {
-    const sink = new Sink(params.getStore);
+  /**
+   * build sink based on sink builder properties
+   * @param params container api for getSink and getStore
+   */
+  public buildSink(container: SinkContainerAPI): Sink {
+    const sink = new Sink(container.getStore);
     const constructorInjects: Array<any> = [];
 
     // sink decorator can also inject sink, sink container or other stuff
     for (const inject of this.sinkInjects) {
       try {
         // try to inject with sink
-        const injectableSink = params.getSink(inject);
+        const injectableSink = container.getSink(inject);
         constructorInjects.push(injectableSink);
       } catch {
         // if we fill to inject sink, inject the input from sinkInject
@@ -60,14 +60,15 @@ export class SinkBuilder {
 
     const effectKeys = Object.keys(this.effects);
     const stateKeys = Object.keys(this.state);
-
     const instanceProperties = Object.keys(instance);
+
     const ignoredProperties = [
-      ...staticIgnoredProperties,
+      ...SinkBuilder.staticIgnoredProperties,
       ...instanceProperties,
       ...effectKeys,
     ];
 
+    // get properties in prototype
     const prototypeProperties = Object
       .getOwnPropertyNames(this.sinkPrototype)
       .filter(name => !ignoredProperties.some(x => x === name));

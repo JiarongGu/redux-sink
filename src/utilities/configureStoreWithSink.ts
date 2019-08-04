@@ -23,7 +23,7 @@ export function configureStoreWithSink<TState = any>(container: SinkContainer, c
   }
 
   // config effect service;
-  container.effectService.effectTrace = useConfig.effectTrace;
+  container.effectService.enableTrace = useConfig.effectTrace;
 
   middlewares.push(
     createServiceMiddleware(container.effectService),

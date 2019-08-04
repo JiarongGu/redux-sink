@@ -44,7 +44,7 @@ export interface StoreConfiguration<TState = any> {
   devToolOptions?: DevToolOptions;
 }
 
-export interface BuildSinkParams {
+export interface SinkContainerAPI {
   getStore: () => Store | undefined;
   getSink: (constructor: Constructor | SinkContainer) => Sink;
 }

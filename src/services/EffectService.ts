@@ -2,24 +2,23 @@ import { EffectHandler, IMiddlewareService, SinkAction } from '../typings';
 
 export class EffectService implements IMiddlewareService {
   public effectHandlers = new Map<string, EffectHandler>();
-  public effectTasks: Array<Promise<any>> = [];
-  public effectTrace: boolean = false;
+
+  public tasks: Array<Promise<any>> = [];
+  public enableTrace: boolean = false;
 
   constructor() {
-    this.removeEffectTask = this.removeEffectTask.bind(this);
+    this.removeTask = this.removeTask.bind(this);
   }
 
   public invoke(action: SinkAction): Promise<any> {
-    if (action.type && action.payload) {
+    if (action.type) {
       const handler = this.effectHandlers.get(action.type);
-
       if (handler) {
         const task = handler(action.payload);
-
-        // if task is promise
         if (task && task.then) {
-          if (this.effectTrace) {
-            this.addEffectTask(task);
+          // if task is promise
+          if (this.enableTrace) {
+            this.addTask(task);
           }
           return task as Promise<any>;
         }
@@ -33,17 +32,22 @@ export class EffectService implements IMiddlewareService {
     this.effectHandlers.set(action, handler);
   }
 
-  public addEffectTask(task: Promise<any>) {
-    this.effectTasks.push(task.then((response: any) => {
-      this.removeEffectTask(task);
-      return response;
-    }).catch((reason) => {
-      this.removeEffectTask(task);
-      return reason;
-    }));
+  private addTask(task: Promise<any>) {
+    this.tasks.push(task
+      .then((response) => {
+        this.removeTask(task);
+        return response;
+      })
+      .catch((reason) => {
+        // should be handled by effect function
+        // this catch should not be used
+        this.removeTask(task);
+        throw reason;
+      })
+    );
   }
 
-  public removeEffectTask(task: Promise<any>) {
-    this.effectTasks.splice(this.effectTasks.indexOf(task), 1);
+  private removeTask(task: Promise<any>) {
+    this.tasks.splice(this.tasks.indexOf(task), 1);
   }
 }
