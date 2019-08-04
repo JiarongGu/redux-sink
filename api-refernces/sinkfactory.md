@@ -24,7 +24,7 @@ const testStore = container.creatStore();
 const counter = container.getSink(CounterSink);
 ```
 
-### createStore\(StoreConfiguration\) =&gt; Store
+### createStore\(SinkConfiguration\) =&gt; Store
 
 see [SinkContainer.createStore](sinkcontainer.md#createstore-storeconfiguration-greater-than-store)
 
@@ -32,9 +32,9 @@ see [SinkContainer.createStore](sinkcontainer.md#createstore-storeconfiguration-
 
 see [SinkContainer.getSink](sinkcontainer.md#getsink-sinkclass-greater-than-sinkinstance)
 
-### getEffectTasks\(\) =&gt; Array&lt;Promise&gt;
+### getTasks\(\) =&gt; Array&lt;Promise&gt;
 
-see [SinkContainer.getEffectTasks](sinkcontainer.md#geteffecttasks-greater-than-array-less-than-promise-greater-than)
+see [SinkContainer.getTasks](sinkcontainer.md#geteffecttasks-greater-than-array-less-than-promise-greater-than)
 
 ### getStore\(\) =&gt; Store
 

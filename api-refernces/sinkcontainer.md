@@ -6,14 +6,14 @@ description: SinkContainer use to keep store and all the sinks within the same s
 
 Since `SinkFactory` is a instance of `SinkContainer` the api is the same, all the code example will be using `SinkFactory` for easier understanding the usage.
 
-### createStore\(StoreConfiguration\) =&gt; Store
+### createStore\(SinkConfiguration\) =&gt; Store
 
 Create sink store, it can take reducers, middlewares and devToolOptions with configuration
 
 {% tabs %}
 {% tab title="Arguments" %}
 ```typescript
-interface StoreConfiguration {
+interface SinkConfiguration {
   // regular reducers
   reducers: { [key: string]: (state, action) => state },
   // predefined state
@@ -69,7 +69,7 @@ const counter = SinkFactory.getSink(CounterSink);
 {% endtab %}
 {% endtabs %}
 
-### getEffectTasks\(\) =&gt; Array&lt;Promise&gt;
+### getTasks\(\) =&gt; Array&lt;Promise&gt;
 
 Get currently running async effects
 
@@ -78,7 +78,7 @@ Get currently running async effects
 ```javascript
 import { SinkFactory } from 'redux-sink';
 
-Promise.all(SinkFactory.getEffectTasks()).then(() => {
+Promise.all(SinkFactory.getTasks()).then(() => {
   // do something when all effects completed
 });
 ```

@@ -1,4 +1,18 @@
 # Change Log
+## \[0.12.1\] - 2019-08-04
+
+### Added
+
+* added  `SinkContainer.invokeEffect`
+
+### Update
+
+* rename `SinkContainer.activateTrigger` to `SinkContainer.invokeTrigger`
+* rename `SinkContainer.getEffectTasks ` to `SinkContainer.getTasks`
+
+### Fixed
+
+* effect trace task error handling
 
 ## \[0.11.1\] - 2019-08-02
 
