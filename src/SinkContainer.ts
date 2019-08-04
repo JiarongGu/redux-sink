@@ -132,11 +132,8 @@ export class SinkContainer {
         }
       }
 
-      const reducer = reducerKeys.reduce((accumulated, key) => (
-        accumulated[sink.actions[key]] = sink.reducers[key], accumulated
-      ), {} as { [key: string]: any });
-
-      this.reducers[sink.namespace] = buildReducer(sink.state, reducer);
+      // update reducers in container
+      this.reducers[sink.namespace] = sink.reducer;
 
       // if store is already set, rebuild reducer
       if (this.store) {

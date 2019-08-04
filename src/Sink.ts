@@ -1,5 +1,7 @@
-import { Store } from 'redux';
+import { Reducer, Store } from 'redux';
+
 import { EffectHandler, ReducerHandler, SinkAction, SinkDispatch, TriggerEvent } from './typings';
+import { buildReducer } from './utilities';
 
 export class Sink {
   public state?: any;
@@ -18,6 +20,7 @@ export class Sink {
   private _reducerActions?: { [key: string]: string };
   private _effectActions?: { [key: string]: string };
   private _actions?: { [key: string]: string };
+  private _reducer?: Reducer<any, SinkAction>;
 
   constructor(getStore: () => Store | undefined) {
     this.reducers = {};
@@ -49,6 +52,16 @@ export class Sink {
       this._effectActions = this.getAction(Object.keys(this.effects), this.namespace);
     }
     return this._effectActions!;
+  }
+
+  public get reducer() {
+    if (!this._reducer) {
+      const reducer = Object.keys(this.reducers).reduce((map, key) => (
+        map[this.actions[key]] = this.reducers[key], map
+      ), {});
+      this._reducer = buildReducer(this.state, reducer);
+    }
+    return this._reducer;
   }
 
   public get actions() {

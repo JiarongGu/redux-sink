@@ -4,12 +4,14 @@ import { AnyFunction, Constructor, SinkAction, SinkContainerAPI, TriggerEvent } 
 import { reduceKeys } from './utilities';
 
 export class SinkBuilder {
-  public static staticIgnoredProperties = ['constructor', '__sinkBuilder__'];
+  public static sinks = new Map<any, SinkBuilder>();
   public static get(prototype: any): SinkBuilder {
-    if (!prototype.__sinkBuilder__) {
-      prototype.__sinkBuilder__ = new SinkBuilder(prototype);
+    let sinkBuilder = SinkBuilder.sinks.get(prototype);
+    if (!sinkBuilder) {
+      sinkBuilder = new SinkBuilder(prototype);
+      SinkBuilder.sinks.set(prototype, sinkBuilder);
     }
-    return prototype.__sinkBuilder__;
+    return sinkBuilder;
   }
 
   public sinkPrototype!: any;
@@ -58,55 +60,37 @@ export class SinkBuilder {
     sink.namespace = this.namespace;
     sink.state = this.state;
 
-    const effectKeys = Object.keys(this.effects);
+    const definedProperties = reduceKeys(
+      // get properties in prototype but constructor
+      Object.getOwnPropertyNames(this.sinkPrototype).filter(name => name !== 'constructor'),
+      key => Object.getOwnPropertyDescriptor(this.sinkPrototype, key)
+    );
+
+    Object.assign(definedProperties, reduceKeys(
+      Object.keys(instance),
+      key => Object.getOwnPropertyDescriptor(instance, key)
+    ));
+
     const stateKeys = Object.keys(this.state);
-    const instanceProperties = Object.keys(instance);
-
-    const ignoredProperties = [
-      ...SinkBuilder.staticIgnoredProperties,
-      ...instanceProperties,
-      ...effectKeys,
-    ];
-
-    // get properties in prototype
-    const prototypeProperties = Object
-      .getOwnPropertyNames(this.sinkPrototype)
-      .filter(name => !ignoredProperties.some(x => x === name));
-
-    instanceProperties.forEach((key) => {
-      sink.instance[key] = instance[key];
-    });
-
-    prototypeProperties.forEach((key) => {
-      const property = Object.getOwnPropertyDescriptor(this.sinkPrototype, key);
-      if (property !== undefined) {
-        Object.defineProperty(sink.instance, key, property);
-      }
-    });
-
-    const dispatcherProperties = {};
-
     if (stateKeys.length > 0) {
       // combine states
       sink.state = reduceKeys(stateKeys, (key) => instance[key]);
-
       // create reducers handlers
-      sink.reducers = reduceKeys(stateKeys, (key) => this.createStateReducer(sink, key));
-
+      sink.reducers = reduceKeys(stateKeys, (key) => this.createReducer(sink, key));
       // set reducer dispatchers
-      Object.assign(dispatcherProperties, reduceKeys(stateKeys, (key) => this.createReducerDispatcher(sink, key)));
+      Object.assign(definedProperties, reduceKeys(stateKeys, (key) => this.createReducerDispatcher(sink, key)));
     }
 
+    const effectKeys = Object.keys(this.effects);
     if (effectKeys.length > 0) {
       // create effect handlers
       sink.effects = reduceKeys(effectKeys, (key) => this.createEffect(key, sink.instance));
-
       // create effect dispatchers
-      Object.assign(dispatcherProperties, reduceKeys(effectKeys, (key) => this.createEffectDispatcher(sink, key)));
+      Object.assign(definedProperties, reduceKeys(effectKeys, (key) => this.createEffectDispatcher(sink, key)));
     }
 
     // assign dispatchers to instance
-    Object.defineProperties(sink.instance, dispatcherProperties);
+    Object.defineProperties(sink.instance, definedProperties);
 
     // create trigger handlers
     sink.triggers = this.triggers.map(trigger => this.createTrigger(trigger, sink.instance));
@@ -127,7 +111,7 @@ export class SinkBuilder {
     };
   }
 
-  private createStateReducer(sink: Sink, name: string) {
+  private createReducer(sink: Sink, name: string) {
     return (state: any, value: any) => {
       if (state[name] === value) {
         return state;
