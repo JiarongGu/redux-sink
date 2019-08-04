@@ -29,7 +29,14 @@ describe('trigger service test', () => {
     });
 
     it('should invoke when lazy loaded trigger', () => {
+      const actionType = 'test';
+      service.addTrigger(actionType, () => 0, {});
+      service.invoke({ type: actionType, payload: 10 });
 
+      let invoked = false;
+      service.addTrigger(actionType, () => { invoked = true; }, { lazyLoad: true });
+
+      assert.isTrue(invoked);
     });
   });
 
