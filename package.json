@@ -1,6 +1,6 @@
 {
   "name": "redux-sink",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "redux sink for less redux boilerplate",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -12,7 +12,8 @@
   },
   "scripts": {
     "build": "rimraf lib/ && node ./node_modules/typescript/bin/tsc",
-    "test": "mocha -r ts-node/register test/**/*.test.ts*"
+    "test": "mocha -r ts-node/register test/**/*.test.ts*",
+    "test-single": "mocha -r ts-node/register"
   },
   "repository": {
     "type": "git",

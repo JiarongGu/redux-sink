@@ -9,6 +9,14 @@ export class SinkBuilder {
     let sinkBuilder = SinkBuilder.sinks.get(prototype);
     if (!sinkBuilder) {
       sinkBuilder = new SinkBuilder(prototype);
+      const base = Object.getPrototypeOf(prototype);
+      if (base && base.constructor !== Object && base.constructor.name) {
+        // try to find base builder
+        const baseBuilder = SinkBuilder.get(base);
+        Object.assign(sinkBuilder.state, baseBuilder.state);
+        Object.assign(sinkBuilder.effects, baseBuilder.effects);
+        sinkBuilder.triggers.push(...baseBuilder.triggers);
+      }
       SinkBuilder.sinks.set(prototype, sinkBuilder);
     }
     return sinkBuilder;
