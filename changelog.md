@@ -1,4 +1,9 @@
 # Change Log
+## \[0.12.3\] - 2019-08-05
+
+### Fixed
+* SinkBuilder with inherited capability
+
 ## \[0.12.1\] - 2019-08-04
 
 ### Added
