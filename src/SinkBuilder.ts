@@ -3,6 +3,7 @@ import { SinkContainer } from './SinkContainer';
 import { AnyFunction, Constructor, SinkAction, SinkContainerAPI, TriggerEvent } from './typings';
 import { reduceKeys } from './utilities';
 
+
 export class SinkBuilder {
   public static sinks = new Map<any, SinkBuilder>();
   public static get(prototype: any): SinkBuilder {
@@ -10,7 +11,9 @@ export class SinkBuilder {
     if (!sinkBuilder) {
       sinkBuilder = new SinkBuilder(prototype);
       const base = Object.getPrototypeOf(prototype);
-      if (base && base.constructor !== Object && base.constructor.name) {
+      const baseConstructor = base && base.constructor;
+
+      if (baseConstructor && baseConstructor !== Object && baseConstructor.name) {
         // try to find base builder
         const baseBuilder = SinkBuilder.get(base);
         Object.assign(sinkBuilder.state, baseBuilder.state);
@@ -83,17 +86,17 @@ export class SinkBuilder {
     if (stateKeys.length > 0) {
       // combine states
       sink.state = reduceKeys(stateKeys, (key) => instance[key]);
-      // create reducers handlers
+
+      // create reducer / dispatcher
       sink.reducers = reduceKeys(stateKeys, (key) => this.createReducer(sink, key));
-      // set reducer dispatchers
       Object.assign(definedProperties, reduceKeys(stateKeys, (key) => this.createReducerDispatcher(sink, key)));
     }
 
     const effectKeys = Object.keys(this.effects);
     if (effectKeys.length > 0) {
-      // create effect handlers
+
+      // create effect / dispatcher
       sink.effects = reduceKeys(effectKeys, (key) => this.createEffect(key, sink.instance));
-      // create effect dispatchers
       Object.assign(definedProperties, reduceKeys(effectKeys, (key) => this.createEffectDispatcher(sink, key)));
     }
 
