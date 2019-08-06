@@ -117,6 +117,4 @@ const Component = () => {
 [MIT](https://github.com/JiarongGu/redux-sink/blob/master/LICENSE)
 
 
-## GitHub
-
-[redux-sink](https://github.com/JiarongGu/redux-sink)
+If you like this library please [star](https://github.com/JiarongGu/redux-sink)
