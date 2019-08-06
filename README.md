@@ -116,5 +116,3 @@ const Component = () => {
 
 [MIT](https://github.com/JiarongGu/redux-sink/blob/master/LICENSE)
 
-
-If you like this library please [star](https://github.com/JiarongGu/redux-sink)
