@@ -11,7 +11,7 @@ export class EffectService implements IMiddlewareService {
       const handler = this.effectHandlers.get(action.type);
       if (handler) {
         const task = handler(action.payload);
-        if (this.enableTrace && task && task.then) {
+        if (this.enableTrace && task && typeof task.then === 'function') {
           return this.addTask(task);
         }
         return Promise.resolve(task);

@@ -1,4 +1,9 @@
 # Change Log
+## \[0.12.5\] - 2019-08-05
+
+### Fixed
+* Server side rendering fix
+
 ## \[0.12.3\] - 2019-08-05
 
 ### Fixed

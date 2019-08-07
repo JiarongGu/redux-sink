@@ -4,7 +4,7 @@ import { EffectService, TriggerService } from './services';
 import { Sink } from './Sink';
 import { SinkBuilder } from './SinkBuilder';
 import { Constructor, SinkAction, SinkConfiguration } from './typings';
-import { buildReducer, combineReducers, configureStoreWithSink } from './utilities';
+import { combineReducers, configureStoreWithSink } from './utilities';
 
 export class SinkContainer {
   public store?: Store;
@@ -27,10 +27,6 @@ export class SinkContainer {
    * @param {SinkConfiguration} config
    */
   public createStore<TState = any>(config?: SinkConfiguration<TState>): Store<TState> {
-    if (this.store) {
-      throw new Error('store already created');
-    }
-
     // create store with sink
     this.store = configureStoreWithSink<TState>(this, config);
     const state = this.store.getState() || {};
