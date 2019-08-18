@@ -3,7 +3,6 @@ import { SinkContainer } from './SinkContainer';
 import { AnyFunction, Constructor, SinkAction, SinkContainerAPI, TriggerEvent } from './typings';
 import { reduceKeys } from './utilities';
 
-
 export class SinkBuilder {
   public static sinks = new Map<any, SinkBuilder>();
   public static get(prototype: any): SinkBuilder {

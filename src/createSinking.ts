@@ -1,18 +1,17 @@
-import { connect, Options } from 'react-redux';
+import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { Sink } from './Sink';
 import { SinkContainer } from './SinkContainer';
 import { Constructor } from './typings';
 import { mergeDispatchState } from './utilities';
 
-export function createSinking(container: SinkContainer, options?: Options) {
-  return function(...sinks: Array<Constructor>) {
+export function createSinking(container: SinkContainer) {
+  return function<TStateProps = any, TOwnProps = any>(...sinks: Array<Constructor>) {
     const sinkPrototypes = sinks.map(sink => container.getSinkPrototype(sink));
-    return connect(
+    return connect<TStateProps, any, TOwnProps>(
       createMapStateToProps(sinkPrototypes),
       createMapDispatchToProps(sinkPrototypes),
-      createMergeProps(sinkPrototypes),
-      options
-    ) as any;
+      createMergeProps(sinkPrototypes)
+    ) as InferableComponentEnhancerWithProps<TStateProps, TOwnProps>;
   };
 }
 

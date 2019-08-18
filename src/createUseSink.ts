@@ -7,7 +7,7 @@ import { mergeDispatchState } from './utilities';
 export function createUseSink(container: SinkContainer) {
   return <T>(sink: Constructor<T>): T => {
     const sinkPrototype = container.getSinkPrototype(sink);
-    const sinkState = useSelector<T, T>((state: any) => state[sinkPrototype.namespace]);
+    const sinkState = useSelector<any, T>(state => state[sinkPrototype.namespace]);
     return mergeDispatchState<T>(sinkPrototype.dispatches, sinkState);
   };
 }
