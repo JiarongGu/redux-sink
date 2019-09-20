@@ -1,6 +1,6 @@
 {
   "name": "redux-sink",
-  "version": "0.12.5",
+  "version": "0.12.6",
   "description": "redux sink for less redux boilerplate",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -34,10 +34,6 @@
     "access": "public"
   },
   "homepage": "https://github.com/JiarongGu/redux-sink#readme",
-  "dependencies": {
-    "react-redux": "*",
-    "redux": "*"
-  },
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
@@ -46,11 +42,15 @@
     "@types/redux": "^3.*",
     "chai": "^4.2.0",
     "mocha": "^6.1.4",
-    "react": "*",
+    "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "rimraf": "^2.6.3",
     "ts-node": "^8.0.3",
     "tslint": "^5.12.1",
-    "typescript": "^3.3.3333"
+    "typescript": "^3.3.3333",
+    "react-redux": "^7.1.1"
+  },
+  "peerDependencies": {
+    "react-redux": "^7.1.1"
   }
 }
