@@ -35,12 +35,26 @@ export interface IMiddlewareService {
   invoke: (action: SinkAction) => Promise<any>;
 }
 
+export interface DefaultSinkConfiguration {
+  middlewares: Array<Middleware>;
+  reducers: { [key: string]: any };
+  useEffectTrace: boolean;
+  useTrigger: boolean;
+}
+
 export interface SinkConfiguration<TState = any> {
+  preloadedState?: TState;
   reducers?: { [key: string]: any };
   middlewares?: Array<Middleware>;
-  effectTrace?: boolean;
+  useEffectTrace?: boolean;
   useTrigger?: boolean;
+  devToolOptions?: DevToolOptions;
+}
+
+export interface StoreConfiguration<TState = any> {
   preloadedState?: TState;
+  middlewares: Array<Middleware>;
+  reducers: { [key: string]: any };
   devToolOptions?: DevToolOptions;
 }
 

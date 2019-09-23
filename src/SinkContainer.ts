@@ -1,10 +1,17 @@
-import { ReducersMapObject, Store } from 'redux';
+import { Middleware, ReducersMapObject, Store } from 'redux';
 
 import { EffectService, TriggerService } from './services';
 import { Sink } from './Sink';
 import { SinkBuilder } from './SinkBuilder';
-import { Constructor, SinkAction, SinkConfiguration } from './typings';
-import { combineReducers, configureStoreWithSink } from './utilities';
+import { Constructor, DefaultSinkConfiguration, SinkAction, SinkConfiguration } from './typings';
+import { combineReducers, configureStore, createServiceMiddleware } from './utilities';
+
+const defaultSinkConfig: DefaultSinkConfiguration = {
+  middlewares: [] as Array<Middleware>,
+  reducers: {},
+  useEffectTrace: false,
+  useTrigger: false,
+};
 
 export class SinkContainer {
   public store?: Store;
@@ -18,8 +25,9 @@ export class SinkContainer {
   constructor() {
     this.getSink = this.getSink.bind(this);
     this.getStore = this.getStore.bind(this);
-    this.effectService = new EffectService();
+
     this.triggerService = new TriggerService();
+    this.effectService = new EffectService();
   }
 
   /**
@@ -27,8 +35,27 @@ export class SinkContainer {
    * @param {SinkConfiguration} config
    */
   public createStore<TState = any>(config?: SinkConfiguration<TState>): Store<TState> {
-    // create store with sink
-    this.store = configureStoreWithSink<TState>(this, config);
+    // get config in used by combine default and user config
+    const useConfig = Object.assign({}, defaultSinkConfig, config);
+    const middlewares: Array<Middleware> = [];
+
+    // configure trigger service
+    if (useConfig.useTrigger) {
+      middlewares.push(createServiceMiddleware(this.triggerService));
+    }
+
+    // configure effect service
+    this.effectService.enableTrace = useConfig.useEffectTrace;
+    middlewares.push(createServiceMiddleware(this.effectService));
+
+    // create store, combine reducers with container reducer
+    this.store = configureStore<TState>({
+      devToolOptions: useConfig.devToolOptions,
+      middlewares: middlewares.concat(useConfig.middlewares),
+      preloadedState: useConfig.preloadedState,
+      reducers: Object.assign({}, this.reducers, useConfig.reducers),
+    });
+
     const state = this.store.getState() || {};
 
     // update sink state from preloaded state
@@ -64,7 +91,7 @@ export class SinkContainer {
    * Get traced effect tasks
    * @returns {[Promise]} promise array
    */
-  public getTasks(): Array<Promise<any>> {
+  public getEffectTasks(): Array<Promise<any>> {
     return this.effectService.tasks;
   }
 
@@ -139,7 +166,7 @@ export class SinkContainer {
 
     // register effects
     Object.keys(sink.effects).forEach(key =>
-      this.effectService.addEffect(sink.actions[key], sink.effects[key])
+      this.effectService!.addEffect(sink.actions[key], sink.effects[key])
     );
 
     // register subscribe

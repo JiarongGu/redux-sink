@@ -12,7 +12,7 @@ export function createFactory(config?: SinkConfiguration, sinkFactory?: SinkCont
 describe('sink test', () => {
   it('can inherit state from store', () => {
     const state = { name: 'initialized name' };
-    const { factory, store } = createFactory({
+    const { factory } = createFactory({
       preloadedState: {
         testSink: { state }
       }
@@ -38,18 +38,22 @@ describe('sink test', () => {
   });
 
   it('can share state between instance', () => {
-    const { factory, store } = createFactory();
+    const { factory } = createFactory();
     const testSink1 = factory.getSink(TestSink);
     const testSink2 = factory.getSink(TestSink);
     assert.equal(testSink1.state, testSink2.state);
   });
 
   it('can share property between instance', () => {
-    const { factory, store } = createFactory();
+    const { factory } = createFactory();
     const testSink1 = factory.getSink(TestSink2);
     const testSink2 = factory.getSink(TestSink2);
-    testSink2.setProp((prop) => { assert.equal(1, prop); });
-    testSink1.setProp((prop) => { assert.equal(2, prop); });
+
+    const assertion1 = (prop: number) => { assert.equal(prop, 1); };
+    const assertion2 = (prop: number) => { assert.equal(prop, 2); };
+
+    testSink1.setProp(assertion1);
+    testSink2.setProp(assertion2);
   });
 
   it('can sink created before store initialized', () => {
@@ -91,15 +95,16 @@ describe('sink test', () => {
   });
 
   it('can trigger run when action detected', () => {
-    const { factory, store } = createFactory();
+    const { factory } = createFactory({ useTrigger: true });
     const testSink = factory.getSink(TestSink);
     testSink.setAll('test name', 'test value');
     assert.equal('test name', testSink.state.copy);
   });
 
-  it('cant set store state', () => {
-    const { factory, store } = createFactory();
+  it('can set store state via effect and trigger', () => {
+    const { factory } = createFactory({ useTrigger: true });
     const testSink = factory.getSink(TestSink);
+
     testSink.setAll('test name', 'test value');
     assert.equal('test name', testSink.state.copy);
   });
