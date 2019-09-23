@@ -1,6 +1,6 @@
 {
   "name": "redux-sink",
-  "version": "0.12.7",
+  "version": "0.12.8",
   "description": "redux sink for less redux boilerplate",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -51,6 +51,6 @@
     "react-redux": "^7.1.1"
   },
   "peerDependencies": {
-    "react-redux": "^7.1.0"
+    "react-redux": ">=7.1.0"
   }
 }
