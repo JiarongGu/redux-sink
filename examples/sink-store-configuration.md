@@ -2,7 +2,7 @@
 description: configure sink store to enable features
 ---
 
-# Sink Store Configuration
+# Store Configuration
 
 ### Use of SinkFactory.createStore
 
