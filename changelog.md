@@ -1,12 +1,24 @@
 # Change Log
+
+## \[0.13.0\] - 2019-09-24
+
+### Update
+
+* rename `SinkContainer.getTask` to `SinkContainer.getEffectTasks`
+* rename store config `effectTrace` to `useEffectTrace`
+* default store config `useTrigger` to `false`
+* improve process of createStore
+
 ## \[0.12.5\] - 2019-08-05
 
 ### Fixed
+
 * Server side rendering fix
 
 ## \[0.12.3\] - 2019-08-05
 
 ### Fixed
+
 * SinkBuilder with inherited capability
 
 ## \[0.12.1\] - 2019-08-04
@@ -18,7 +30,7 @@
 ### Update
 
 * rename `SinkContainer.activateTrigger` to `SinkContainer.invokeTrigger`
-* rename `SinkContainer.getEffectTasks ` to `SinkContainer.getTasks`
+* rename `SinkContainer.getEffectTasks` to `SinkContainer.getTasks`
 
 ### Fixed
 

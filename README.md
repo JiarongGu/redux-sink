@@ -48,7 +48,7 @@ import { sink, state, effect } from 'redux-sink'
 class CounterSink {
   @state count = 0;
   @state total = 0;
-  
+
   @effect
   update(value) {
     this.total += value;

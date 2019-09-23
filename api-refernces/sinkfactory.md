@@ -6,7 +6,7 @@ description: default SinkContainer scope
 
 `SinkFactory` is default `SinkContainer` object which used globally. when using `sinking` and `useSink` to connect sink with component, all the sink objects will be generated from SinkFactory
 
-### SinkFactory vs SinkContainer
+## SinkFactory vs SinkContainer
 
 Normally in project should use `SinkFactory` and `SinkContainer` for testing, also when using it `SinkFactory` can be detectly used because it is a `SinkCotainer` Instance. but `SinkContainer` is a constructor.
 
@@ -24,19 +24,19 @@ const testStore = container.creatStore();
 const counter = container.getSink(CounterSink);
 ```
 
-### createStore\(SinkConfiguration\) =&gt; Store
+## createStore\(SinkConfiguration\) =&gt; Store
 
 see [SinkContainer.createStore](sinkcontainer.md#createstore-storeconfiguration-greater-than-store)
 
-### getSink\(SinkClass\) =&gt; SinkInstance
+## getSink\(SinkClass\) =&gt; SinkInstance
 
 see [SinkContainer.getSink](sinkcontainer.md#getsink-sinkclass-greater-than-sinkinstance)
 
-### getTasks\(\) =&gt; Array&lt;Promise&gt;
+## getTasks\(\) =&gt; Array&lt;Promise&gt;
 
 see [SinkContainer.getTasks](sinkcontainer.md#geteffecttasks-greater-than-array-less-than-promise-greater-than)
 
-### getStore\(\) =&gt; Store
+## getStore\(\) =&gt; Store
 
 see [SinkContainer.getStore](sinkcontainer.md#getstore-greater-than-store)
 

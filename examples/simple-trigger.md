@@ -4,6 +4,19 @@ description: Trigger will be called when matched action dispatches
 
 # Simple Trigger
 
+### Configure store with useTrigger
+
+```javascript
+import { SinkFactory } from 'redux-sink';
+
+// its also possible to add reducers and middlewares through this api
+const store = SinkFactory.createStore({
+  ...
+  useTrigger: true,
+  ...
+});
+```
+
 ### Create sink with trigger
 
 {% code-tabs %}

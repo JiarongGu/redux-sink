@@ -6,7 +6,7 @@ description: SinkContainer use to keep store and all the sinks within the same s
 
 Since `SinkFactory` is a instance of `SinkContainer` the api is the same, all the code example will be using `SinkFactory` for easier understanding the usage.
 
-### createStore\(SinkConfiguration\) =&gt; Store
+## createStore\(SinkConfiguration\) =&gt; Store
 
 Create sink store, it can take reducers, middlewares and devToolOptions with configuration
 
@@ -20,6 +20,10 @@ interface SinkConfiguration {
   preloadedState: { ...state },
   // additional middlewares
   middlewares: Array<ReduxMiddleware>,
+  // use effect trace, default false
+  useEffectTrace?: boolean;
+  // use effect, default false
+  useTrigger?: boolean;
   // required compose function from redux-dev-tool
   devToolOptions: {
     // devTool compose function
@@ -42,13 +46,15 @@ const store = SinkFactory.createStore({
   reducers,
   preloadedState,
   middlewares,
+  useEffectTrace: true,
+  useTrigger: true,
   devToolOptions: { devToolCompose: composeWithDevTools } 
 });
 ```
 {% endtab %}
 {% endtabs %}
 
-### getSink\(SinkClass\) =&gt; SinkInstance
+## getSink\(SinkClass\) =&gt; SinkInstance
 
 Get sink from current container using sink class
 
@@ -69,7 +75,7 @@ const counter = SinkFactory.getSink(CounterSink);
 {% endtab %}
 {% endtabs %}
 
-### getTasks\(\) =&gt; Array&lt;Promise&gt;
+## getEffectTasks\(\) =&gt; Array&lt;Promise&gt;
 
 Get currently running async effects
 
@@ -78,14 +84,14 @@ Get currently running async effects
 ```javascript
 import { SinkFactory } from 'redux-sink';
 
-Promise.all(SinkFactory.getTasks()).then(() => {
+Promise.all(SinkFactory.getEffectTasks()).then(() => {
   // do something when all effects completed
 });
 ```
 {% endtab %}
 {% endtabs %}
 
-### getStore\(\) =&gt; Store
+## getStore\(\) =&gt; Store
 
 Get underlining redux store from the container
 
