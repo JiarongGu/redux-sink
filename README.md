@@ -4,10 +4,10 @@
 
 Redux Sink is a decorator based using of Redux, uses class as boundary of each redux state, no actions, no reducers, introduce state and effect decorator instead, natively support redux state and reducers to be loaded by code split. for easier life of using state management
 
-* [Getting started](./#getting-started)
-  * [Step 1: create store](./#step-1-create-store)
-  * [Step 2: create sink](./#step-2-create-sink)
-  * [Step 3: sinking](./#step-3-sinking)
+* [Getting started](#getting-started)
+  * [Step 1: create store](#step-1-create-store)
+  * [Step 2: create sink](#step-2-create-sink)
+  * [Step 3: sinking](#step-3-sinking)
 * [Examples](examples/)
 * [API References](api-refernces/)
 * [ChangeLog](changelog.md)
