@@ -8,7 +8,7 @@ import { SinkBuilder } from '../SinkBuilder';
  * @param {string} [name] name of effect
  * @param {Object} [descriptor] function to handle effect
  */
-export function effect(target: any, name: string, descriptor: PropertyDescriptor) {
+export function effect(target: any, name: string, descriptor: TypedPropertyDescriptor<any>) {
   const sinkBuilder = SinkBuilder.get(target);
   sinkBuilder.effects[name] = descriptor.value;
 }

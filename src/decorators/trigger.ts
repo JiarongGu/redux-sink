@@ -25,7 +25,7 @@ const defaultOptions: TriggerOptions = {
 export function trigger(actionType: string, options?: TriggerOptions) {
   const triggerOptions = Object.assign({}, defaultOptions, options);
 
-  return function(target: any, name: string, descriptor: PropertyDescriptor) {
+  return function(target: any, name: string, descriptor: TypedPropertyDescriptor<any>) {
     const sinkBuilder = SinkBuilder.get(target);
     sinkBuilder.triggers.push({ handler: descriptor.value, actionType, options: triggerOptions });
   };
