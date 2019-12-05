@@ -4,6 +4,7 @@ import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { createSinking, useSink } from '../src';
+import { createUseSink } from '../src/createUseSink';
 import { AnyFunction } from '../src/typings';
 import { TestSink, TestSink2 } from './sinks';
 import { createFactory } from './utils';
@@ -47,6 +48,21 @@ describe('sink render test', () => {
     const app = <Provider store={store}><TestComponent /></Provider>;
     const state = store.getState();
     assert.equal(renderToString(app), '<div>test name</div>');
+  });
+
+  it('can connect to component hooks with no subscribe', () => {
+    const { factory, store } = createFactory();
+    const testSink2 = factory.getSink(TestSink2);
+    const useSinkCustom = createUseSink(factory);
+
+    const TestComponent = () => {
+      const testSink = useSinkCustom(TestSink, false);
+      return <div>{testSink!.state.name}</div>;
+    };
+    testSink2.setName('test name');
+    const app = <Provider store={store}><TestComponent /></Provider>;
+    const state = store.getState();
+    assert.equal(renderToString(app), `<div>test name</div>`);
   });
 });
 

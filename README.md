@@ -2,7 +2,7 @@
 
 [![travis](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)](https://travis-ci.org/JiarongGu/redux-sink) [![npm version](https://badge.fury.io/js/redux-sink.svg)](https://www.npmjs.com/package/redux-sink) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ee58187b2e794033aeb4296f128fd3ee)](https://app.codacy.com/app/JiarongGu/redux-sink?utm_source=github.com&utm_medium=referral&utm_content=JiarongGu/redux-sink&utm_campaign=Badge_Grade_Dashboard)
 
-Redux Sink is a decorator based using of Redux, uses class as boundary of each redux state, no actions, no reducers, introduce state and effect decorator instead, natively support redux state and reducers to be loaded by code split. for easier life of using state management
+Redux Sink is a decorator based using of React-Redux, uses class as boundary of each redux state, no actions, no reducers, introduce state and effect decorator instead, natively support redux state and reducers to be loaded by code split. for easier life of using state management
 
 * [Getting started](#getting-started)
   * [Step 1: create store](#step-1-create-store)

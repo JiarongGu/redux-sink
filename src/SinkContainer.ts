@@ -4,7 +4,7 @@ import { EffectService, TriggerService } from './services';
 import { Sink } from './Sink';
 import { SinkBuilder } from './SinkBuilder';
 import { Constructor, DefaultSinkConfiguration, SinkAction, SinkConfiguration } from './typings';
-import { combineReducers, configureStore, createServiceMiddleware } from './utilities';
+import { combineReducers, configureStore, createServiceMiddleware } from './utils';
 
 const defaultSinkConfig: DefaultSinkConfiguration = {
   middlewares: [] as Array<Middleware>,
@@ -156,7 +156,9 @@ export class SinkContainer {
       }
 
       // update reducers in container
-      this.reducers[sink.namespace] = sink.reducer;
+      if (sink.reducer) {
+        this.reducers[sink.namespace] = sink.reducer;
+      }
 
       // if store is already set, rebuild reducer
       if (this.store) {

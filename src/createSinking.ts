@@ -2,7 +2,7 @@ import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { Sink } from './Sink';
 import { SinkContainer } from './SinkContainer';
 import { Constructor } from './typings';
-import { mergeDispatchState } from './utilities';
+import { mergeDispatchState } from './utils';
 
 export function createSinking(container: SinkContainer) {
   return function<TStateProps = any, TOwnProps = any>(...sinks: Array<Constructor>) {

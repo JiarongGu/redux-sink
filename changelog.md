@@ -1,5 +1,13 @@
 # Change Log
 
+## \[0.13.4\] - 2019-12-05
+* added subscribe parameter to `useSink` default `true`, to tell if the component should subscribe on the sink, (be able to modify the state only)
+* rename `utilities` folder to `utils`
+* remove all dependencies, to allowed decide during development
+
+## \[0.13.3\] - 2019-12-03
+* push redux, react-redux to peerDependency to avoid duplicated ReactReduxContext not working with react-redux Provider
+
 ## \[0.13.0\] - 2019-09-24
 
 ### Update

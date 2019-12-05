@@ -4,5 +4,9 @@
   "mochaExplorer.require": [
     "ts-node/register"
   ],
-  "workbench.colorCustomizations": {}
+  "workbench.colorCustomizations": {},
+  "cSpell.words": [
+    "devtool",
+    "middlewares"
+  ]
 }

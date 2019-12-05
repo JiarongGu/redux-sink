@@ -1,7 +1,7 @@
 import { Reducer, Store } from 'redux';
 
 import { EffectHandler, ReducerHandler, SinkAction, SinkDispatch, TriggerEvent } from './typings';
-import { buildReducer } from './utilities';
+import { buildReducer } from './utils';
 
 export class Sink {
   public state?: any;

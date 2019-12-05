@@ -2,9 +2,9 @@ import { assert } from 'chai';
 import { Reducer } from 'redux';
 
 import { SinkAction } from '../../src';
-import { buildReducer } from '../../src/utilities';
+import { buildReducer } from '../../src/utils';
 
-describe('utilities test', () => {
+describe('utils test', () => {
   describe('buildReducer', () => {
     let valueReducer: Reducer<any>;
     let buildTestReducer: (state?: any) => Reducer<any, SinkAction>;

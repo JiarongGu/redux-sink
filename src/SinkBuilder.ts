@@ -1,7 +1,7 @@
 import { Sink } from './Sink';
 import { SinkContainer } from './SinkContainer';
 import { AnyFunction, Constructor, SinkAction, SinkContainerAPI, TriggerEvent } from './typings';
-import { reduceKeys } from './utilities';
+import { reduceKeys } from './utils';
 
 export class SinkBuilder {
   public static sinks = new Map<any, SinkBuilder>();
