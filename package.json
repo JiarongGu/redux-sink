@@ -31,8 +31,7 @@
     "url": "https://github.com/JiarongGu/redux-sink/issues"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com/"
+    "access": "public"
   },
   "homepage": "https://github.com/JiarongGu/redux-sink#readme",
   "peerDependencies": {
