@@ -1,23 +1,27 @@
-import { EffectHandler, IMiddlewareService, SinkAction } from '../typings';
+import { EffectHandler, MiddlewareService, MiddlewareServiceResult, SinkAction } from '../typings';
 
-export class EffectService implements IMiddlewareService {
+export class EffectService implements MiddlewareService {
   public effectHandlers = new Map<string, EffectHandler>();
 
   public tasks: Array<Promise<any>> = [];
   public enableTrace: boolean = false;
 
-  public invoke(action: SinkAction): Promise<any> {
+  public invoke(action: SinkAction): MiddlewareServiceResult {
     if (action.type) {
       const handler = this.effectHandlers.get(action.type);
       if (handler) {
         const task = handler(action.payload);
+        const result = { isMiddlewareResult: true } as MiddlewareServiceResult;
+
         if (this.enableTrace && task && typeof task.then === 'function') {
-          return this.addTask(task);
+          result.value = this.addTask(task);
+        } else {
+          result.value = Promise.resolve(task);
         }
-        return Promise.resolve(task);
+        return result;
       }
     }
-    return Promise.resolve();
+    return { value: Promise.resolve() };
   }
 
   public addEffect(action: string, handler: EffectHandler) {

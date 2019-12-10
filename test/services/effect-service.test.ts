@@ -17,7 +17,7 @@ describe('effect service test', () => {
 
       it('not found should return promise', () => {
         const action: SinkAction = { type: 'any', payload: undefined };
-        const promise = service.invoke(action);
+        const promise = service.invoke(action).value;
         assert.isTrue(promise instanceof Promise);
         promise.then(result => {
           assert.isUndefined(result);
@@ -30,7 +30,7 @@ describe('effect service test', () => {
         const action: SinkAction = { type: actionType, payload: undefined };
         service.addEffect(actionType, handler);
 
-        const promise = service.invoke(action);
+        const promise = service.invoke(action).value;
         assert.isTrue(promise instanceof Promise);
 
         promise.then(result => {
@@ -48,7 +48,7 @@ describe('effect service test', () => {
         };
         service.addEffect(actionType, handler);
 
-        const promise = service.invoke(action);
+        const promise = service.invoke(action).value;
         assert.isTrue(promise instanceof Promise);
 
         promise.then(result => {
@@ -69,7 +69,7 @@ describe('effect service test', () => {
         };
         service.addEffect(actionType, handler);
 
-        const promise = service.invoke(action);
+        const promise = service.invoke(action).value;
 
         if (enableTrace) {
           assert.equal(service.tasks.length, 1);

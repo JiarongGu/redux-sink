@@ -1,10 +1,15 @@
 import { Dispatch, MiddlewareAPI } from 'redux';
 
-import { IMiddlewareService, SinkAction } from '../typings';
+import { MiddlewareService, SinkAction } from '../typings';
 
-export function createServiceMiddleware(service: IMiddlewareService) {
+/**
+ * create a middleware based on middleware service
+ * @param service the service will be used in this middleware
+ */
+export function createServiceMiddleware(service: MiddlewareService) {
   return (store: MiddlewareAPI<any>) => (next: Dispatch<SinkAction>) => (action: any) => {
-    service.invoke(action);
-    return next(action);
+    const result = service.invoke(action);
+    const nextResult = next(action);
+    return result.isMiddlewareResult ? result.value : nextResult;
   };
 }

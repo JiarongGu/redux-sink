@@ -1,5 +1,8 @@
 # Change Log
 
+## \[0.13.5\] - 2019-12-12
+* added `MiddlewareServiceResult` for middleware service invoke result, for identify which value return for effect dispatch
+
 ## \[0.13.4\] - 2019-12-05
 * added subscribe parameter to `useSink` default `true`, to tell if the component should subscribe on the sink, (be able to modify the state only)
 * rename `utilities` folder to `utils`

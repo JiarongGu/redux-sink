@@ -1,6 +1,6 @@
 {
   "name": "redux-sink",
-  "version": "0.13.4",
+  "version": "0.13.5",
   "description": "redux sink for less redux boilerplate",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -31,7 +31,8 @@
     "url": "https://github.com/JiarongGu/redux-sink/issues"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com/"
   },
   "homepage": "https://github.com/JiarongGu/redux-sink#readme",
   "peerDependencies": {

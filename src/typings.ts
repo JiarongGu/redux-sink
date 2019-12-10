@@ -31,8 +31,13 @@ export interface TriggerEventHandler {
   handler: AnyFunction;
 }
 
-export interface IMiddlewareService {
-  invoke: (action: SinkAction) => Promise<any>;
+export interface MiddlewareService {
+  invoke: (action: SinkAction) => MiddlewareServiceResult;
+}
+
+export interface MiddlewareServiceResult {
+  value: Promise<any>;
+  isMiddlewareResult?: boolean;
 }
 
 export interface DefaultSinkConfiguration {

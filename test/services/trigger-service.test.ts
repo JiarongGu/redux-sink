@@ -48,7 +48,7 @@ describe('trigger service test', () => {
       service.addTrigger(actionType, () => new Promise(resolve => resolve(1)), {});
       service.addTrigger(actionType, () => new Promise(resolve => resolve(2)), {});
 
-      service.invoke({ type: actionType, payload: 10 })
+      service.invoke({ type: actionType, payload: 10 }).value
         .then(results => {
           assert.equal(results[0], 0);
           assert.equal(results[1], 1);

@@ -76,7 +76,7 @@ export class SinkContainer {
    * @param action sink action
    */
   public invokeTrigger(action: SinkAction): Promise<any> {
-    return this.triggerService.invoke(action);
+    return this.triggerService.invoke(action).value;
   }
 
   /**
@@ -84,7 +84,7 @@ export class SinkContainer {
    * @param action sink action
    */
   public invokeEffect(action: SinkAction): Promise<any> {
-    return this.effectService.invoke(action);
+    return this.effectService.invoke(action).value;
   }
 
   /**
