@@ -31,11 +31,10 @@ export class SinkBuilder {
   public namespace!: string;
   public state: { [key: string]: any } = {};
   public effects: { [key: string]: AnyFunction } = {};
+  public triggers: Array<TriggerEvent> = [];
 
   // for injecting internal sinks
   public sinkInjects!: Array<Constructor | SinkContainer>;
-
-  public triggers: Array<TriggerEvent> = [];
 
   // auto generated
   public _dispatches?: { [key: string]: AnyFunction };
@@ -89,6 +88,9 @@ export class SinkBuilder {
       // create reducer / dispatcher
       sink.reducers = reduceKeys(stateKeys, (key) => this.createReducer(sink, key));
       Object.assign(definedProperties, reduceKeys(stateKeys, (key) => this.createReducerDispatcher(sink, key)));
+
+      // set state name reference for sink
+      sink.stateNames = reduceKeys(stateKeys, (key) => key);
     }
 
     const effectKeys = Object.keys(this.effects);

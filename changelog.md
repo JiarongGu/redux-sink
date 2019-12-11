@@ -1,4 +1,8 @@
 # Change Log
+## \[0.14.0\] - 2019-12-12
+* added subscriber logic to `useSink` and `sinking`, now able to choose which state will be subscribe
+* the subscriber can use as `useSink(TestSink, sink => [sink.state1, sink.state2])`
+* remove array sinking support to allowed subscriber parameter been added
 
 ## \[0.13.5\] - 2019-12-12
 * added `MiddlewareServiceResult` for middleware service invoke result, for identify which value return for effect dispatch

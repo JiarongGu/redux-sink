@@ -7,12 +7,14 @@ export class Sink {
   public state?: any;
   public getStore: () => Store | undefined;
 
-  // configured by decorator
+  // mapped from builder
   public namespace!: string;
   public reducers: { [key: string]: ReducerHandler };
   public effects: { [key: string]: EffectHandler };
   public triggers: Array<TriggerEvent>;
+  public stateNames: { [key: string]: string };
 
+  // working instance
   public instance: any;
 
   // auto generated
@@ -26,6 +28,7 @@ export class Sink {
     this.reducers = {};
     this.effects = {};
     this.instance = {};
+    this.stateNames = {};
     this.triggers = [];
     this.getStore = getStore;
   }

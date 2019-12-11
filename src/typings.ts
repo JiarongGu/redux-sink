@@ -8,6 +8,7 @@ export type Constructor<T = any> = new (...args: Array<any>) => T;
 export type EffectHandler<TPayload = any> = (payload: TPayload) => any;
 export type ReducerHandler<TPayload = any> = (state: any, payload: TPayload) => any;
 export type AnyFunction = (...args: Array<any>) => any;
+export type SinkSubscriber<T> = (sink: { [key in keyof T]: keyof T }) => Array<keyof T>;
 
 export interface ReducerHandlerMap {
   [key: string]: ReducerHandler;

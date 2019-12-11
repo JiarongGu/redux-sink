@@ -106,7 +106,7 @@ describe('effect service test', () => {
           assert.equal(service.tasks.length, 0);
         }
 
-        Promise.all([promise1, promise2])
+        Promise.all([promise1.value, promise2.value])
           .catch((error) => {
             assert.equal(actionPayload, error);
             assert.equal(0, service.tasks.length);
