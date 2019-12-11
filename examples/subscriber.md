@@ -42,3 +42,7 @@ import { sinking } from 'redux-sink';
 export const SinkingCounter = sinking(CounterSink, (sink) => [sink.state])(Counter)
 ```
 
+{% hint style="info" %}
+For more complex senario, you can set subsribe value to`false`which stops default update and use the complex selector from`react-redux`which is base lirabry of`redux-sink`
+{% endhint %}
+
