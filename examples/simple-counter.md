@@ -8,8 +8,7 @@ description: Use state to create a simple counter component
 
 Sink states maps dispatch automatically to component. so you don't have to create action or reducer.
 
-{% code-tabs %}
-{% code-tabs-item title="CounterSink.js" %}
+{% code title="CounterSink.js" %}
 ```javascript
 import { state, sink } from 'redux-sink';
 
@@ -18,13 +17,11 @@ export class CounterSink {
   @state value = 0;
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
 
 ### Use external state without dispatches
 
-{% code-tabs %}
-{% code-tabs-item title="Counter.jsx" %}
+{% code title="Counter.jsx" %}
 ```jsx
 import { useSink } from 'redux-sink';
 import { CounterSink } from './counter-sink';
@@ -41,8 +38,7 @@ export const Counter = () => {
   );
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
 
 {% hint style="warning" %}
 The two way update for state is baed on ****[defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty), so when updating object or arrray you still need to update the whole object reference. For example: [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) or [Array.concat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat)

@@ -4,6 +4,7 @@
 * [Examples](examples/README.md)
   * [Simple Counter](examples/simple-counter.md)
   * [Simple Trigger](examples/simple-trigger.md)
+  * [Subscriber](examples/subscriber.md)
   * [Store Configuration](examples/sink-store-configuration.md)
   * [External Request](examples/external-request.md)
   * [Navigation Sink](examples/navigation-sink.md)

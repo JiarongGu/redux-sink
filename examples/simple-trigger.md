@@ -19,8 +19,7 @@ const store = SinkFactory.createStore({
 
 ### Create sink with trigger
 
-{% code-tabs %}
-{% code-tabs-item title="WeatherSink.js" %}
+{% code title="WeatherSink.js" %}
 ```javascript
 import { sink, state, effect } from 'redux-sink';
 
@@ -45,6 +44,5 @@ export class WeatherSink {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
 

@@ -8,8 +8,7 @@ description: 'Use effect to handle external effects, mostly handel async calls.'
 
 This is an example for using effect to handle http requests, using async function
 
-{% code-tabs %}
-{% code-tabs-item title="WeatherSink.js" %}
+{% code title="WeatherSink.js" %}
 ```javascript
 import { sink, state, effect } from 'redux-sink';
 
@@ -30,13 +29,11 @@ export class WeatherSink {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
 
 ### Call effect load data in component
 
-{% code-tabs %}
-{% code-tabs-item title="Weather.jsx" %}
+{% code title="Weather.jsx" %}
 ```jsx
 import * as React from 'react';
 import { sinking } from 'redux-sink';
@@ -66,6 +63,5 @@ export class Weather extends React.Component {
 
 export default sinking(WeatherSink)(Weather);
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
 

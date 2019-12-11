@@ -6,8 +6,7 @@ description: Create sink on history event to watch location change
 
 ### Create Navigation Sink with BrowserHistory
 
-{% code-tabs %}
-{% code-tabs-item title="NavigationSink.js" %}
+{% code title="NavigationSink.js" %}
 ```javascript
 import { state, sink, effect, SinkFactory } from 'redux-sink';
 import { createBrowserHistory } from 'history';
@@ -29,13 +28,11 @@ export const createNavigationHistory = () => {
   return history;
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
 
 ### Supply the navigation history object to router
 
-{% code-tabs %}
-{% code-tabs-item title="index.jsx" %}
+{% code title="index.jsx" %}
 ```jsx
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -58,6 +55,5 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+{% endcode %}
 
