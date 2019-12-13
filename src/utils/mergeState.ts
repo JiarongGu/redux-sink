@@ -2,8 +2,7 @@ import { SinkDispatch } from '../typings';
 import { reduceKeys } from './reduceKeys';
 
 export function mergeState<T>(storeState: any, sinkState: any, dispatches: { [key: string]: SinkDispatch }) {
-  const merged = {};
-
+  const merged = Object.assign({}, dispatches);
   const defineProperties = reduceKeys(Object.keys(sinkState), (key) => {
     let state = storeState[key];
     if (state === undefined) {
