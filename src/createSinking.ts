@@ -1,7 +1,7 @@
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { SinkContainer } from './SinkContainer';
 import { Constructor, SinkSubscriber } from './typings';
-import { mergeDispatchState, reduceKeys } from './utils';
+import { mergeState, reduceKeys } from './utils';
 
 export function createSinking(container: SinkContainer) {
   return function <TSink, TStateProps = any, TOwnProps = any>(
@@ -23,7 +23,7 @@ export function createSinking(container: SinkContainer) {
       }
     }
     const mergeProps = (state: any, dispatch: any, own: any) => ({
-      [namespace]: mergeDispatchState(dispatch[namespace], state[namespace]),
+      [namespace]: mergeState(state[namespace], sinkPrototype.state, dispatch[namespace]),
       ...own
     });
 
