@@ -11,8 +11,8 @@ export function createUseSink(container: SinkContainer) {
       let sinkState;
       if (typeof subscriber === 'function') {
         const subscribes = subscriber(sinkPrototype.stateNames as any) as Array<string>;
-        sinkState = useSelector<any, any>(state =>
-          reduceKeys(subscribes, key => state[sinkPrototype.namespace][key])
+        sinkState = reduceKeys(subscribes, key =>
+          useSelector<any, any>(state => state[sinkPrototype.namespace][key])
         );
       } else {
         sinkState = useSelector<any, T>(state => state[sinkPrototype.namespace]);
