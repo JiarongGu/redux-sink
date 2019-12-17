@@ -2,7 +2,7 @@
 
 ## \[0.14.1\] - 2019-12-17
 
-* added `getSinkConstructor` to `sinkContainer`/`SinkFactory`, to get original class constructor without sink injections
+* added `getSinkConstructor` to `SinkContainer`/`SinkFactory`, to get original class constructor without sink injections
 
 ## \[0.14.0\] - 2019-12-12
 
