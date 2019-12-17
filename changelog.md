@@ -1,5 +1,9 @@
 # Change Log
 
+## \[0.15.0\] - 2019-12-17
+
+* remove `getSinkConstructor` its not necessary
+
 ## \[0.14.4\] - 2019-12-17
 
 * added `getSinkConstructor` to `SinkContainer`/`SinkFactory`, to get original class constructor without sink injections
