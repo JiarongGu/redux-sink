@@ -1,5 +1,9 @@
 # Change Log
 
+## \[0.14.1\] - 2019-12-17
+
+* added `getSinkConstructor` to `sinkContainer`/`SinkFactory`, to get original class constructor without sink injections
+
 ## \[0.14.0\] - 2019-12-12
 
 * added subscriber logic to `useSink` and `sinking`, now able to choose which state will be subscribe

@@ -134,6 +134,16 @@ export class SinkContainer {
     return this.sinks[builder.namespace];
   }
 
+  /**
+   * get original sink constructor without injections, for easier to test the logic inside sink
+   * @param sink Sink class
+   * @return original constructor without injections
+   */
+  public getSinkConstructor<TSink>(sink: Constructor<TSink>): Constructor<TSink> {
+    const builder = SinkBuilder.get(sink.prototype);
+    return builder.sinkConstructor;
+  }
+
   private addSink(builder: SinkBuilder) {
     // build sink with build params
     const sink = builder.buildSink({

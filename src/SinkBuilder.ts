@@ -25,7 +25,6 @@ export class SinkBuilder {
   }
 
   public sinkPrototype!: any;
-  public sinkConstructor!: Constructor;
 
   // configured by decorator
   public namespace!: string;
@@ -34,6 +33,7 @@ export class SinkBuilder {
   public triggers: Array<TriggerEvent> = [];
 
   // for injecting internal sinks
+  public sinkConstructor!: Constructor;
   public sinkInjects!: Array<Constructor | SinkContainer>;
 
   // auto generated
