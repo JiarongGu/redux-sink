@@ -1,7 +1,7 @@
 ---
 description: >-
-  `redux-sink` provide a simple testing flow, here is the example of testing
-  with `jest` along with `enzyme` and `typescript`
+  redux-sink provide a simple testing flow, here is the example of testing with
+  `jest` along with `enzyme` and `typescript`
 ---
 
 # Sink Testing
