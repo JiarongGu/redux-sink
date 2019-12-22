@@ -12,6 +12,7 @@
   * [Injections](examples/injections.md)
   * [Reducers / Middlewares](examples/reducers-middlewares.md)
   * [Custom Decorators](examples/custom-decorators.md)
+  * [Sink Testing](examples/sink-testing.md)
 * [API Refernces](api-refernces/README.md)
   * [@sink](api-refernces/decorator-sink.md)
   * [@state](api-refernces/decorator-state.md)
