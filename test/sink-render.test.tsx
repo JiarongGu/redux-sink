@@ -17,7 +17,9 @@ describe('sink render test', () => {
     const TestComponent = (props: { testSink: TestSink }) => {
       return <div>{props.testSink.state!.name}</div>;
     };
-    const app = createApp(store, createSinking(factory)(TestSink, (sink) => [sink.state]), TestComponent);
+    const app = createApp(store, createSinking(factory)(TestSink, (sink) => [
+      sink.state, sink.something
+    ]), TestComponent);
     assert.equal(renderToString(app), '<div>initialized name</div>');
 
     const testSink = factory.getSink(TestSink);

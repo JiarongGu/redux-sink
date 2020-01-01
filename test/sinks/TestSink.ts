@@ -9,6 +9,9 @@ export interface TestState {
 @sink('testSink')
 export class TestSink {
   @state
+  public something?: number;
+
+  @state
   public state = { name: '', value: '', copy: '' };
 
   @effect
