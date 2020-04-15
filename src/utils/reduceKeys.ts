@@ -1,5 +1,5 @@
-export function reduceKeys(keys: Array<string>, formatter: (key: string) => any) {
-  return keys.reduce((accumulate, key) => (
-    accumulate[key] = formatter(key), accumulate
+export function reduceKeys(keys: Array<string>, formatter: (key: string, index: number) => any) {
+  return keys.reduce((accumulate, key, index) => (
+    accumulate[key] = formatter(key, index), accumulate
   ), {} as { [key: string]: any });
 }

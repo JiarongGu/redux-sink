@@ -1,6 +1,6 @@
-import { useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
+import { useMemo } from 'react';
 import { SinkContainer } from './SinkContainer';
 import { Constructor, SinkSubscriber } from './typings';
 import { mergeState, reduceKeys } from './utils';
@@ -9,23 +9,22 @@ export function createUseSink(container: SinkContainer) {
   return <T>(sink: Constructor<T>, subscriber: boolean | SinkSubscriber<T> = true): T => {
     if (subscriber) {
       const sinkPrototype = container.getSinkPrototype(sink);
+      let storeState;
+      if (typeof subscriber === 'function') {
+        const subscribes = subscriber(sinkPrototype.stateNames as any) as Array<string>;
+        const subscribedStates: Array<any> = subscribes.map(key =>
+          useSelector<any, any>(state => state[sinkPrototype.namespace][key])
+        );
 
-      const storeStateSelector = useCallback((state) => {
-        if (typeof subscriber === 'function') {
-          const subscribes = subscriber(sinkPrototype.stateNames as any) as Array<string>;
-          return reduceKeys(subscribes, key => state[sinkPrototype.namespace][key]);
-        } else {
-          return state[sinkPrototype.namespace];
-        }
-      }, [subscriber]);
+        storeState = useMemo(() =>
+          reduceKeys(subscribes, (_, index) => subscribedStates[index])
+        , subscribedStates);
 
-      const storeState = useSelector<any, any>(storeStateSelector);
+      } else {
+        storeState = useSelector<any, T>(state => state[sinkPrototype.namespace]);
+      }
 
-      const mergedState = useMemo(() =>
-        mergeState<T>(storeState, sinkPrototype.state, sinkPrototype.dispatches
-      ), [storeState, sinkPrototype]);
-
-      return mergedState;
+      return useMemo(() => mergeState<T>(storeState, sinkPrototype.state, sinkPrototype.dispatches), [storeState]);
     }
     return container.getSink(sink);
   };
