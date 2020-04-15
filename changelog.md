@@ -1,6 +1,5 @@
 # Change Log
-
-## \[0.15.0\] - 2020-04-15
+## \[0.17.0\] - 2020-04-16
 * fix `useSink` potential performance issue
 
 ## \[0.15.0\] - 2019-12-17

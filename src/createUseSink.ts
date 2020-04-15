@@ -24,7 +24,9 @@ export function createUseSink(container: SinkContainer) {
         storeState = useSelector<any, T>(state => state[sinkPrototype.namespace]);
       }
 
-      return useMemo(() => mergeState<T>(storeState, sinkPrototype.state, sinkPrototype.dispatches), [storeState]);
+      return useMemo(() =>
+        mergeState<T>(storeState, sinkPrototype.state, sinkPrototype.dispatches)
+      , [storeState, sinkPrototype]);
     }
     return container.getSink(sink);
   };
