@@ -1,5 +1,8 @@
 # Change Log
 
+## \[0.15.0\] - 2020-04-15
+* fix `useSink` potential performance issue
+
 ## \[0.15.0\] - 2019-12-17
 
 * remove `getSinkConstructor` its not necessary
