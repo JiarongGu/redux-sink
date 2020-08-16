@@ -4,7 +4,7 @@ description: SinkContainer use to keep store and all the sinks within the same s
 
 # SinkContainer
 
-Since `SinkFactory` is a instance of `SinkContainer` the api is the same, all the code example will be using `SinkFactory` for easier understanding the usage.
+Since `SinkFactory` is an instance of `SinkContainer` the API is the same, all the code example will be using `SinkFactory` for easier understanding the usage.
 
 ## createStore\(SinkConfiguration\) =&gt; Store
 
@@ -56,7 +56,7 @@ const store = SinkFactory.createStore({
 
 ## getSink\(SinkClass\) =&gt; SinkInstance
 
-Get sink from current container using sink class
+Get sink from the current container using sink class
 
 {% tabs %}
 {% tab title="Arguments" %}

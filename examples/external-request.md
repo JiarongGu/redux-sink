@@ -4,9 +4,9 @@ description: 'Use effect to handle external effects, mostly handel async calls.'
 
 # External Request
 
-### Create sink with effect to handle external request
+### Create a sink with effect to handle the external request
 
-This is an example for using effect to handle http requests, using async function
+This is an example of using the effect to handle HTTP requests, using an async function
 
 {% code title="WeatherSink.js" %}
 ```javascript
@@ -31,7 +31,7 @@ export class WeatherSink {
 ```
 {% endcode %}
 
-### Call effect load data in component
+### Call effect load data in a component
 
 {% code title="Weather.jsx" %}
 ```jsx

@@ -6,13 +6,13 @@ description: configure sink store to enable features
 
 ### Use of SinkFactory.createStore
 
-simple createStore will not include trigger, effect trace, preloaded state
+simple createStore will not include a trigger, effect trace, preloaded state
 
 ```javascript
 const store = SinkFactory.createStore();
 ```
 
-but the store can be configured by those through creation
+but the store can be configured by those through the creation
 
 ```javascript
 const store = SinkFactory.createStore({

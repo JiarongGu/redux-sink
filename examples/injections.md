@@ -50,7 +50,7 @@ export class ProductSink {
 
 ### Inject SinkFactory
 
-there is a chance that injecting class will not work due to [decorators dont work when there circular references](https://github.com/Microsoft/TypeScript/issues/4521), there is work arounds, but not simplied to be solve because `redux-sink` does not use `reflect-metadata`, and `redux-sink` provide object injection.
+there is a chance that injecting class will not work due to [decorators don't work when there circular references](https://github.com/Microsoft/TypeScript/issues/4521), there are workarounds, but not simplified to be solved because `redux-sink` does not use `reflect-metadata`, and `redux-sink` provide object injection.
 
 ```javascript
 import { sink, state, SinkFactory } from 'redux-sink';
@@ -70,7 +70,7 @@ export class ProductSink {
 
 ### Inject other objects
 
-because all `Sink` use `SinkContainer` to create instance, so we normally cannot access the constuctor arugments, so we provide way to inject other objects.
+because all `Sink` use `SinkContainer` to create the instance, so we normally cannot access the constructor arguments, so we provide a way to inject other objects.
 
 ```javascript
 import { sink, state } from 'redux-sink';

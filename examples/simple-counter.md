@@ -6,7 +6,7 @@ description: Use state to create a simple counter component
 
 ### Create CounterSink
 
-Sink states maps dispatch automatically to component. so you don't have to create action or reducer.
+Sink states maps dispatch automatically to the component. so you don't have to create action or reducer.
 
 {% code title="CounterSink.js" %}
 ```javascript
@@ -41,6 +41,6 @@ export const Counter = () => {
 {% endcode %}
 
 {% hint style="warning" %}
-The two way update for state is baed on ****[defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty), so when updating object or arrray you still need to update the whole object reference. For example: [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) or [Array.concat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat)
+The two-way update for the state is based on ****[defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty), so when updating object or array you still need to update the whole object reference. For example [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) or [Array.contact](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat)
 {% endhint %}
 

@@ -30,7 +30,7 @@ export const createNavigationHistory = () => {
 ```
 {% endcode %}
 
-### Supply the navigation history object to router
+### Supply the navigation history object to a router
 
 {% code title="index.jsx" %}
 ```jsx

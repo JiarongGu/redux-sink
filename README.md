@@ -2,11 +2,11 @@
 
 [![travis](https://travis-ci.org/JiarongGu/redux-sink.svg?branch=master)](https://travis-ci.org/JiarongGu/redux-sink) [![npm version](https://badge.fury.io/js/redux-sink.svg)](https://www.npmjs.com/package/redux-sink) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ee58187b2e794033aeb4296f128fd3ee)](https://app.codacy.com/app/JiarongGu/redux-sink?utm_source=github.com&utm_medium=referral&utm_content=JiarongGu/redux-sink&utm_campaign=Badge_Grade_Dashboard)
 
-Redux Sink is a decorator based using of React-Redux, uses class as boundary of each redux state, no actions, no reducers, introduce state and effect decorator instead, natively support redux state and reducers to be loaded by code split. for easier life of using state management
+Redux Sink is a decorator based using of React-Redux, uses class as the boundary of each redux state, no actions, no reducers, introduce state and effect decorator instead, natively support redux state and reducers to be loaded by code split. for an easier life of using state management
 
 * [Getting started](./#getting-started)
-  * [Step 1: create store](./#step-1-create-store)
-  * [Step 2: create sink](./#step-2-create-sink)
+  * [Step 1: create a store](./#step-1-create-store)
+  * [Step 2: create a sink](./#step-2-create-sink)
   * [Step 3: sinking](./#step-3-sinking)
 * [Examples](examples/)
 * [API References](api-refernces/)
@@ -18,9 +18,9 @@ Redux Sink is a decorator based using of React-Redux, uses class as boundary of 
 npm i redux-sink
 ```
 
-### Step 1: create store
+### Step 1: create a store
 
-create store use `SinkFactory.createStore`, then use `react-redux` or other library to connect the store with `Provider`.
+create store use `SinkFactory.createStore`, then use `react-redux` or another library to connect the store with `Provider`.
 
 ```jsx
 import { SinkFactory } from 'redux-sink';
@@ -37,9 +37,9 @@ ReactDOM.render(
 )
 ```
 
-### Step 2: create sink
+### Step 2: create a sink
 
-redux state and effects managed by `sink` class, configured by decorators. to update the state, just simply assign the new state to it
+redux state and effects managed by`sink`class, configured by decorators. to update the state, just simply assign the new state to it
 
 ```javascript
 import { sink, state, effect } from 'redux-sink'
@@ -59,7 +59,7 @@ class CounterSink {
 
 ### Step 3: sinking
 
-use `sinking` instead of `connect`, to connect sinks to component, only `state` and `effect` can be used in components
+use `sinking` instead of `connect`, to connect sinks to a component, only `state` and `effect` can be used in components
 
 ```jsx
 import { sinking } from 'redux-sink';
@@ -83,10 +83,10 @@ class Counter extends React.Component {
 ```
 
 {% hint style="info" %}
-Use state or effect to update sink value in component like example above. both behave the same as redux dispatch when use in component
+Use state or effect to update sink value in a component like an example above. both behave the same as redux dispatch when using in component
 {% endhint %}
 
-use sinking with out decorator
+use sinking without the decorator
 
 ```jsx
 import { sinking } from 'redux-sink';

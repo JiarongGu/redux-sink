@@ -48,6 +48,6 @@ export class WeatherSink {
 {% endtabs %}
 
 {% hint style="warning" %}
-trigger is a power tool for redux events, but may cause infinity loop to redux actions when setting bad triggers, be careful when using it
+the trigger is a powerful tool for make redux as an event sourcing system, but may cause infinity loop to redux actions when setting bad triggers, be careful when using it
 {% endhint %}
 

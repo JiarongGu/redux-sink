@@ -4,11 +4,11 @@ description: default SinkContainer scope
 
 # SinkFactory
 
-`SinkFactory` is default `SinkContainer` object which used globally. when using `sinking` and `useSink` to connect sink with component, all the sink objects will be generated from SinkFactory
+`SinkFactory` is default `SinkContainer` the object which used globally. when using `sinking` and `useSink` to connect sink with components, all the sink objects will be generated from SinkFactory
 
 ## SinkFactory vs SinkContainer
 
-Normally in project should use `SinkFactory` and `SinkContainer` for testing, also when using it `SinkFactory` can be detectly used because it is a `SinkCotainer` Instance. but `SinkContainer` is a constructor.
+Normally in a single project should use `SinkFactory` and `SinkContainer` for testing, also when using it `SinkFactory` can be directly used because it is a `SinkCotainer` Instance. but `SinkContainer` is a constructor.
 
 ```javascript
 import { SinkFactory, SinkContainer } from 'redux-sink';

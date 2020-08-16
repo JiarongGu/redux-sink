@@ -6,7 +6,7 @@ description: Create custom decorators to control the behavior of sink functions.
 
 ## @debounce
 
-use debounce function from lodash.
+use the debounce function from lodash.
 
 ```javascript
 import _debounce from 'lodash/debounce';
@@ -33,7 +33,7 @@ class CounterSink extends React.Component {
 
 ## @throttle
 
-use throttle function from lodash.
+use the throttle function from lodash.
 
 ```javascript
 import _throttle from 'lodash/throttle';

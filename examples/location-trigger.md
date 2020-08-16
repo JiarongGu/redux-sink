@@ -6,7 +6,7 @@ description: Create Trigger based on location change action
 
 This is advanced trigger usage requires to use something like [`NavigationSink`](navigation-sink.md), the trigger watches on `navigation/location` action to update sink state
 
-### Create sink with location trigger
+### Create sink with a location trigger
 
 ```javascript
 import { sink, state, effect } from 'redux-sink';
@@ -35,5 +35,5 @@ export class WeatherSink {
 }
 ```
 
-on location change to `/weather` this sink will fire a `loadWeather` event, to use this so we don't need to call effect inside component life cycle event
+on location change to `/weather` this sink will fire a `loadWeather` the event, to use this so we don't need to call effect inside the component life cycle event
 
